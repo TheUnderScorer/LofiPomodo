@@ -1,0 +1,19 @@
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "target": "ES2020",
+    "module": "CommonJS",
+    "outDir": "build-electron",
+    "baseUrl": ".",
+    "importHelpers": false,
+    "noEmit": false
+  },
+  "include": [
+    "src/main/*.ts",
+    "src/typings/*.ts",
+    "src/shared/*.ts"
+  ],
+  "exclude": [
+    "node_modules"
+  ]
+}

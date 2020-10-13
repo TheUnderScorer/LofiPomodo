@@ -2,6 +2,7 @@
   "name": "lofi-pomodo",
   "version": "0.1.0",
   "private": true,
+  "main": "build/electron.js",
   "dependencies": {
     "@testing-library/jest-dom": "^4.2.4",
     "@testing-library/react": "^9.3.2",
@@ -10,19 +11,135 @@
     "@types/node": "^12.0.0",
     "@types/react": "^16.9.0",
     "@types/react-dom": "^16.9.0",
+    "electron-debug": "^3.1.0",
+    "electron-is-dev": "^1.2.0",
+    "electron-store": "^6.0.0",
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
     "react-scripts": "3.4.3",
-    "typescript": "~3.7.2"
+    "typescript": "4.0.3"
+  },
+  "devDependencies": {
+    "@craco/craco": "5.7.0",
+    "@semantic-release/changelog": "^5.0.1",
+    "@semantic-release/exec": "^5.0.0",
+    "@semantic-release/git": "^9.0.0",
+    "@semantic-release/github": "^7.0.7",
+    "@semantic-release/npm": "^7.0.5",
+    "@typescript-eslint/eslint-plugin": "^4.4.1",
+    "@typescript-eslint/parser": "^4.4.1",
+    "electron": "^10.1.2",
+    "electron-builder": "^22.8.1",
+    "eslint": "7.11.0",
+    "eslint-plugin-prettier": "^3.1.3",
+    "prettier": "^2.1.2",
+    "ts-loader": "^8.0.4",
+    "tsconfig-paths-webpack-plugin": "^3.3.0",
+    "semantic-release": "17.1.2",
+    "webpack-cli": "^3.3.12",
+    "webpack-node-externals": "^2.5.2"
+  },
+  "resolutions": {
+    "**/@typescript-eslint/eslint-plugin": "^4.4.1",
+    "**/@typescript-eslint/parser": "^4.4.1"
   },
   "scripts": {
-    "start": "react-scripts start",
-    "build": "react-scripts build",
-    "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "start-renderer": "SKIP_PREFLIGHT_CHECK=true craco start",
+    "build-renderer": "SKIP_PREFLIGHT_CHECK=true craco build",
+    "lint": "eslint . --ext .ts,tsx",
+    "lint:fix": "eslint . --ext .ts,tsx --fix",
+    "test": "SKIP_PREFLIGHT_CHECK=true craco test",
+    "build-electron": "NODE_ENV=\"production\" webpack --config webpack.electron.js",
+    "watch-electron": "webpack --config webpack.electron.js -w",
+    "start-electron": "electron ./build/main.js",
+    "build-windows": "electron-builder -w",
+    "build-macos": "electron-builder -m",
+    "postinstall": "electron-builder install-app-deps"
+  },
+  "build": {
+    "productName": "Lofi Pomodo",
+    "appId": "com.pz.lofiPomodo",
+    "win": {
+      "target": [
+        "nsis"
+      ]
+    },
+    "mac": {
+      "target": [
+        "dmg"
+      ]
+    },
+    "files": [
+      "build/**",
+      "package.json"
+    ],
+    "artifactName": "LofiPomodo.${ext}",
+    "directories": {
+      "output": "electron/output"
+    }
   },
   "eslintConfig": {
-    "extends": "react-app"
+    "extends": "react-app",
+    "rules": {
+      "react/style-prop-object": "off"
+    }
+  },
+  "release": {
+    "branches": [
+      "+([0-9])?(.{+([0-9]),x}).x",
+      "master",
+      "next",
+      {
+        "name": "alpha",
+        "prerelease": true
+      },
+      {
+        "name": "beta",
+        "prerelease": true
+      }
+    ],
+    "plugins": [
+      "@semantic-release/commit-analyzer",
+      "@semantic-release/release-notes-generator",
+      [
+        "@semantic-release/changelog",
+        {
+          "changelogFile": "docs/CHANGELOG.md"
+        }
+      ],
+      "@semantic-release/npm",
+      [
+        "@semantic-release/exec",
+        {
+          "prepareCmd": "electron-builder -m -w --x64"
+        }
+      ],
+      [
+        "@semantic-release/git",
+        {
+          "assets": [
+            "docs/CHANGELOG.md",
+            "package.json",
+            "package-lock.json"
+          ]
+        }
+      ],
+      [
+        "@semantic-release/github",
+        {
+          "assets": [
+            {
+              "path": "electron/output/LofiPomodo.exe",
+              "label": "Windows Build"
+            },
+            {
+              "path": "electron/output/LofiPomodo.dmg",
+              "label": "Mac Build"
+            }
+          ]
+        }
+      ]
+    ]
   },
   "browserslist": {
     "production": [

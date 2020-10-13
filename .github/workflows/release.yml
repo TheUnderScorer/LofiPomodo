@@ -1,0 +1,53 @@
+name: Release
+on:
+  push:
+    branches:
+      - master
+jobs:
+  release:
+    name: Build & Release
+    runs-on: macos-latest
+
+    steps:
+      - uses: actions/checkout@v2
+      - name: Configure CI Git User
+        run: |
+          git config --global user.name 'TheUnderScorer'
+          git config --global user.email 'przemyslawzydek@gmail.com'
+          git remote set-url origin https://TheUnderScorer:$GITHUB_TOKEN@github.com/TheUnderScorer/LofiPomodo
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Install Node.js, NPM and Yarn
+        uses: actions/setup-node@v1
+        with:
+          node-version: 14
+
+      - name: Install npm dependencies
+        run: |
+          npm install
+
+      - name: Build main & renderer
+        run: |
+          npm run build-renderer & npm run build-electron
+
+      - name: Build & Release
+        run: |
+          npm run semantic-release
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+
+      - name: Upload Artifact
+        id: upload_artifact_windows
+        uses: actions/upload-artifact@v1
+        with:
+          name: DietAssistant.exe
+          path: electron/output/LofiPomodo.exe
+
+      - name: Upload Artifact
+        id: upload_artifact_mac
+        uses: actions/upload-artifact@v1
+        with:
+          name: DietAssistant.dmg
+          path: electron/output/LofiPomodo.dmg
