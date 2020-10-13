@@ -2,17 +2,11 @@ import { app, BrowserWindow } from 'electron';
 import isDev from 'electron-is-dev';
 import path from 'path';
 import url from 'url';
-import { AppContext } from './context';
-import { IpcMainService } from './shared/ipc/IpcMainService';
-import ElectronStore from 'electron-store';
+import { createContext } from './context';
+
+createContext();
 
 const createWindow = async () => {
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const context: AppContext = {
-    ipcService: new IpcMainService(),
-    store: new ElectronStore(),
-  };
-
   const preload = path.join(__dirname, 'preload.js');
 
   console.log(`Using ${preload} as preload script.`);
