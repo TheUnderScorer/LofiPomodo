@@ -31,6 +31,7 @@ export class PomodoroService
   subscribe!: Subscriber<PomodoroService>;
 
   constructor(private readonly store: ElectronStore<AppStore>) {
+    // TODO Fetch pomodoro state from store
     Object.assign(this, getInitialPomodoro());
   }
 

@@ -4,6 +4,7 @@
   "private": true,
   "main": "build/electron.js",
   "dependencies": {
+    "@chakra-ui/core": "1.0.0-rc.5",
     "@testing-library/jest-dom": "^4.2.4",
     "@testing-library/react": "^9.3.2",
     "@testing-library/user-event": "^7.1.2",
@@ -18,7 +19,9 @@
     "lodash.debounce": "^4.0.8",
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
+    "react-router-dom": "^5.2.0",
     "react-scripts": "3.4.3",
+    "recoil": "0.0.13",
     "typescript": "4.0.3"
   },
   "devDependencies": {
@@ -28,11 +31,14 @@
     "@semantic-release/git": "^9.0.0",
     "@semantic-release/github": "^7.0.7",
     "@semantic-release/npm": "^7.0.5",
-    "@typescript-eslint/eslint-plugin": "^4.4.1",
-    "@typescript-eslint/parser": "^4.4.1",
+    "@types/react-router-dom": "^5.1.6",
+    "@types/recoil": "0.0.1",
+    "@typescript-eslint/eslint-plugin": "4.4.0",
+    "@typescript-eslint/parser": "4.4.0",
     "electron": "^10.1.2",
     "electron-builder": "^22.8.1",
     "eslint": "7.11.0",
+    "eslint-import-resolver-typescript": "^2.3.0",
     "eslint-plugin-prettier": "^3.1.3",
     "jest-mock-proxy": "^3.0.0",
     "prettier": "^2.1.2",
@@ -43,15 +49,15 @@
     "webpack-node-externals": "^2.5.2"
   },
   "resolutions": {
-    "**/@typescript-eslint/eslint-plugin": "^4.4.1",
-    "**/@typescript-eslint/parser": "^4.4.1"
+    "**/@typescript-eslint/eslint-plugin": "4.4.0",
+    "**/@typescript-eslint/parser": "4.4.0"
   },
   "scripts": {
-    "start-renderer": "SKIP_PREFLIGHT_CHECK=true craco start",
-    "build-renderer": "SKIP_PREFLIGHT_CHECK=true craco build",
+    "start-renderer": "EXTEND_ESLINT=true SKIP_PREFLIGHT_CHECK=true craco start",
+    "build-renderer": "EXTEND_ESLINT=true SKIP_PREFLIGHT_CHECK=true craco build",
     "lint": "eslint . --ext .ts,tsx",
     "lint:fix": "eslint . --ext .ts,tsx --fix",
-    "test": "SKIP_PREFLIGHT_CHECK=true craco test",
+    "test": "EXTEND_ESLINT=true SKIP_PREFLIGHT_CHECK=true craco test",
     "build-electron": "NODE_ENV=\"production\" webpack --config webpack.electron.js",
     "watch-electron": "webpack --config webpack.electron.js -w",
     "start-electron": "electron ./build/electron.js",
@@ -84,8 +90,18 @@
   },
   "eslintConfig": {
     "extends": "react-app",
+    "settings": {
+      "react": {
+        "version": "detect"
+      },
+      "import/resolver": {
+        "typescript": {}
+      }
+    },
     "rules": {
-      "react/style-prop-object": "off"
+      "react/style-prop-object": "off",
+      "no-use-before-define": "off",
+      "@typescript-eslint/no-use-before-define": "off"
     }
   },
   "release": {

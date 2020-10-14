@@ -1,11 +1,11 @@
 module.exports = () => {
   return {
     webpack: {
-      configure: webpackConfig => {
-        webpackConfig.target = 'electron-renderer';
-        webpackConfig.output.publicPath = '';
+      configure: (config) => {
+        //config.target = 'electron-renderer';
+        config.output.publicPath = '';
 
-        return webpackConfig;
+        return config;
       },
     },
   };

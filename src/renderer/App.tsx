@@ -1,26 +1,27 @@
 import React from 'react';
-import logo from './logo.svg';
 import './App.css';
+import { Box, Container, useColorMode } from '@chakra-ui/core';
+import { Route, Switch } from 'react-router-dom';
+import { routes } from '../shared/routes/routes';
+import { Timer } from './app/pomodoro/components/Timer';
 
-function App() {
+const App = () => {
+  const { colorMode } = useColorMode();
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <Container
+      w="100%"
+      pl="0"
+      pr="0"
+      maxW="100%"
+      bg={colorMode === 'dark' ? 'gray.900' : 'gray.50'}
+    >
+      <Box className="title-bar" h="40px" w="100%" />
+      <Switch>
+        <Route path={routes.timer()} component={Timer} />
+      </Switch>
+    </Container>
   );
-}
+};
 
 export default App;
