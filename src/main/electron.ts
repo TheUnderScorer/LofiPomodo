@@ -3,8 +3,11 @@ import isDev from 'electron-is-dev';
 import path from 'path';
 import url from 'url';
 import { createContext } from './context';
+import { setupPomodoro } from './app/pomodoro/setup';
 
-createContext();
+const context = createContext();
+
+setupPomodoro(context);
 
 const createWindow = async () => {
   const preload = path.join(__dirname, 'preload.js');

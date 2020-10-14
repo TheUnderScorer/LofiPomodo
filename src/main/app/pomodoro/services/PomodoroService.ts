@@ -1,11 +1,20 @@
-import { Changable, Pomodoro, PomodoroState } from '../../../../shared/types';
+import {
+  CanSubscribe,
+  Changable,
+  Pomodoro,
+  PomodoroState,
+  Subscriber,
+} from '../../../../shared/types';
 import { getInitialPomodoro } from '../data';
 import ElectronStore from 'electron-store';
 import { AppStore } from '../../../../shared/types/store';
 import { getDurationByState, getNextState } from '../logic/nextState';
 import { secondsToTime } from '../../../../shared/utils/time';
+import { Reactive } from '../../../../shared/reactive';
 
-export class PomodoroService implements Changable, Pomodoro {
+@Reactive()
+export class PomodoroService
+  implements Changable, Pomodoro, CanSubscribe<PomodoroService> {
   autoRun!: boolean;
   isRunning!: boolean;
   longBreakDurationSeconds!: number;
@@ -18,6 +27,8 @@ export class PomodoroService implements Changable, Pomodoro {
   workDurationSeconds!: number;
 
   timeoutId: any = null;
+
+  subscribe!: Subscriber<PomodoroService>;
 
   constructor(private readonly store: ElectronStore<AppStore>) {
     Object.assign(this, getInitialPomodoro());

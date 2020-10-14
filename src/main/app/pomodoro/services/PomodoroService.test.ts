@@ -1,12 +1,11 @@
 import { PomodoroService } from './PomodoroService';
-import { reactive } from '../../../../shared/reactive';
 import { createMockProxy } from 'jest-mock-proxy';
 import ElectronStore from 'electron-store';
 import { AppStore } from '../../../../shared/types/store';
-import { CanSubscribe, PomodoroState } from '../../../../shared/types';
+import { PomodoroState } from '../../../../shared/types';
 
 describe('PomodoroService', () => {
-  let service: PomodoroService & CanSubscribe<PomodoroService>;
+  let service: PomodoroService;
 
   const mockStore = createMockProxy<ElectronStore<AppStore>>();
 
@@ -17,7 +16,7 @@ describe('PomodoroService', () => {
       service.stop();
     }
 
-    service = reactive(new PomodoroService(mockStore));
+    service = new PomodoroService(mockStore);
   });
 
   it('should return correct time', () => {

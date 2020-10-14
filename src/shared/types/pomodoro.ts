@@ -16,3 +16,7 @@ export enum PomodoroState {
   Break = 'Break',
   LongBreak = 'LongBreak',
 }
+
+export enum PomodoroEvents {
+  Updated = 'Updated',
+}
