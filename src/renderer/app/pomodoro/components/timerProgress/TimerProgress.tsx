@@ -6,10 +6,10 @@ import { useBreakpointValue } from '@chakra-ui/media-query';
 import './TimerProgress.css';
 
 export interface TimerProgressProps {
-  colored?: boolean;
+  breakMode?: boolean;
 }
 
-export const TimerProgress: FC<TimerProgressProps> = ({ colored = true }) => {
+export const TimerProgress: FC<TimerProgressProps> = ({ breakMode = true }) => {
   const { pomodoro, loading } = usePomodoro();
 
   const size = useBreakpointValue({
@@ -17,15 +17,13 @@ export const TimerProgress: FC<TimerProgressProps> = ({ colored = true }) => {
     xs: '200px',
     sm: '300px',
     md: '500px',
-    lg: '600px',
   });
 
   const fontSize = useBreakpointValue({
-    base: '20px',
-    xs: '20px',
+    base: '40px',
+    xs: '40px',
     sm: '70px',
     md: '90px',
-    lg: '100px',
   });
 
   return (
@@ -35,11 +33,11 @@ export const TimerProgress: FC<TimerProgressProps> = ({ colored = true }) => {
         value={pomodoro?.remainingPercentage ?? 0}
         thickness="4px"
         isIndeterminate={loading}
-        trackColor={colored ? 'gray.100' : 'gray.400'}
-        color={
-          colored
+        color="gray.100"
+        trackColor={
+          !breakMode
             ? `brand.${pomodoro?.state ?? PomodoroState.Work}`
-            : 'gray.100'
+            : 'gray.400'
         }
       >
         <CircularProgressLabel

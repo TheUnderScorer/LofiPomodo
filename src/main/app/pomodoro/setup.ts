@@ -2,10 +2,12 @@ import { AppContext } from '../../context';
 import { BrowserWindow } from 'electron';
 import { Pomodoro, PomodoroEvents } from '../../../shared/types';
 import { PomodoroServiceEvents } from './services/PomodoroService';
+import { setupTray } from './tray';
 
 export const setupPomodoro = (context: AppContext) => {
   sendUpdatesToWindows(context);
   breakWindow(context);
+  setupTray(context);
 
   context.ipcService.handle(
     PomodoroEvents.Update,

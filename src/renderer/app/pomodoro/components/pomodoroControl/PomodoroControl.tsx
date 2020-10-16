@@ -1,4 +1,4 @@
-import { IconButton } from '@chakra-ui/core';
+import { IconButton, useTheme } from '@chakra-ui/core';
 import React, { FC, useCallback } from 'react';
 import { usePomodoro } from '../../hooks/usePomodoro';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -8,6 +8,8 @@ export interface PomodoroControlProps {}
 
 export const PomodoroControl: FC<PomodoroControlProps> = () => {
   const { pomodoro, update } = usePomodoro();
+
+  const theme = useTheme();
 
   const toggle = useCallback(() => {
     update((prev) => ({
@@ -23,7 +25,12 @@ export const PomodoroControl: FC<PomodoroControlProps> = () => {
       aria-label="Toggle pomodoro timer"
       variant="solid"
       fontSize="20px"
-      icon={<FontAwesomeIcon icon={pomodoro?.isRunning ? faPause : faPlay} />}
+      icon={
+        <FontAwesomeIcon
+          color={theme.colors.brand.textPrimary}
+          icon={pomodoro?.isRunning ? faPause : faPlay}
+        />
+      }
     />
   );
 };

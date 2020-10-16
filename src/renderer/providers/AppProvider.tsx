@@ -2,6 +2,7 @@ import React, { FC, useMemo } from 'react';
 import { RecoilRoot } from 'recoil';
 import { IpcRendererProvider } from './IpcRendererProvider';
 import {
+  ColorModeProvider,
   CSSReset,
   extendTheme,
   theme as chakraTheme,
@@ -13,24 +14,25 @@ import { PomodoroState } from '../../shared/types';
 
 export interface AppProviderProps {}
 
-const theme = extendTheme({
-  colors: {
-    brand: {
-      [PomodoroState.Work]: chakraTheme.colors.blue['300'],
-      [PomodoroState.Break]: chakraTheme.colors.green['300'],
-      [PomodoroState.LongBreak]: chakraTheme.colors.green['600'],
-      primary: chakraTheme.colors.blue['300'],
-      textPrimary: chakraTheme.colors.black,
-      textSecondary: chakraTheme.colors.gray['500'],
-    },
-  },
-  config: {
-    useSystemColorMode: true,
-    initialColorMode: 'light',
-  },
-});
-
 export const AppProvider: FC<AppProviderProps> = ({ children }) => {
+  const colorMode = 'dark';
+
+  const theme = extendTheme({
+    colors: {
+      brand: {
+        [PomodoroState.Work]: chakraTheme.colors.blue['300'],
+        [PomodoroState.Break]: chakraTheme.colors.green['300'],
+        [PomodoroState.LongBreak]: chakraTheme.colors.green['600'],
+        primary: chakraTheme.colors.blue['300'],
+        textPrimary:
+          colorMode === 'dark'
+            ? chakraTheme.colors.white
+            : chakraTheme.colors.black,
+        textSecondary: chakraTheme.colors.gray['500'],
+      },
+    },
+  });
+
   const initialEntries: History.LocationDescriptor[] = useMemo(() => {
     if (!window.location.search) {
       return [];
@@ -55,9 +57,15 @@ export const AppProvider: FC<AppProviderProps> = ({ children }) => {
       <IpcRendererProvider>
         <CSSReset />
         <ThemeProvider theme={theme}>
-          <MemoryRouter initialEntries={initialEntries}>
-            {children}
-          </MemoryRouter>
+          <ColorModeProvider
+            options={{
+              useSystemColorMode: true,
+            }}
+          >
+            <MemoryRouter initialEntries={initialEntries}>
+              {children}
+            </MemoryRouter>
+          </ColorModeProvider>
         </ThemeProvider>
       </IpcRendererProvider>
     </RecoilRoot>

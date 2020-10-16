@@ -21,7 +21,7 @@ const App = () => {
       <Switch>
         <Route exact path={routes.timer()} component={Timer} />
         <Route path={routes.timer(true)}>
-          <Timer fullScreenMode />
+          <Timer breakMode />
         </Route>
       </Switch>
     </Container>

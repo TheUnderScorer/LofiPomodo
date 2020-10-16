@@ -1,15 +1,11 @@
 import { app, BrowserWindow } from 'electron';
 import isDev from 'electron-is-dev';
-import { createContext } from './context';
+import { AppContext, createContext } from './context';
 import { setupPomodoro } from './app/pomodoro/setup';
 
 let mainWindow: BrowserWindow | null;
 
-const context = createContext();
-
-setupPomodoro(context);
-
-const createWindow = async () => {
+const createWindow = async (context: AppContext) => {
   if (mainWindow) {
     return;
   }
@@ -30,10 +26,14 @@ const createWindow = async () => {
 };
 
 app.whenReady().then(async () => {
-  await createWindow();
+  const context = createContext();
+
+  setupPomodoro(context);
+
+  await createWindow(context);
 
   app.on('activate', async () => {
-    await createWindow();
+    await createWindow(context);
   });
 });
 
