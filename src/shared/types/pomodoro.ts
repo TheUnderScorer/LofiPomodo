@@ -9,6 +9,8 @@ export interface Pomodoro {
   remainingSeconds: number;
   isRunning: boolean;
   autoRun: boolean;
+  remainingTime: string;
+  remainingPercentage: number;
 }
 
 export enum PomodoroState {
@@ -19,4 +21,6 @@ export enum PomodoroState {
 
 export enum PomodoroEvents {
   Updated = 'Updated',
+  Update = 'Update',
+  GetState = 'GetState',
 }

@@ -2,17 +2,33 @@ import React, { FC, useMemo } from 'react';
 import { RecoilRoot } from 'recoil';
 import { IpcRendererProvider } from './IpcRendererProvider';
 import {
-  extendTheme,
-  ThemeProvider,
   CSSReset,
-  ColorModeProvider,
+  extendTheme,
+  theme as chakraTheme,
+  ThemeProvider,
 } from '@chakra-ui/core';
 import { MemoryRouter } from 'react-router-dom';
 import History from 'history';
+import { PomodoroState } from '../../shared/types';
 
 export interface AppProviderProps {}
 
-const theme = extendTheme({});
+const theme = extendTheme({
+  colors: {
+    brand: {
+      [PomodoroState.Work]: chakraTheme.colors.blue['300'],
+      [PomodoroState.Break]: chakraTheme.colors.green['300'],
+      [PomodoroState.LongBreak]: chakraTheme.colors.green['600'],
+      primary: chakraTheme.colors.blue['300'],
+      textPrimary: chakraTheme.colors.black,
+      textSecondary: chakraTheme.colors.gray['500'],
+    },
+  },
+  config: {
+    useSystemColorMode: true,
+    initialColorMode: 'light',
+  },
+});
 
 export const AppProvider: FC<AppProviderProps> = ({ children }) => {
   const initialEntries: History.LocationDescriptor[] = useMemo(() => {
@@ -39,11 +55,9 @@ export const AppProvider: FC<AppProviderProps> = ({ children }) => {
       <IpcRendererProvider>
         <CSSReset />
         <ThemeProvider theme={theme}>
-          <ColorModeProvider options={{}} value="dark">
-            <MemoryRouter initialEntries={initialEntries}>
-              {children}
-            </MemoryRouter>
-          </ColorModeProvider>
+          <MemoryRouter initialEntries={initialEntries}>
+            {children}
+          </MemoryRouter>
         </ThemeProvider>
       </IpcRendererProvider>
     </RecoilRoot>

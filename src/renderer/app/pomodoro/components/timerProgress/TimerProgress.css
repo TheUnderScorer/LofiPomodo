@@ -1,0 +1,7 @@
+.timer-progress svg {
+    margin: 0 auto;
+}
+
+.timer-progress, .timer-progress > div {
+    width: 100%;
+}

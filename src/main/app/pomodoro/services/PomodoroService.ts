@@ -11,6 +11,20 @@ import { AppStore } from '../../../../shared/types/store';
 import { getDurationByState, getNextState } from '../logic/nextState';
 import { secondsToTime } from '../../../../shared/utils/time';
 import { Reactive } from '../../../../shared/reactive';
+import { percent } from '../../../../shared/utils/math';
+import { Typed as TypedEmittery } from 'emittery';
+
+export enum PomodoroServiceEvents {
+  BreakStarted = 'BreakStarted',
+  WorkStarted = 'WorkStarted',
+  LongBreakStarted = 'LongBreakStarted',
+}
+
+export interface PomodoroServiceEventsMap {
+  [PomodoroServiceEvents.BreakStarted]: PomodoroService;
+  [PomodoroServiceEvents.LongBreakStarted]: PomodoroService;
+  [PomodoroServiceEvents.WorkStarted]: PomodoroService;
+}
 
 @Reactive()
 export class PomodoroService
@@ -30,9 +44,22 @@ export class PomodoroService
 
   subscribe!: Subscriber<PomodoroService>;
 
+  events = new TypedEmittery<PomodoroServiceEventsMap>();
+
+  private static newStateEventMap = {
+    [PomodoroState.Work]: PomodoroServiceEvents.WorkStarted,
+    [PomodoroState.LongBreak]: PomodoroServiceEvents.LongBreakStarted,
+    [PomodoroState.Break]: PomodoroServiceEvents.BreakStarted,
+  };
+
   constructor(private readonly store: ElectronStore<AppStore>) {
     // TODO Fetch pomodoro state from store
-    Object.assign(this, getInitialPomodoro());
+    this.fill(getInitialPomodoro());
+  }
+
+  fill(pomodoro: Pomodoro) {
+    const { remainingTime, remainingPercentage, ...payload } = pomodoro;
+    Object.assign(this, payload);
   }
 
   onChange() {
@@ -41,8 +68,12 @@ export class PomodoroService
     this.schedule();
   }
 
-  get remainingTime() {
+  get remainingTime(): string {
     return secondsToTime(this.remainingSeconds).toString();
+  }
+
+  get remainingPercentage(): number {
+    return percent(this.remainingSeconds, getDurationByState(this));
   }
 
   stop() {
@@ -89,6 +120,10 @@ export class PomodoroService
         if (this.state === PomodoroState.LongBreak) {
           newBreakCount = 0;
         }
+
+        const eventToEmit = PomodoroService.newStateEventMap[newPomodoroState];
+
+        this.events.emit(eventToEmit, this);
       }
 
       Object.assign(this, {
@@ -100,5 +135,22 @@ export class PomodoroService
 
       this.onChange();
     }, 1000);
+  }
+
+  toJSON(): Pomodoro {
+    return {
+      autoRun: this.autoRun,
+      isRunning: this.isRunning,
+      longBreakDurationSeconds: this.longBreakDurationSeconds,
+      longBreakInterval: this.longBreakInterval,
+      remainingSeconds: this.remainingSeconds,
+      remainingTime: this.remainingTime,
+      shortBreakCount: this.shortBreakCount,
+      shortBreakDurationSeconds: this.shortBreakDurationSeconds,
+      start: this.start,
+      state: this.state,
+      workDurationSeconds: this.workDurationSeconds,
+      remainingPercentage: this.remainingPercentage,
+    };
   }
 }

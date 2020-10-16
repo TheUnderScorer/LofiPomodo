@@ -1,12 +1,14 @@
 import React from 'react';
-import './App.css';
-import { Box, Container, useColorMode } from '@chakra-ui/core';
+import { Container, useColorMode } from '@chakra-ui/core';
 import { Route, Switch } from 'react-router-dom';
 import { routes } from '../shared/routes/routes';
 import { Timer } from './app/pomodoro/components/Timer';
+import { usePomodoroListeners } from './app/pomodoro/hooks/usePomodoroListeners';
 
 const App = () => {
   const { colorMode } = useColorMode();
+
+  usePomodoroListeners();
 
   return (
     <Container
@@ -16,9 +18,11 @@ const App = () => {
       maxW="100%"
       bg={colorMode === 'dark' ? 'gray.900' : 'gray.50'}
     >
-      <Box className="title-bar" h="40px" w="100%" />
       <Switch>
-        <Route path={routes.timer()} component={Timer} />
+        <Route exact path={routes.timer()} component={Timer} />
+        <Route path={routes.timer(true)}>
+          <Timer fullScreenMode />
+        </Route>
       </Switch>
     </Container>
   );

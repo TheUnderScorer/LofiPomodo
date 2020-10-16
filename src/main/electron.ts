@@ -1,16 +1,24 @@
-import { app } from 'electron';
+import { app, BrowserWindow } from 'electron';
 import isDev from 'electron-is-dev';
 import { createContext } from './context';
 import { setupPomodoro } from './app/pomodoro/setup';
+
+let mainWindow: BrowserWindow | null;
 
 const context = createContext();
 
 setupPomodoro(context);
 
 const createWindow = async () => {
-  console.log(`Using ${context.preloadPath} as preload script.`);
+  if (mainWindow) {
+    return;
+  }
 
-  const mainWindow = await context.windowFactory.createTimerWindow();
+  mainWindow = await context.windowFactory.createTimerWindow();
+
+  mainWindow.on('closed', () => {
+    mainWindow = null;
+  });
 
   if (isDev) {
     mainWindow.webContents.once('dom-ready', () => {
@@ -23,6 +31,10 @@ const createWindow = async () => {
 
 app.whenReady().then(async () => {
   await createWindow();
+
+  app.on('activate', async () => {
+    await createWindow();
+  });
 });
 
 app.on('window-all-closed', () => {

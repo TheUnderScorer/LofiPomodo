@@ -1,19 +1,19 @@
-const path = require("path");
-const TsconfigPathsPlugin = require("tsconfig-paths-webpack-plugin");
-const nodeExternals = require("webpack-node-externals");
+const path = require('path');
+const TsconfigPathsPlugin = require('tsconfig-paths-webpack-plugin');
+const nodeExternals = require('webpack-node-externals');
 
 module.exports = {
-  mode: process.env.NODE_ENV === "production" ? "production" : "development",
+  mode: process.env.NODE_ENV === 'production' ? 'production' : 'development',
   entry: {
-    electron: "./src/main/electron.ts",
-    preload: "./src/main/preload.js"
+    electron: './src/main/electron.ts',
+    preload: './src/main/preload.js',
   },
-  target: "electron-main",
-  devtool: "sourcemap",
+  target: 'electron-main',
+  devtool: 'source-map',
   externals: [nodeExternals()],
   node: {
     __dirname: false,
-    __filename: false
+    __filename: false,
   },
   module: {
     rules: [
@@ -22,23 +22,23 @@ module.exports = {
         exclude: /node_modules|renderer/,
         use: [
           {
-            loader: "ts-loader",
+            loader: 'ts-loader',
             options: {
-              configFile: "tsconfig.electron.json"
-            }
-          }
-        ]
-      }
-    ]
+              configFile: 'tsconfig.electron.json',
+            },
+          },
+        ],
+      },
+    ],
   },
   resolve: {
-    extensions: [".tsx", ".ts", ".js"],
+    extensions: ['.tsx', '.ts', '.js'],
     plugins: [
-      new TsconfigPathsPlugin({ configFile: "./tsconfig.electron.json" })
-    ]
+      new TsconfigPathsPlugin({ configFile: './tsconfig.electron.json' }),
+    ],
   },
   output: {
-    filename: "[name].js",
-    path: path.resolve(__dirname, "build")
-  }
+    filename: '[name].js',
+    path: path.resolve(__dirname, 'build'),
+  },
 };

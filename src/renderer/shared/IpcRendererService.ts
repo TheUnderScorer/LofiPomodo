@@ -16,7 +16,7 @@ export class IpcRendererService {
     return result;
   }
 
-  receive(name: string, listener: (...args: any[]) => void) {
+  receive(name: string, listener: (event: object, ...args: any[]) => void) {
     this.ipc.on(name, listener);
 
     return () => {
