@@ -11,13 +11,14 @@ import {
 import { MemoryRouter } from 'react-router-dom';
 import History from 'history';
 import { PomodoroState } from '../../shared/types';
+import { Theme } from '../types/theme';
 
 export interface AppProviderProps {}
 
 export const AppProvider: FC<AppProviderProps> = ({ children }) => {
   const colorMode = 'dark';
 
-  const theme = extendTheme({
+  const theme: Theme = extendTheme({
     colors: {
       brand: {
         [PomodoroState.Work]: chakraTheme.colors.blue['300'],
@@ -29,6 +30,7 @@ export const AppProvider: FC<AppProviderProps> = ({ children }) => {
             ? chakraTheme.colors.white
             : chakraTheme.colors.black,
         textSecondary: chakraTheme.colors.gray['500'],
+        iconPrimary: chakraTheme.colors.gray['400'],
       },
     },
   });

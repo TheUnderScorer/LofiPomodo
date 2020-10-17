@@ -17,6 +17,7 @@ import { TitleBar } from '../../../ui/atoms/titleBar/TitleBar';
 import { theme as chakraTheme } from '@chakra-ui/theme';
 import { Heading } from '../../../ui/atoms/heading/Heading';
 import { PomodoroInterval } from './pomodoroInterval/PomodoroInterval';
+import { Theme } from '../../../types/theme';
 
 export interface TimerProps {
   breakMode?: boolean;
@@ -25,10 +26,10 @@ export interface TimerProps {
 export const Timer: FC<TimerProps> = ({ breakMode = false }) => {
   const { pomodoro } = usePomodoro();
 
-  const orgTheme = useTheme();
+  const orgTheme = useTheme() as Theme;
   const { colorMode } = useColorMode();
 
-  const theme = useMemo(() => {
+  const theme = useMemo<Theme>(() => {
     return {
       ...orgTheme,
       colors: {
@@ -37,6 +38,7 @@ export const Timer: FC<TimerProps> = ({ breakMode = false }) => {
           ...orgTheme.colors.brand,
           textPrimary: chakraTheme.colors.black,
           textSecondary: chakraTheme.colors.gray['500'],
+          iconPrimary: chakraTheme.colors.gray['400'],
         },
       },
       config: {
@@ -64,7 +66,7 @@ export const Timer: FC<TimerProps> = ({ breakMode = false }) => {
             }
           >
             <Center h="100%" w="100%">
-              <Stack w="100%" spacing={4}>
+              <Stack w="100%" spacing={2}>
                 {pomodoro && (
                   <>
                     <Center>

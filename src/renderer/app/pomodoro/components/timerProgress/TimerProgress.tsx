@@ -15,14 +15,16 @@ export const TimerProgress: FC<TimerProgressProps> = ({ breakMode = true }) => {
   const size = useBreakpointValue({
     base: '250px',
     xs: '200px',
-    sm: '300px',
-    md: '500px',
+    sm: '250px',
+    md: '400px',
+    lg: '500px',
+    xl: '600px',
   });
 
   const fontSize = useBreakpointValue({
     base: '40px',
     xs: '40px',
-    sm: '70px',
+    sm: '60px',
     md: '90px',
   });
 
