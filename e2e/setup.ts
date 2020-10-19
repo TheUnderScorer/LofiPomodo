@@ -13,8 +13,16 @@ beforeEach(async () => {
   await app.start();
 });
 
-afterEach(async () => {
+async function closeApp() {
   if (app?.isRunning()) {
     await app.stop();
   }
+}
+
+afterEach(async () => {
+  await closeApp();
+});
+
+process.on('beforeExit', async () => {
+  await closeApp();
 });

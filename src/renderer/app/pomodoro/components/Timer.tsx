@@ -53,6 +53,7 @@ export const Timer: FC<TimerProps> = ({ breakMode = false }) => {
       <ThemeProvider theme={breakMode ? theme : orgTheme}>
         <ColorModeProvider options={{}} value={breakMode ? 'light' : colorMode}>
           <Container
+            id="timer"
             pt="10"
             pb="10"
             height="100vh"
