@@ -4,7 +4,7 @@ import { routes } from '../../../../shared/routes/routes';
 import { getWindowByTitle } from '../getWindowByTitle';
 
 export enum WindowTitles {
-  LofiPomodoro = 'Lofi Pomodoro',
+  Timer = 'Lofi Pomodoro',
   Break = 'Break',
 }
 
@@ -13,7 +13,7 @@ export class WindowFactory {
     WindowTitles,
     keyof Pick<WindowFactory, 'createBreakWindow' | 'createTimerWindow'>
   > = {
-    [WindowTitles.LofiPomodoro]: 'createTimerWindow',
+    [WindowTitles.Timer]: 'createTimerWindow',
     [WindowTitles.Break]: 'createBreakWindow',
   };
 
@@ -44,7 +44,7 @@ export class WindowFactory {
       simpleFullscreen: false,
       fullscreen: false,
       minimizable: false,
-      title: WindowTitles.LofiPomodoro,
+      title: WindowTitles.Timer,
       titleBarStyle: 'hiddenInset',
       webPreferences: {
         preload: this.preloadPath,

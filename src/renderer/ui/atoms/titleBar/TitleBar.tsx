@@ -4,6 +4,10 @@ import './TitleBar.css';
 
 export interface TitleBarProps {}
 
-export const TitleBar: FC<TitleBarProps> = () => {
-  return <Box position="absolute" className="title-bar" h="40px" w="100%" />;
+export const TitleBar: FC<TitleBarProps> = ({ children }) => {
+  return (
+    <Box position="absolute" className="title-bar" h="40px" w="100%">
+      {children}
+    </Box>
+  );
 };

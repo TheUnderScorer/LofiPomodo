@@ -13,4 +13,5 @@ export const getInitialPomodoro = (): Pomodoro => ({
   autoRun: false,
   remainingTime: '',
   remainingPercentage: 0,
+  openFullWindowOnBreak: false,
 });

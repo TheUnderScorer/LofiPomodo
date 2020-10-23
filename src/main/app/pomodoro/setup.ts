@@ -1,56 +1,24 @@
 import { AppContext } from '../../context';
-import { BrowserWindow } from 'electron';
 import { Pomodoro, PomodoroEvents } from '../../../shared/types';
-import { PomodoroServiceEvents } from './services/PomodoroService';
 import { setupTray } from './tray';
+import { breakWindow } from './features/breakWindow';
+import { sendUpdatesToWindows } from './features/rendererUpdates';
+import { handleTimerMenu } from './features/timerMenu';
 
 export const setupPomodoro = (context: AppContext) => {
   sendUpdatesToWindows(context);
   breakWindow(context);
   setupTray(context);
 
-  context.ipcService.handle(
-    PomodoroEvents.Update,
-    (event, payload: Pomodoro) => {
+  context.ipcService.registerAsMap({
+    [PomodoroEvents.Update]: (_, payload: Pomodoro) => {
       if (!payload) {
         return;
       }
 
       context.pomodoro.fill(payload);
-    }
-  );
-
-  context.ipcService.handle(PomodoroEvents.GetState, () => {
-    return context.pomodoro.toJSON();
-  });
-};
-
-const sendUpdatesToWindows = ({ pomodoro }: AppContext) => {
-  pomodoro.subscribe((data) => {
-    BrowserWindow.getAllWindows().forEach((window) => {
-      window.webContents.send(PomodoroEvents.Updated, data.toJSON());
-    });
-  });
-};
-
-const breakWindow = ({ pomodoro, windowFactory }: AppContext) => {
-  let breakWindow: BrowserWindow | null = null;
-
-  const breaks = [
-    PomodoroServiceEvents.BreakStarted,
-    PomodoroServiceEvents.LongBreakStarted,
-  ];
-
-  pomodoro.events.onAny(async (eventName) => {
-    if (!breaks.includes(eventName)) {
-      if (eventName === PomodoroServiceEvents.WorkStarted && breakWindow) {
-        breakWindow.close();
-        breakWindow = null;
-      }
-
-      return;
-    }
-
-    breakWindow = await windowFactory.createBreakWindow();
+    },
+    [PomodoroEvents.GetState]: () => context.pomodoro.toJSON(),
+    [PomodoroEvents.ToggleTimerMenu]: handleTimerMenu(context),
   });
 };

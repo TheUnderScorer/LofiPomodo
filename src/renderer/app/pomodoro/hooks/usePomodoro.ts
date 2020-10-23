@@ -14,7 +14,7 @@ export const usePomodoro = () => {
     (update: (prev: Pomodoro) => Pomodoro) => {
       const payload = update(pomodoro!);
 
-      ipc.invoke(PomodoroEvents.Update, payload);
+      ipc.invoke(PomodoroEvents.Update, payload).catch(console.error);
     },
     [ipc, pomodoro]
   );

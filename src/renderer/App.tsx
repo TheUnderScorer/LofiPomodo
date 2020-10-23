@@ -2,7 +2,7 @@ import React from 'react';
 import { Container, useColorMode } from '@chakra-ui/core';
 import { Route, Switch } from 'react-router-dom';
 import { routes } from '../shared/routes/routes';
-import { Timer } from './app/pomodoro/components/Timer';
+import { Timer } from './app/pomodoro/views/Timer';
 import { usePomodoroListeners } from './app/pomodoro/hooks/usePomodoroListeners';
 
 const App = () => {

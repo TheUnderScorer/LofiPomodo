@@ -39,6 +39,7 @@ export class PomodoroService
   start!: Date;
   state!: PomodoroState;
   workDurationSeconds!: number;
+  openFullWindowOnBreak!: boolean;
 
   timeoutId: any = null;
 
@@ -96,7 +97,7 @@ export class PomodoroService
       return;
     }
 
-    this.timeoutId = setTimeout(() => {
+    this.timeoutId = setTimeout(async () => {
       this.timeoutId = null;
 
       if (!this.isRunning) {
@@ -123,7 +124,7 @@ export class PomodoroService
 
         const eventToEmit = PomodoroService.newStateEventMap[newPomodoroState];
 
-        this.events.emit(eventToEmit, this);
+        await this.events.emit(eventToEmit, this);
       }
 
       Object.assign(this, {
@@ -151,6 +152,7 @@ export class PomodoroService
       state: this.state,
       workDurationSeconds: this.workDurationSeconds,
       remainingPercentage: this.remainingPercentage,
+      openFullWindowOnBreak: this.openFullWindowOnBreak,
     };
   }
 }

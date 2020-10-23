@@ -3,21 +3,23 @@ import {
   Center,
   ColorModeProvider,
   Container,
+  Flex,
   Stack,
   ThemeProvider,
   useColorMode,
   useTheme,
 } from '@chakra-ui/core';
-import { TimerProgress } from './timerProgress/TimerProgress';
-import { PomodoroControl } from './pomodoroControl/PomodoroControl';
+import { TimerProgress } from '../components/timerProgress/TimerProgress';
+import { PomodoroControl } from '../components/pomodoroControl/PomodoroControl';
 import { pomodoroStateDictionary } from '../../../../shared/dictionary/pomodoro';
 import { usePomodoro } from '../hooks/usePomodoro';
 import { PomodoroState } from '../../../../shared/types';
 import { TitleBar } from '../../../ui/atoms/titleBar/TitleBar';
 import { theme as chakraTheme } from '@chakra-ui/theme';
 import { Heading } from '../../../ui/atoms/heading/Heading';
-import { PomodoroInterval } from './pomodoroInterval/PomodoroInterval';
+import { PomodoroInterval } from '../components/pomodoroInterval/PomodoroInterval';
 import { Theme } from '../../../types/theme';
+import { PomodoroMenu } from '../components/pomodoroMenu/PomodoroMenu';
 
 export interface TimerProps {
   breakMode?: boolean;
@@ -47,9 +49,17 @@ export const Timer: FC<TimerProps> = ({ breakMode = false }) => {
     };
   }, [orgTheme]);
 
+  if (!pomodoro) {
+    return null;
+  }
+
   return (
     <>
-      <TitleBar />
+      <TitleBar>
+        <Flex justifyContent="flex-end" pt={2} pr={4}>
+          <PomodoroMenu />
+        </Flex>
+      </TitleBar>
       <ThemeProvider theme={breakMode ? theme : orgTheme}>
         <ColorModeProvider options={{}} value={breakMode ? 'light' : colorMode}>
           <Container
