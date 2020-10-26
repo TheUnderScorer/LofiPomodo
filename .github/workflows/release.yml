@@ -42,12 +42,12 @@ jobs:
         id: upload_artifact_windows
         uses: actions/upload-artifact@v1
         with:
-          name: DietAssistant.exe
+          name: LofiPomodo.exe
           path: electron/output/LofiPomodo.exe
 
       - name: Upload Artifact
         id: upload_artifact_mac
         uses: actions/upload-artifact@v1
         with:
-          name: DietAssistant.dmg
+          name: LofiPomodo.dmg
           path: electron/output/LofiPomodo.dmg

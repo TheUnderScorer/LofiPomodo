@@ -10,8 +10,14 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
+
+      - name: Set Node.js 14.x
+        uses: actions/setup-node@v2-beta
+        with:
+          node-version: '14'
+
       - name: Install npm dependencies
-        run: npm ci
+        run: npm install
 
       - name: Lint
         run: npm run lint
@@ -21,3 +27,6 @@ jobs:
 
       - name: Build
         run: npm run build-renderer & npm run build-electron
+
+      - name: E2E
+        run: npm run test:e2e-docker

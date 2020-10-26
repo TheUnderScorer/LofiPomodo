@@ -1,0 +1,9 @@
+{
+  "apps": [
+    {
+      "name": "Renderer",
+      "script": "npm",
+      "args": "run start-renderer"
+    }
+  ]
+}

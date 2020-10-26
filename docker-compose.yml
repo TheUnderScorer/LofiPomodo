@@ -1,0 +1,21 @@
+version: "3.8"
+
+services:
+  e2e:
+    environment:
+      SHORT_BREAK_DURATION_SECONDS: ${SHORT_BREAK_DURATION_SECONDS}
+      LONG_BREAK_DURATION_SECONDS: ${LONG_BREAK_DURATION_SECONDS}
+      WORK_DURATION_SECONDS: ${WORK_DURATION_SECONDS}
+      LONG_BREAK_INTERVAL: ${LONG_BREAK_INTERVAL}
+      AUTO_RUN_WORK: ${AUTO_RUN_WORK}
+      AUTO_RUN_BREAK: ${AUTO_RUN_BREAK}
+    build:
+      dockerfile: ./docker/e2e/Dockerfile
+      context: .
+    command: >
+      sh -c "npm run test:e2e --forceExit"
+    volumes:
+    - ./e2e:/app/e2e
+    - ./env:/app/env
+    - ./build:/app/build
+    - ./jest.config.e2e.js:/app/jest.config.e2e.js
