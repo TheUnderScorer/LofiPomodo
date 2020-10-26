@@ -8,7 +8,8 @@ export interface Pomodoro {
   shortBreakCount: number;
   remainingSeconds: number;
   isRunning: boolean;
-  autoRun: boolean;
+  autoRunBreak: boolean;
+  autoRunWork: boolean;
   remainingTime: string;
   remainingPercentage: number;
   openFullWindowOnBreak: boolean;

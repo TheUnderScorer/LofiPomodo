@@ -23,8 +23,6 @@ export class WindowFactory {
     const foundWindow = getWindowByTitle(title);
 
     if (foundWindow) {
-      foundWindow.focus();
-
       return foundWindow;
     }
 

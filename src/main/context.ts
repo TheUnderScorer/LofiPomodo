@@ -4,6 +4,8 @@ import { AppStore } from '../shared/types/store';
 import { PomodoroService } from './app/pomodoro/services/PomodoroService';
 import path from 'path';
 import { WindowFactory } from './shared/windows/factories/WindowFactory';
+import AutoLaunch from 'auto-launch';
+import { app } from 'electron';
 
 export interface AppContext {
   ipcService: IpcMainService;
@@ -11,6 +13,7 @@ export interface AppContext {
   pomodoro: PomodoroService;
   preloadPath: string;
   windowFactory: WindowFactory;
+  autoLaunch: AutoLaunch;
 }
 
 export const createContext = (): AppContext => {
@@ -25,5 +28,9 @@ export const createContext = (): AppContext => {
     pomodoro,
     preloadPath: preload,
     windowFactory,
+    autoLaunch: new AutoLaunch({
+      isHidden: true,
+      name: app.getName(),
+    }),
   };
 };

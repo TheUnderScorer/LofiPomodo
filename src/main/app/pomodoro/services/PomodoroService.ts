@@ -13,6 +13,7 @@ import { secondsToTime } from '../../../../shared/utils/time';
 import { Reactive } from '../../../../shared/reactive';
 import { percent } from '../../../../shared/utils/math';
 import { Typed as TypedEmittery } from 'emittery';
+import { shouldRun } from '../logic/autorun';
 
 export enum PomodoroServiceEvents {
   BreakStarted = 'BreakStarted',
@@ -29,7 +30,6 @@ export interface PomodoroServiceEventsMap {
 @Reactive()
 export class PomodoroService
   implements Changable, Pomodoro, CanSubscribe<PomodoroService> {
-  autoRun!: boolean;
   isRunning!: boolean;
   longBreakDurationSeconds!: number;
   longBreakInterval!: number;
@@ -40,6 +40,8 @@ export class PomodoroService
   state!: PomodoroState;
   workDurationSeconds!: number;
   openFullWindowOnBreak!: boolean;
+  autoRunBreak!: boolean;
+  autoRunWork!: boolean;
 
   timeoutId: any = null;
 
@@ -58,7 +60,7 @@ export class PomodoroService
     this.fill(getInitialPomodoro());
   }
 
-  fill(pomodoro: Pomodoro) {
+  fill(pomodoro: Partial<Pomodoro>) {
     const { remainingTime, remainingPercentage, ...payload } = pomodoro;
     Object.assign(this, payload);
   }
@@ -108,11 +110,16 @@ export class PomodoroService
       let newRemainingSeconds = this.remainingSeconds - 1;
       let newIsRunning: boolean = this.isRunning;
       let newBreakCount = this.shortBreakCount;
+      let newStart = this.start;
 
       if (newRemainingSeconds <= 0) {
+        newStart = new Date();
         newPomodoroState = getNextState(this);
         newRemainingSeconds = getDurationByState(this, newPomodoroState);
-        newIsRunning = this.autoRun;
+        newIsRunning = shouldRun({
+          ...this,
+          state: newPomodoroState,
+        });
         newBreakCount =
           this.state === PomodoroState.Break
             ? newBreakCount + 1
@@ -127,11 +134,12 @@ export class PomodoroService
         await this.events.emit(eventToEmit, this);
       }
 
-      Object.assign(this, {
+      this.fill({
         remainingSeconds: newRemainingSeconds,
         state: newPomodoroState,
         isRunning: newIsRunning,
         shortBreakCount: newBreakCount,
+        start: newStart,
       });
 
       this.onChange();
@@ -140,7 +148,8 @@ export class PomodoroService
 
   toJSON(): Pomodoro {
     return {
-      autoRun: this.autoRun,
+      autoRunWork: this.autoRunWork,
+      autoRunBreak: this.autoRunBreak,
       isRunning: this.isRunning,
       longBreakDurationSeconds: this.longBreakDurationSeconds,
       longBreakInterval: this.longBreakInterval,

@@ -9,8 +9,14 @@ export const setupTray = (context: AppContext) => {
 
   const tray = new Tray(img);
 
+  tray.on('right-click', () => {
+    context.pomodoro.isRunning = !context.pomodoro.isRunning;
+  });
+
   tray.on('click', async () => {
-    await context.windowFactory.getOrCreateWindow(WindowTitles.Timer);
+    await context.windowFactory
+      .getOrCreateWindow(WindowTitles.Timer)
+      .then((window) => window.focus());
   });
 
   const setTitle = (pomodoro: Readonly<PomodoroService>) => {

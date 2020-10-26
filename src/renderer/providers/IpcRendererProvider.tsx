@@ -1,5 +1,5 @@
 import React, { createContext, FC, useContext } from 'react';
-import { IpcRendererService } from '../shared/IpcRendererService';
+import { IpcRendererService } from '../shared/ipc/IpcRendererService';
 
 const defaultValue = new IpcRendererService(window.ipcRenderer);
 
