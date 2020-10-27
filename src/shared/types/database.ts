@@ -15,3 +15,17 @@ export interface BaseRepository<T extends BaseModel> {
   insert: (entity: T) => Promise<boolean>;
   update: (entity: T) => Promise<boolean>;
 }
+
+export interface Pagination {
+  take: number;
+  skip: number;
+}
+
+export enum OrderDirection {
+  Asc = 'asc',
+  Desc = 'desc',
+}
+
+export type Order<T extends Record<string, any>> = {
+  [Key in keyof T]?: OrderDirection;
+};

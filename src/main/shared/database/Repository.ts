@@ -11,30 +11,30 @@ export class Repository<T extends BaseModel> implements BaseRepository<T> {
     private readonly table: Tables
   ) {}
 
-  protected getConnection(): QueryBuilder {
+  protected getQueryBuilder(): QueryBuilder {
     return this.connection(this.table);
   }
 
   async delete(ids: string[]): Promise<number> {
-    return this.getConnection().delete().whereIn('id', ids);
+    return this.getQueryBuilder().delete().whereIn('id', ids);
   }
 
   async findMany(ids: string[]): Promise<T[]> {
-    return this.getConnection().whereIn('id', ids);
+    return this.getQueryBuilder().whereIn('id', ids);
   }
 
   async findOne(id: string): Promise<T> {
-    return this.getConnection().where('id', id).first();
+    return this.getQueryBuilder().where('id', id).first();
   }
 
   async insert(entity: T | T[]): Promise<boolean> {
-    const result = await this.getConnection().insert(entity);
+    const result = await this.getQueryBuilder().insert(entity);
 
     return Boolean(result);
   }
 
   async update(entity: T): Promise<boolean> {
-    const result = await this.getConnection()
+    const result = await this.getQueryBuilder()
       .where('id', entity.id)
       .update({
         ...entity,

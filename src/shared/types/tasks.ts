@@ -1,4 +1,4 @@
-import { BaseModel } from './database';
+import { BaseModel, Order, Pagination } from './database';
 
 export interface Task extends BaseModel {
   title: string;
@@ -7,6 +7,16 @@ export interface Task extends BaseModel {
   sourceId?: string;
   estimatedPomodoroDuration?: number;
   completed?: boolean;
+}
+
+export enum TaskEvents {
+  GetTasks = 'GetTasks',
+}
+
+export interface GetTasksPayload {
+  source?: TaskSource;
+  order?: Order<Task>;
+  pagination?: Pagination;
 }
 
 export enum TaskSource {
