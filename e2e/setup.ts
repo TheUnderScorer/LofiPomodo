@@ -41,6 +41,7 @@ beforeEach(async () => {
       '--no-sandbox',
       '--disable-dev-shm-usage',
     ],
+    requireName: 'electronRequire',
   });
 
   await app.start();

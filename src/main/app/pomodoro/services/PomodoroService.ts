@@ -14,6 +14,7 @@ import { Reactive } from '../../../../shared/reactive';
 import { percent } from '../../../../shared/utils/math';
 import { Typed as TypedEmittery } from 'emittery';
 import { shouldRun } from '../logic/autorun';
+import { stateDurationMap } from '../maps';
 
 export enum PomodoroServiceEvents {
   BreakStarted = 'BreakStarted',
@@ -72,7 +73,7 @@ export class PomodoroService
   }
 
   get remainingTime(): string {
-    return secondsToTime(this.remainingSeconds).toString();
+    return secondsToTime(this.remainingSeconds).toClockString();
   }
 
   get remainingPercentage(): number {
@@ -144,6 +145,25 @@ export class PomodoroService
 
       this.onChange();
     }, 1000);
+  }
+
+  setDuration(
+    seconds: number,
+    target: PomodoroState,
+    forceSet: boolean = false
+  ) {
+    const key = stateDurationMap[target];
+
+    const prevSeconds = this[key] as number;
+
+    this.fill({
+      [key]: seconds,
+      remainingSeconds:
+        this.state === target &&
+        (this.remainingSeconds === prevSeconds || forceSet)
+          ? seconds
+          : this.remainingSeconds,
+    });
   }
 
   toJSON(): Pomodoro {

@@ -14,6 +14,7 @@ export const nextStateMap: Record<
     return PomodoroState.Break;
   },
 };
+
 export const stateDurationMap: Record<PomodoroState, keyof Pomodoro> = {
   [PomodoroState.Break]: 'shortBreakDurationSeconds',
   [PomodoroState.LongBreak]: 'longBreakDurationSeconds',

@@ -14,7 +14,7 @@ describe('Timer', () => {
     const progressText = await progress.getText();
 
     expect(progressText).toEqual(
-      secondsToTime(initialPomodoro.remainingSeconds).toString()
+      secondsToTime(initialPomodoro.remainingSeconds).toClockString()
     );
   });
 });

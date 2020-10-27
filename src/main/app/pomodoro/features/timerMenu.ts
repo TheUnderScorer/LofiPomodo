@@ -1,11 +1,12 @@
 import { AppContext } from '../../../context';
-import { ToggleMenuPayload } from '../../../../shared/types';
+import { PomodoroState, ToggleMenuPayload } from '../../../../shared/types';
 import { Menu } from 'electron';
 import { getWindowByTitle } from '../../../shared/windows/getWindowByTitle';
 import { WindowTitles } from '../../../shared/windows/factories/WindowFactory';
 import { createSectionTitle } from '../../../shared/menu/menuFactory';
 import { createErrorDialog } from '../../../shared/dialog/factories/errorDialog';
 import { AppError } from '../../../errors/AppError';
+import { createDurationsMenu } from '../menu/menuFactory';
 
 export const handleTimerMenu = (context: AppContext) => async (
   _: unknown,
@@ -41,6 +42,52 @@ export const handleTimerMenu = (context: AppContext) => async (
               );
             }
           },
+        },
+        {
+          type: 'separator',
+        },
+
+        {
+          ...createSectionTitle('Durations'),
+        },
+        {
+          label: 'Work duration',
+          submenu: [
+            ...createDurationsMenu(
+              context.pomodoro.workDurationSeconds,
+              (value) => {
+                context.pomodoro.setDuration(value.seconds, PomodoroState.Work);
+              }
+            ),
+          ],
+        },
+        {
+          label: 'Break duration',
+          submenu: [
+            ...createDurationsMenu(
+              context.pomodoro.shortBreakDurationSeconds,
+              (value) => {
+                context.pomodoro.setDuration(
+                  value.seconds,
+                  PomodoroState.Break
+                );
+              }
+            ),
+          ],
+        },
+        {
+          label: 'Long break duration',
+          submenu: [
+            ...createDurationsMenu(
+              context.pomodoro.longBreakDurationSeconds,
+              (value) => {
+                context.pomodoro.setDuration(
+                  value.seconds,
+                  PomodoroState.LongBreak
+                );
+              }
+            ),
+          ],
         },
         {
           type: 'separator',
