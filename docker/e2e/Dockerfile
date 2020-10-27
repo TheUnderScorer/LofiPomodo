@@ -16,7 +16,6 @@ ENV DISPLAY=:99
 RUN npm install --global typescript pm2
 
 COPY . ./
-COPY ./.env ./env.dist
 
 RUN npm ci
 RUN npm run build-renderer
