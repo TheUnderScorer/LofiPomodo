@@ -15,7 +15,8 @@
   "include": [
     "src/main/*.ts",
     "src/typings/*.ts",
-    "src/shared/*.ts"
+    "src/shared/*.ts",
+    "db/migrations/*.ts"
   ],
   "exclude": [
     "node_modules"

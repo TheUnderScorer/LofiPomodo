@@ -6,6 +6,9 @@ import path from 'path';
 import { WindowFactory } from './shared/windows/factories/WindowFactory';
 import AutoLaunch from 'auto-launch';
 import { app } from 'electron';
+import { setupConnection } from './shared/database/connection';
+import { TaskRepository } from './app/tasks/repositories/TaskRepository';
+import { Tables } from '../shared/types/database';
 
 export interface AppContext {
   ipcService: IpcMainService;
@@ -14,9 +17,13 @@ export interface AppContext {
   preloadPath: string;
   windowFactory: WindowFactory;
   autoLaunch: AutoLaunch;
+  taskRepository: TaskRepository;
 }
 
-export const createContext = (): AppContext => {
+export const createContext = async (): Promise<AppContext> => {
+  const connection = await setupConnection();
+  const taskRepository = new TaskRepository(connection, Tables.Tasks);
+
   const preload = path.join(__dirname, 'preload.js');
   const store = new ElectronStore<AppStore>();
   const pomodoro = new PomodoroService(store);
@@ -24,6 +31,7 @@ export const createContext = (): AppContext => {
 
   return {
     ipcService: new IpcMainService(),
+    taskRepository,
     store,
     pomodoro,
     preloadPath: preload,

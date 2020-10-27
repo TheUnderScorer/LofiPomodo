@@ -26,7 +26,7 @@ const createWindow = async (context: AppContext) => {
 };
 
 app.whenReady().then(async () => {
-  const context = createContext();
+  const context = await createContext();
 
   setupPomodoro(context);
 
