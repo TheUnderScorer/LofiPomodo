@@ -30,3 +30,11 @@ jobs:
 
       - name: E2E
         run: npm run test:e2e-docker
+        env:
+          SHORT_BREAK_DURATION_SECONDS: 5
+          LONG_BREAK_DURATION_SECONDS: 15
+          WORK_DURATION_SECONDS: 10
+          LONG_BREAK_INTERVAL: 4
+          AUTO_RUN_WORK: false
+          AUTO_RUN_BREAK: false
+

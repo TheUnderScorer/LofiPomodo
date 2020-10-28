@@ -20,6 +20,7 @@ export const PomodoroControl: FC<PomodoroControlProps> = () => {
 
   return (
     <IconButton
+      id="control"
       w="40px"
       onClick={toggle}
       aria-label="Toggle pomodoro timer"
@@ -27,6 +28,7 @@ export const PomodoroControl: FC<PomodoroControlProps> = () => {
       fontSize="20px"
       icon={
         <FontAwesomeIcon
+          className="pomodoro-control-icon"
           color={theme.colors.brand.textPrimary}
           icon={pomodoro?.isRunning ? faPause : faPlay}
         />

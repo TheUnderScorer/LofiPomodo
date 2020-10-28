@@ -38,7 +38,7 @@ app.whenReady().then(async () => {
 });
 
 app.on('window-all-closed', () => {
-  if (process.platform !== 'darwin') {
+  if (process.env.CLOSE_ON_ALL_WINDOW_CLOSE === 'true') {
     app.quit();
   }
 });
