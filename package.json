@@ -1,7 +1,7 @@
 {
   "name": "lofi-pomodo",
   "productName": "Lofi Pomodo",
-  "version": "0.1.0",
+  "version": "1.0.0",
   "private": true,
   "main": "build/electron.js",
   "dependencies": {
