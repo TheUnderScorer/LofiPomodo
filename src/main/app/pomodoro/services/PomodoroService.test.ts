@@ -18,12 +18,17 @@ describe('PomodoroService', () => {
     }
 
     service = new PomodoroService(mockStore);
+
+    service.fill({
+      workDurationSeconds: 1,
+      remainingSeconds: 1,
+    });
   });
 
   it('should return correct time', () => {
     jest.useFakeTimers();
 
-    expect(service.remainingTime).toMatchInlineSnapshot(`"00:10"`);
+    expect(service.remainingTime).toMatchInlineSnapshot(`"00:01"`);
   });
 
   it('should stop timer after work if auto run is set to false', async () => {
@@ -34,6 +39,7 @@ describe('PomodoroService', () => {
       autoRunBreak: false,
       autoRunWork: false,
       workDurationSeconds: 1,
+      shortBreakDurationSeconds: 5,
       remainingSeconds: 1,
     });
 
