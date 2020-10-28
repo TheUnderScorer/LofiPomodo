@@ -1,5 +1,6 @@
 import React, { FC, useMemo } from 'react';
 import {
+  Box,
   Center,
   ColorModeProvider,
   Container,
@@ -10,7 +11,7 @@ import {
   useTheme,
 } from '@chakra-ui/core';
 import { TimerProgress } from '../components/timerProgress/TimerProgress';
-import { PomodoroControl } from '../components/pomodoroControl/PomodoroControl';
+import { PomodoroControl } from '../components/buttons/pomodoroControl/PomodoroControl';
 import { pomodoroStateDictionary } from '../../../../shared/dictionary/pomodoro';
 import { usePomodoro } from '../hooks/usePomodoro';
 import { PomodoroState } from '../../../../shared/types';
@@ -20,6 +21,7 @@ import { Heading } from '../../../ui/atoms/heading/Heading';
 import { PomodoroInterval } from '../components/pomodoroInterval/PomodoroInterval';
 import { Theme } from '../../../types/theme';
 import { PomodoroMenu } from '../components/pomodoroMenu/PomodoroMenu';
+import { SkipBreak } from '../components/buttons/skipBreak/SkipBreak';
 
 export interface TimerProps {
   breakMode?: boolean;
@@ -80,10 +82,15 @@ export const Timer: FC<TimerProps> = ({ breakMode = false }) => {
               <Stack w="100%" spacing={2}>
                 {pomodoro && (
                   <>
-                    <Center>
+                    <Center alignItems="center">
                       <Heading>
                         {pomodoroStateDictionary[pomodoro.state]}
                       </Heading>
+                      {pomodoro.state !== PomodoroState.Work && (
+                        <Box ml="1">
+                          <SkipBreak />
+                        </Box>
+                      )}
                     </Center>
                     <TimerProgress breakMode={breakMode} />
                     {!breakMode && (

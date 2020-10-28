@@ -1,9 +1,10 @@
 import React, { FC, MouseEventHandler, useCallback } from 'react';
 import { faEllipsisV } from '@fortawesome/free-solid-svg-icons';
-import { IconButton } from '@chakra-ui/core';
+import { IconButton, Stack } from '@chakra-ui/core';
 import { FaIcon } from '../../../../ui/atoms/faIcon/FaIcon';
 import { PomodoroEvents, ToggleMenuPayload } from '../../../../../shared/types';
 import { useIpcInvoke } from '../../../../shared/ipc/useIpcInvoke';
+import { ResetState } from '../buttons/resetState/ResetState';
 
 export interface PomodoroMenuProps {}
 
@@ -25,13 +26,16 @@ export const PomodoroMenu: FC<PomodoroMenuProps> = () => {
   );
 
   return (
-    <IconButton
-      isLoading={loading}
-      variant="ghost"
-      onClick={handleClick}
-      aria-label="Toggle menu"
-    >
-      <FaIcon icon={faEllipsisV} />
-    </IconButton>
+    <Stack direction="row">
+      <ResetState />
+      <IconButton
+        isLoading={loading}
+        variant="ghost"
+        onClick={handleClick}
+        aria-label="Toggle menu"
+      >
+        <FaIcon icon={faEllipsisV} />
+      </IconButton>
+    </Stack>
   );
 };

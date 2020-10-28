@@ -3,7 +3,7 @@ import { useCallback, useState } from 'react';
 import { Nullable } from '../../../shared/types';
 
 type InvokeFn<Arg extends object, ReturnValue = any> = (
-  arg: Arg
+  arg?: Arg
 ) => Promise<ReturnValue | null>;
 
 interface InvokeMeta<Result = any> {

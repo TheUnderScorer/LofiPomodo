@@ -1,6 +1,6 @@
 import { IconButton, useTheme } from '@chakra-ui/core';
 import React, { FC, useCallback } from 'react';
-import { usePomodoro } from '../../hooks/usePomodoro';
+import { usePomodoro } from '../../../hooks/usePomodoro';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPlay, faPause } from '@fortawesome/free-solid-svg-icons';
 

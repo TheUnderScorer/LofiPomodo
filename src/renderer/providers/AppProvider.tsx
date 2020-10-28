@@ -7,6 +7,7 @@ import {
   extendTheme,
   theme as chakraTheme,
   ThemeProvider,
+  useColorModePreference,
 } from '@chakra-ui/core';
 import { MemoryRouter } from 'react-router-dom';
 import History from 'history';
@@ -16,7 +17,7 @@ import { Theme } from '../types/theme';
 export interface AppProviderProps {}
 
 export const AppProvider: FC<AppProviderProps> = ({ children }) => {
-  const colorMode = 'dark';
+  const colorMode = useColorModePreference();
 
   const theme: Theme = extendTheme({
     colors: {
@@ -30,7 +31,10 @@ export const AppProvider: FC<AppProviderProps> = ({ children }) => {
             ? chakraTheme.colors.white
             : chakraTheme.colors.black,
         textSecondary: chakraTheme.colors.gray['500'],
-        iconPrimary: chakraTheme.colors.gray['400'],
+        iconPrimary:
+          colorMode === 'dark'
+            ? chakraTheme.colors.gray['400']
+            : chakraTheme.colors.gray['700'],
       },
     },
   });
@@ -54,6 +58,8 @@ export const AppProvider: FC<AppProviderProps> = ({ children }) => {
     ];
   }, []);
 
+  console.log({ colorMode });
+
   return (
     <RecoilRoot>
       <IpcRendererProvider>
@@ -62,7 +68,9 @@ export const AppProvider: FC<AppProviderProps> = ({ children }) => {
           <ColorModeProvider
             options={{
               useSystemColorMode: true,
+              initialColorMode: colorMode,
             }}
+            value={colorMode}
           >
             <MemoryRouter initialEntries={initialEntries}>
               {children}

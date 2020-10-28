@@ -107,44 +107,49 @@ export class PomodoroService
         return;
       }
 
-      let newPomodoroState = this.state;
       let newRemainingSeconds = this.remainingSeconds - 1;
-      let newIsRunning: boolean = this.isRunning;
-      let newBreakCount = this.shortBreakCount;
-      let newStart = this.start;
 
       if (newRemainingSeconds <= 0) {
-        newStart = new Date();
-        newPomodoroState = getNextState(this);
-        newRemainingSeconds = getDurationByState(this, newPomodoroState);
-        newIsRunning = shouldRun({
-          ...this,
-          state: newPomodoroState,
+        await this.moveToNextState();
+      } else {
+        this.fill({
+          remainingSeconds: newRemainingSeconds,
         });
-        newBreakCount =
-          this.state === PomodoroState.Break
-            ? newBreakCount + 1
-            : newBreakCount;
-
-        if (this.state === PomodoroState.LongBreak) {
-          newBreakCount = 0;
-        }
-
-        const eventToEmit = PomodoroService.newStateEventMap[newPomodoroState];
-
-        await this.events.emit(eventToEmit, this);
       }
-
-      this.fill({
-        remainingSeconds: newRemainingSeconds,
-        state: newPomodoroState,
-        isRunning: newIsRunning,
-        shortBreakCount: newBreakCount,
-        start: newStart,
-      });
 
       this.onChange();
     }, 1000);
+  }
+
+  async moveToNextState() {
+    const newStart = new Date();
+    const newPomodoroState = getNextState(this);
+    const newRemainingSeconds = getDurationByState(this, newPomodoroState);
+    const newIsRunning = shouldRun({
+      ...this,
+      state: newPomodoroState,
+    });
+
+    let newBreakCount =
+      this.state === PomodoroState.Break
+        ? this.shortBreakCount + 1
+        : this.shortBreakCount;
+
+    if (this.state === PomodoroState.LongBreak) {
+      newBreakCount = 0;
+    }
+
+    this.fill({
+      remainingSeconds: newRemainingSeconds,
+      state: newPomodoroState,
+      isRunning: newIsRunning,
+      shortBreakCount: newBreakCount,
+      start: newStart,
+    });
+
+    const eventToEmit = PomodoroService.newStateEventMap[newPomodoroState];
+
+    await this.events.emit(eventToEmit, this);
   }
 
   setDuration(
@@ -164,6 +169,20 @@ export class PomodoroService
           ? seconds
           : this.remainingSeconds,
     });
+  }
+
+  resetCurrentState() {
+    const key = stateDurationMap[this.state];
+
+    this.remainingSeconds = this[key] as number;
+  }
+
+  async skipBreak() {
+    if (this.state === PomodoroState.Work) {
+      return;
+    }
+
+    await this.moveToNextState();
   }
 
   toJSON(): Pomodoro {
