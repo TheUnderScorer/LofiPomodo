@@ -8,11 +8,29 @@ export interface Pomodoro {
   shortBreakCount: number;
   remainingSeconds: number;
   isRunning: boolean;
-  autoRun: boolean;
+  autoRunBreak: boolean;
+  autoRunWork: boolean;
+  remainingTime: string;
+  remainingPercentage: number;
+  openFullWindowOnBreak: boolean;
 }
 
 export enum PomodoroState {
   Work = 'Work',
   Break = 'Break',
   LongBreak = 'LongBreak',
+}
+
+export enum PomodoroEvents {
+  Updated = 'Updated',
+  Update = 'Update',
+  GetState = 'GetState',
+  ToggleTimerMenu = 'ToggleTimerMenu',
+  RestartCurrentState = 'RestartCurrentState',
+  SkipBreak = 'SkipBreak',
+}
+
+export interface ToggleMenuPayload {
+  y: number;
+  x: number;
 }

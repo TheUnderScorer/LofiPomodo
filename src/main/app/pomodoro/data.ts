@@ -1,14 +1,26 @@
 import { Pomodoro, PomodoroState } from '../../../shared/types';
+import { getBoolEnv, getIntEnv } from '../../../shared/env';
+import { durations } from './const/durations';
 
 export const getInitialPomodoro = (): Pomodoro => ({
-  shortBreakDurationSeconds: 500,
-  longBreakDurationSeconds: 800,
-  remainingSeconds: 1000,
+  shortBreakDurationSeconds: getIntEnv(
+    'SHORT_BREAK_DURATION_SECONDS',
+    durations[1].seconds
+  ),
+  longBreakDurationSeconds: getIntEnv(
+    'LONG_BREAK_DURATION_SECONDS',
+    durations[4].seconds
+  ),
+  remainingSeconds: getIntEnv('WORK_DURATION_SECONDS', durations[6].seconds),
   start: new Date(),
   state: PomodoroState.Work,
-  workDurationSeconds: 1000,
+  workDurationSeconds: getIntEnv('WORK_DURATION_SECONDS', durations[6].seconds),
   isRunning: false,
-  longBreakInterval: 4,
+  longBreakInterval: getIntEnv('LONG_BREAK_INTERVAL', 4),
   shortBreakCount: 0,
-  autoRun: false,
+  autoRunWork: getBoolEnv('AUTO_RUN_WORK', false),
+  autoRunBreak: getBoolEnv('AUTO_RUN_BREAK', false),
+  remainingTime: '',
+  remainingPercentage: 0,
+  openFullWindowOnBreak: false,
 });

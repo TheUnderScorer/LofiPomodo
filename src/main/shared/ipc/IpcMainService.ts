@@ -1,4 +1,4 @@
-import { ipcMain, IpcMain, IpcMainInvokeEvent } from "electron";
+import { ipcMain, IpcMain, IpcMainInvokeEvent } from 'electron';
 
 /**
  * Definition of callback that will be triggered on message from renderer process
@@ -14,6 +14,20 @@ export type IpcServiceCallback<
 export class IpcMainService {
   constructor(private readonly ipc: IpcMain = ipcMain) {}
 
+  registerAsMap(map: Record<string, IpcServiceCallback<any, any>>) {
+    const entries = Object.entries(map);
+
+    const unregisterCallbacks = entries.map(([eventName, handler]) => {
+      return this.handle(eventName, handler);
+    });
+
+    return () => {
+      unregisterCallbacks.forEach((callback) => {
+        callback();
+      });
+    };
+  }
+
   handle<Args extends object = object, ReturnValue = any>(
     name: string,
     callback: IpcServiceCallback<Args, ReturnValue>
@@ -23,7 +37,7 @@ export class IpcMainService {
         return await callback(event, args);
       } catch (e) {
         return {
-          error: e
+          error: e,
         };
       }
     };

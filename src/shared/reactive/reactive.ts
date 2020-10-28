@@ -9,9 +9,13 @@ export const reactive = <T extends Changable>(
     await Promise.all(subscribers.map(sub => sub(target)));
   };
 
-  let isOnChange = false;
-
   const castedObject = object as T & CanSubscribe<T>;
+  const orgOnChange = castedObject.onChange.bind(castedObject);
+
+  castedObject.onChange = function() {
+    orgOnChange();
+    triggerSubscribers(this);
+  };
 
   castedObject.subscribe = function(handler) {
     const index = subscribers.push(handler) - 1;
@@ -25,12 +29,7 @@ export const reactive = <T extends Changable>(
     set(target: T, p: keyof T, value: any): boolean {
       target[p] = value;
 
-      triggerSubscribers(target);
-
-      if (!isOnChange) {
-        target.onChange();
-        isOnChange = false;
-      }
+      target.onChange.call(target);
 
       return true;
     },
