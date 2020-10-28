@@ -91,7 +91,7 @@ export const Timer: FC<TimerProps> = ({ breakMode = false }) => {
                         <PomodoroInterval />
                       </Center>
                     )}
-                    <Center>
+                    <Center mt="20px !important">
                       <PomodoroControl />
                     </Center>
                   </>

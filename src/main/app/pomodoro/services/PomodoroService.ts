@@ -17,9 +17,9 @@ import { shouldRun } from '../logic/autorun';
 import { stateDurationMap } from '../maps';
 
 export enum PomodoroServiceEvents {
-  BreakStarted = 'BreakStarted',
-  WorkStarted = 'WorkStarted',
-  LongBreakStarted = 'LongBreakStarted',
+  BreakStarted = 'PomodoroBreakStarted',
+  WorkStarted = 'PomodoroWorkStarted',
+  LongBreakStarted = 'PomodoroLongBreakStarted',
 }
 
 export interface PomodoroServiceEventsMap {

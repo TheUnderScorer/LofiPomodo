@@ -22,10 +22,10 @@ export const TimerProgress: FC<TimerProgressProps> = ({ breakMode = true }) => {
   });
 
   const fontSize = useBreakpointValue({
-    base: '40px',
-    xs: '40px',
-    sm: '60px',
-    md: '90px',
+    base: '30px',
+    xs: '30px',
+    sm: '50px',
+    md: '80px',
   });
 
   return (
@@ -43,9 +43,9 @@ export const TimerProgress: FC<TimerProgressProps> = ({ breakMode = true }) => {
         }
       >
         <CircularProgressLabel
+          fontSize={fontSize}
           color="brand.textPrimary"
           className="timer-text"
-          fontSize={fontSize}
         >
           {pomodoro?.remainingTime}
         </CircularProgressLabel>
