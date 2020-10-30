@@ -9,9 +9,12 @@ export async function up(knex: Knex): Promise<void> {
     table.string('title', 255);
     table.string('description').nullable();
     table.string('source', 15);
+    table.string('state', 15);
     table.uuid('sourceId').nullable();
     table.integer('estimatedPomodoroDuration').nullable();
+    table.integer('pomodoroSpent').nullable();
     table.boolean('completed').defaultTo(false);
+    table.boolean('active').defaultTo(false);
   });
 }
 

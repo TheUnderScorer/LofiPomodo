@@ -12,6 +12,7 @@ export const SkipBreak: FC<SkipBreakProps> = () => {
 
   return (
     <IconButton
+      className="skip-break"
       onClick={() => invoke()}
       isRound
       aria-label="Skip break"

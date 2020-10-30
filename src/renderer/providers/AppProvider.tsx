@@ -58,8 +58,6 @@ export const AppProvider: FC<AppProviderProps> = ({ children }) => {
     ];
   }, []);
 
-  console.log({ colorMode });
-
   return (
     <RecoilRoot>
       <IpcRendererProvider>

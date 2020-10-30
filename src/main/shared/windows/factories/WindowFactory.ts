@@ -75,6 +75,8 @@ export class WindowFactory {
       },
     });
 
+    window.setAlwaysOnTop(true, 'floating');
+
     await setupWindow(window, routes.timer(true));
 
     return window;

@@ -22,6 +22,7 @@ import { PomodoroInterval } from '../components/pomodoroInterval/PomodoroInterva
 import { Theme } from '../../../types/theme';
 import { PomodoroMenu } from '../components/pomodoroMenu/PomodoroMenu';
 import { SkipBreak } from '../components/buttons/skipBreak/SkipBreak';
+import { ActiveTaskTitle } from '../../tasks/components/activeTaskTitle/ActiveTaskTitle';
 
 export interface TimerProps {
   breakMode?: boolean;
@@ -83,7 +84,7 @@ export const Timer: FC<TimerProps> = ({ breakMode = false }) => {
                 {pomodoro && (
                   <>
                     <Center alignItems="center">
-                      <Heading>
+                      <Heading className="pomodoro-state-text">
                         {pomodoroStateDictionary[pomodoro.state]}
                       </Heading>
                       {pomodoro.state !== PomodoroState.Work && (
@@ -91,6 +92,9 @@ export const Timer: FC<TimerProps> = ({ breakMode = false }) => {
                           <SkipBreak />
                         </Box>
                       )}
+                    </Center>
+                    <Center>
+                      <ActiveTaskTitle />
                     </Center>
                     <TimerProgress breakMode={breakMode} />
                     {!breakMode && (

@@ -6,4 +6,5 @@ export const routes = {
 
     return '/timer/break';
   },
+  tasks: () => '/tasks',
 };

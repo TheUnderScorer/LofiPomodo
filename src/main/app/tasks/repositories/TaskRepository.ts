@@ -21,4 +21,8 @@ export class TaskRepository extends Repository<Task> {
 
     return query;
   }
+
+  async getActiveTask() {
+    return this.getQueryBuilder().where('active', true).first<Task | null>();
+  }
 }

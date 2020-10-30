@@ -9,6 +9,7 @@ import { app } from 'electron';
 import { setupConnection } from './shared/database/connection';
 import { TaskRepository } from './app/tasks/repositories/TaskRepository';
 import { Tables } from '../shared/types/database';
+import { TasksService } from './app/tasks/services/TasksService';
 
 export interface AppContext {
   ipcService: IpcMainService;
@@ -17,12 +18,17 @@ export interface AppContext {
   preloadPath: string;
   windowFactory: WindowFactory;
   autoLaunch: AutoLaunch;
+  tasksService: TasksService;
   taskRepository: TaskRepository;
 }
 
 export const createContext = async (): Promise<AppContext> => {
   const connection = await setupConnection();
   const taskRepository = new TaskRepository(connection, Tables.Tasks);
+
+  await connection.migrate.latest();
+
+  const tasksService = new TasksService(taskRepository);
 
   const preload = path.join(__dirname, 'preload.js');
   const store = new ElectronStore<AppStore>();
@@ -36,6 +42,7 @@ export const createContext = async (): Promise<AppContext> => {
     pomodoro,
     preloadPath: preload,
     windowFactory,
+    tasksService,
     autoLaunch: new AutoLaunch({
       isHidden: true,
       name: app.getName(),

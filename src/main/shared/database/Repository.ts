@@ -4,6 +4,7 @@ import {
   Tables,
 } from '../../../shared/types/database';
 import Knex, { QueryBuilder } from 'knex';
+import { castAsArray } from '../../../shared/utils/array';
 
 export class Repository<T extends BaseModel> implements BaseRepository<T> {
   constructor(
@@ -28,7 +29,13 @@ export class Repository<T extends BaseModel> implements BaseRepository<T> {
   }
 
   async insert(entity: T | T[]): Promise<boolean> {
-    const result = await this.getQueryBuilder().insert(entity);
+    const entities = castAsArray(entity).map((entity) => {
+      (entity as T).createdAt = new Date();
+
+      return entity;
+    }) as T[];
+
+    const result = await this.getQueryBuilder().insert(entities);
 
     return Boolean(result);
   }
