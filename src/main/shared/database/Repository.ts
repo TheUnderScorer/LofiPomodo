@@ -5,8 +5,21 @@ import {
 } from '../../../shared/types/database';
 import Knex, { QueryBuilder } from 'knex';
 import { castAsArray } from '../../../shared/utils/array';
+import { Typed as EventEmitter } from 'emittery';
+
+export enum RepositoryEvents {
+  EntityCreated = 'EntityCreated',
+  EntitiesCreated = 'EntitiesCreated',
+}
+
+export interface RepositoryEventsMap<T> {
+  [RepositoryEvents.EntityCreated]: T;
+  [RepositoryEvents.EntitiesCreated]: T[];
+}
 
 export class Repository<T extends BaseModel> implements BaseRepository<T> {
+  readonly events = new EventEmitter<RepositoryEventsMap<T>>();
+
   constructor(
     private readonly connection: Knex,
     private readonly table: Tables
@@ -37,6 +50,8 @@ export class Repository<T extends BaseModel> implements BaseRepository<T> {
 
     const result = await this.getQueryBuilder().insert(entities);
 
+    await this.events.emit(RepositoryEvents.EntityCreated, entities as any);
+
     return Boolean(result);
   }
 
@@ -47,6 +62,10 @@ export class Repository<T extends BaseModel> implements BaseRepository<T> {
         ...entity,
         updatedAt: new Date(),
       });
+
+    if (result) {
+      await this.events.emit(RepositoryEvents.EntityCreated, entity);
+    }
 
     return Boolean(result);
   }

@@ -26,7 +26,7 @@ export const ActiveTaskTitle: FC<ActiveTaskTitleProps> = () => {
               {activeTask ? activeTask.title : 'No task selected'}
             </Tooltip>
           </Button>
-          {activeTask && activeTask.estimatedPomodoroDuration && (
+          {activeTask && (
             <Text ml="1">({getTaskDurationText(activeTask)})</Text>
           )}
           <AddTaskBtn ml="2" size="sm" isRound />

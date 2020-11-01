@@ -12,6 +12,23 @@
       "type": "chrome",
       "webRoot": "${workspaceFolder}",
       "sourceMaps": true
+    },
+    {
+      "name": "Debug Tests",
+      "request": "launch",
+      "runtimeArgs": ["run-script", "test"],
+      "runtimeExecutable": "npm",
+      "skipFiles": ["<node_internals>/**"],
+      "type": "pwa-node"
+    },
+    {
+      "name": "Debug Tests - current file",
+      "request": "launch",
+      "runtimeArgs": ["run-script", "test", "--testPathPattern", "${file}"],
+      "runtimeExecutable": "npm",
+      "skipFiles": ["<node_internals>/**"],
+      "type": "pwa-node",
+      "console": "integratedTerminal"
     }
   ]
 }

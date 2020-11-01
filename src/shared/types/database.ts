@@ -27,5 +27,9 @@ export enum OrderDirection {
 }
 
 export type Order<T extends Record<string, any>> = {
-  [Key in keyof T]?: OrderDirection;
+  [Key in keyof T]?: T[Key] extends object
+    ? Order<T[Key]>
+    : T[Key] extends Array<infer P>
+    ? Order<P>
+    : OrderDirection;
 };

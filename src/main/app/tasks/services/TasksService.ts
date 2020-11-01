@@ -34,4 +34,9 @@ export class TasksService {
 
     return task;
   }
+
+  async setActiveTask(taskId: string) {
+    await this.taskRepository.markActiveTaskAsNotActive();
+    await this.taskRepository.setActiveTask(taskId);
+  }
 }

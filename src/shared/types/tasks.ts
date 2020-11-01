@@ -7,9 +7,14 @@ export interface Task extends BaseModel {
   sourceId?: string;
   state: TaskState;
   estimatedPomodoroDuration?: number;
-  pomodoroSpent?: number;
+  pomodoroSpent?: TaskPomodoroSpent[];
   completed?: boolean;
   active?: boolean;
+}
+
+export interface TaskPomodoroSpent {
+  durationInSeconds: number;
+  finishedAt: string;
 }
 
 export interface CreateTaskInput
@@ -29,12 +34,14 @@ export enum TaskEvents {
   CreateTask = 'CreateTask',
   GetActiveTask = 'GetActiveTask',
   SetActiveTask = 'SetActiveTask',
+  ActiveTaskUpdated = 'ActiveTaskUpdated',
 }
 
 export interface GetTasksPayload {
   source?: TaskSource;
   order?: Order<Task>;
   pagination?: Pagination;
+  completed?: boolean;
 }
 
 export enum TaskSource {

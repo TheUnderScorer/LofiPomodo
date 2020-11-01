@@ -50,6 +50,11 @@ export class PomodoroService
 
   events = new TypedEmittery<PomodoroServiceEventsMap>();
 
+  public static readonly breakEventsMap = [
+    PomodoroServiceEvents.LongBreakStarted,
+    PomodoroServiceEvents.BreakStarted,
+  ];
+
   private static newStateEventMap = {
     [PomodoroState.Work]: PomodoroServiceEvents.WorkStarted,
     [PomodoroState.LongBreak]: PomodoroServiceEvents.LongBreakStarted,
