@@ -5,8 +5,8 @@
   "private": true,
   "main": "build/electron.js",
   "dependencies": {
-    "@chakra-ui/core": "1.0.0-rc.5",
-    "@chakra-ui/icons": "1.0.0-next.3",
+    "@chakra-ui/core": "1.0.0-rc.8",
+    "@chakra-ui/icons": "1.0.0-next.7",
     "@fortawesome/fontawesome-svg-core": "^1.2.32",
     "@fortawesome/free-solid-svg-icons": "^5.15.1",
     "@fortawesome/react-fontawesome": "^0.1.11",

@@ -17,7 +17,7 @@ export const ActiveTaskTitle: FC<ActiveTaskTitleProps> = () => {
         <Center>
           <Button
             minW="none"
-            maxW="80%"
+            maxW="90%"
             justifyContent="flex-start"
             isTruncated
             variant="link"

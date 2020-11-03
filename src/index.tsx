@@ -4,9 +4,11 @@ import './renderer/index.css';
 import App from './renderer/App';
 import * as serviceWorker from './renderer/serviceWorker';
 import { AppProvider } from './renderer/providers/AppProvider';
+import { ColorModeScript } from '@chakra-ui/core';
 
 ReactDOM.render(
   <React.StrictMode>
+    <ColorModeScript initialColorMode="light" />
     <AppProvider>
       <App />
     </AppProvider>

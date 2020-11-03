@@ -37,6 +37,24 @@ export const AppProvider: FC<AppProviderProps> = ({ children }) => {
             : chakraTheme.colors.gray['700'],
       },
     },
+    config: {
+      useSystemColorMode: false,
+      initialColorMode: 'light',
+    },
+    fonts: {
+      body: 'Silkscreen',
+      heading: 'Silkscreen',
+      mono: 'Silkscreen',
+    },
+    styles: {
+      global: () => ({
+        body: {
+          fontFamily: 'Silkscreen',
+          borderColor: 'gray.800',
+          color: 'black',
+        },
+      }),
+    },
   });
 
   const initialEntries: History.LocationDescriptor[] = useMemo(() => {
@@ -61,20 +79,19 @@ export const AppProvider: FC<AppProviderProps> = ({ children }) => {
   return (
     <RecoilRoot>
       <IpcRendererProvider>
-        <CSSReset />
-        <ThemeProvider theme={theme}>
-          <ColorModeProvider
-            options={{
-              useSystemColorMode: true,
-              initialColorMode: colorMode,
-            }}
-            value={colorMode}
-          >
+        <ColorModeProvider
+          options={{
+            useSystemColorMode: true,
+            initialColorMode: 'light',
+          }}
+        >
+          <ThemeProvider theme={theme}>
+            <CSSReset />
             <MemoryRouter initialEntries={initialEntries}>
               {children}
             </MemoryRouter>
-          </ColorModeProvider>
-        </ThemeProvider>
+          </ThemeProvider>
+        </ColorModeProvider>
       </IpcRendererProvider>
     </RecoilRoot>
   );

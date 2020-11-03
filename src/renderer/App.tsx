@@ -2,8 +2,9 @@ import React from 'react';
 import { Container, useColorMode } from '@chakra-ui/core';
 import { Route, Switch } from 'react-router-dom';
 import { routes } from '../shared/routes/routes';
-import { Timer } from './app/pomodoro/views/Timer';
+import { PomodoroView } from './app/pomodoro/views/PomodoroView';
 import { usePomodoroListeners } from './app/pomodoro/hooks/usePomodoroListeners';
+import './fonts/fonts.css';
 
 const App = () => {
   const { colorMode } = useColorMode();
@@ -19,9 +20,9 @@ const App = () => {
       bg={colorMode === 'dark' ? 'gray.900' : 'gray.50'}
     >
       <Switch>
-        <Route exact path={routes.timer()} component={Timer} />
+        <Route exact path={routes.timer()} component={PomodoroView} />
         <Route path={routes.timer(true)}>
-          <Timer breakMode />
+          <PomodoroView breakMode />
         </Route>
       </Switch>
     </Container>

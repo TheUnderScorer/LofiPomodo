@@ -27,7 +27,6 @@ export const PomodoroMenu: FC<PomodoroMenuProps> = () => {
 
   return (
     <Stack direction="row">
-      <ResetState />
       <IconButton
         isLoading={loading}
         variant="ghost"
