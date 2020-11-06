@@ -3,6 +3,7 @@ import { activeTask } from '../state/activeTask';
 import { useCallback, useEffect, useState } from 'react';
 import { useIpcInvoke } from '../../../shared/ipc/useIpcInvoke';
 import { Task, TaskEvents } from '../../../../shared/types/tasks';
+import { useIpcReceiver } from '../../../shared/ipc/useIpcReceiver';
 
 export const useActiveTask = () => {
   const [didInit, setDidInit] = useState(false);
@@ -19,6 +20,14 @@ export const useActiveTask = () => {
     },
     [setActiveTask, setActiveTaskIpc]
   );
+
+  const handleTaskChange = useCallback(
+    (_: undefined, task: Task) => {
+      setActiveTask(task);
+    },
+    [setActiveTask]
+  );
+  useIpcReceiver(TaskEvents.ActiveTaskUpdated, handleTaskChange);
 
   useEffect(() => {
     if (!didInit) {

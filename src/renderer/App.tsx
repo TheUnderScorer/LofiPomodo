@@ -20,7 +20,9 @@ const App = () => {
       bg={colorMode === 'dark' ? 'gray.900' : 'gray.50'}
     >
       <Switch>
-        <Route exact path={routes.timer()} component={PomodoroView} />
+        <Route exact path={routes.timer()}>
+          <PomodoroView />
+        </Route>
         <Route path={routes.timer(true)}>
           <PomodoroView breakMode />
         </Route>

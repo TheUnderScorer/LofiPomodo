@@ -25,12 +25,16 @@ export interface TaskFormProps {
   onSubmit?: (task: Task) => any;
   Wrapper?: any;
   Footer?: any;
+  wrapperProps?: any;
+  footerProps?: any;
 }
 
 export const TaskForm: FC<TaskFormProps> = ({
   onSubmit,
   Wrapper = Box,
   Footer = Box,
+  wrapperProps,
+  footerProps,
 }) => {
   const [createTask] = useIpcInvoke<CreateTaskInput, Task>(
     TaskEvents.CreateTask
@@ -59,7 +63,7 @@ export const TaskForm: FC<TaskFormProps> = ({
 
   return (
     <form onSubmit={handleSubmit(submitHandler)}>
-      <Wrapper>
+      <Wrapper {...wrapperProps}>
         <Stack spacing={6}>
           <CommonField
             inputProps={{
@@ -93,7 +97,7 @@ export const TaskForm: FC<TaskFormProps> = ({
           </FormControl>
         </Stack>
       </Wrapper>
-      <Footer border="0" d="flex" justifyContent="flex-end">
+      <Footer border="0" d="flex" justifyContent="flex-end" {...footerProps}>
         <Button type="submit" bg="brand.primary" color="brand.textPrimary">
           Save
         </Button>

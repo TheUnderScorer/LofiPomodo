@@ -21,6 +21,7 @@ export const AppProvider: FC<AppProviderProps> = ({ children }) => {
 
   const theme: Theme = extendTheme({
     colors: {
+      white: '#FFFCFC',
       brand: {
         [PomodoroState.Work]: chakraTheme.colors.blue['300'],
         [PomodoroState.Break]: chakraTheme.colors.green['300'],
@@ -50,8 +51,6 @@ export const AppProvider: FC<AppProviderProps> = ({ children }) => {
       global: () => ({
         body: {
           fontFamily: 'Silkscreen',
-          borderColor: 'gray.800',
-          color: 'black',
         },
       }),
     },
@@ -79,19 +78,19 @@ export const AppProvider: FC<AppProviderProps> = ({ children }) => {
   return (
     <RecoilRoot>
       <IpcRendererProvider>
-        <ColorModeProvider
-          options={{
-            useSystemColorMode: true,
-            initialColorMode: 'light',
-          }}
-        >
-          <ThemeProvider theme={theme}>
+        <ThemeProvider theme={theme}>
+          <ColorModeProvider
+            options={{
+              useSystemColorMode: true,
+              initialColorMode: 'light',
+            }}
+          >
             <CSSReset />
             <MemoryRouter initialEntries={initialEntries}>
               {children}
             </MemoryRouter>
-          </ThemeProvider>
-        </ColorModeProvider>
+          </ColorModeProvider>
+        </ThemeProvider>
       </IpcRendererProvider>
     </RecoilRoot>
   );

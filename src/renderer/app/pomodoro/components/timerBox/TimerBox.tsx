@@ -1,4 +1,4 @@
-import { Box, BoxProps, Center, Flex, Input, Stack } from '@chakra-ui/core';
+import { Box, BoxProps, Center, Flex, Stack } from '@chakra-ui/core';
 import React, { FC } from 'react';
 import { usePomodoro } from '../../hooks/usePomodoro';
 import { PomodoroState } from '../../../../../shared/types';
@@ -19,12 +19,11 @@ export const TimerBox: FC<TimerProps> = ({ containerProps = {} }) => {
 
   return (
     <Box
-      height="225px"
-      color="white"
+      height="240px"
       bg={`brand.${pomodoro?.state ?? PomodoroState.Work}`}
       {...containerProps}
     >
-      <Stack height="100%" spacing={2}>
+      <Stack height="100%" spacing={4}>
         <Flex mt="0 !important" pl={2} pr={2} justifyContent="space-between">
           <Text color="white">
             {pomodoroStateDictionary[pomodoro?.state ?? PomodoroState.Work]}
@@ -44,11 +43,11 @@ export const TimerBox: FC<TimerProps> = ({ containerProps = {} }) => {
           </Stack>
         </Stack>
         <Center>
-          <ActiveTaskTitle />
+          <ActiveTaskTitle color="white" />
         </Center>
         <Center mt="1em !important">
           <Stack direction="row" spacing={2}>
-            <PomodoroControl />
+            <PomodoroControl color="white" />
             <ResetState iconProps={{ variant: 'light' }} />
           </Stack>
         </Center>

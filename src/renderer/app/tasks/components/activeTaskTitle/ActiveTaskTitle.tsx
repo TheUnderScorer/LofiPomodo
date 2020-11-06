@@ -5,9 +5,11 @@ import { Text } from '../../../../ui/atoms/text/Text';
 import { getTaskDurationText } from '../../getTaskDurationText';
 import { AddTaskBtn } from '../addTaskBtn/AddTaskBtn';
 
-export interface ActiveTaskTitleProps {}
+export interface ActiveTaskTitleProps {
+  color?: string;
+}
 
-export const ActiveTaskTitle: FC<ActiveTaskTitleProps> = () => {
+export const ActiveTaskTitle: FC<ActiveTaskTitleProps> = ({ color }) => {
   const { loading, activeTask } = useActiveTask();
 
   return (
@@ -16,6 +18,7 @@ export const ActiveTaskTitle: FC<ActiveTaskTitleProps> = () => {
       {
         <Center>
           <Button
+            color={color}
             minW="none"
             maxW="90%"
             justifyContent="flex-start"
@@ -27,9 +30,11 @@ export const ActiveTaskTitle: FC<ActiveTaskTitleProps> = () => {
             </Tooltip>
           </Button>
           {activeTask && (
-            <Text ml="1">({getTaskDurationText(activeTask)})</Text>
+            <Text color={color} ml="1">
+              ({getTaskDurationText(activeTask)})
+            </Text>
           )}
-          <AddTaskBtn ml="2" size="sm" isRound />
+          <AddTaskBtn ml="2" size="sm" />
         </Center>
       }
     </>

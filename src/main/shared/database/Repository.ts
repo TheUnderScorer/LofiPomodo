@@ -8,12 +8,12 @@ import { castAsArray } from '../../../shared/utils/array';
 import { Typed as EventEmitter } from 'emittery';
 
 export enum RepositoryEvents {
-  EntityCreated = 'EntityCreated',
+  EntityUpdated = 'EntityUpdated',
   EntitiesCreated = 'EntitiesCreated',
 }
 
 export interface RepositoryEventsMap<T> {
-  [RepositoryEvents.EntityCreated]: T;
+  [RepositoryEvents.EntityUpdated]: T;
   [RepositoryEvents.EntitiesCreated]: T[];
 }
 
@@ -50,7 +50,7 @@ export class Repository<T extends BaseModel> implements BaseRepository<T> {
 
     const result = await this.getQueryBuilder().insert(entities);
 
-    await this.events.emit(RepositoryEvents.EntityCreated, entities as any);
+    await this.events.emit(RepositoryEvents.EntityUpdated, entities as any);
 
     return Boolean(result);
   }
@@ -64,7 +64,7 @@ export class Repository<T extends BaseModel> implements BaseRepository<T> {
       });
 
     if (result) {
-      await this.events.emit(RepositoryEvents.EntityCreated, entity);
+      await this.events.emit(RepositoryEvents.EntityUpdated, entity);
     }
 
     return Boolean(result);

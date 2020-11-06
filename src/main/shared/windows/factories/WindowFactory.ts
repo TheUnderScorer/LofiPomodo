@@ -32,11 +32,13 @@ export class WindowFactory {
   }
 
   async createTimerWindow() {
+    const size = 650;
+
     const window = new BrowserWindow({
-      height: 500,
-      width: 500,
-      minHeight: 500,
-      minWidth: 500,
+      height: size,
+      width: size,
+      minHeight: size,
+      minWidth: size,
       fullscreenable: false,
       maximizable: false,
       simpleFullscreen: false,
