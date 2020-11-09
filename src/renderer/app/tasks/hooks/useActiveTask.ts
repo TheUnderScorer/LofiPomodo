@@ -1,15 +1,18 @@
 import { useRecoilState } from 'recoil';
 import { activeTask } from '../state/activeTask';
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback } from 'react';
 import { useIpcInvoke } from '../../../shared/ipc/useIpcInvoke';
 import { Task, TaskEvents } from '../../../../shared/types/tasks';
 import { useIpcReceiver } from '../../../shared/ipc/useIpcReceiver';
 
 export const useActiveTask = () => {
-  const [didInit, setDidInit] = useState(false);
-  const [fetchInitialTask, { loading, error }] = useIpcInvoke<never, Task>(
-    TaskEvents.GetActiveTask
-  );
+  const [fetchInitialTask, { loading, error }] = useIpcInvoke<
+    never,
+    Task | null
+  >(TaskEvents.GetActiveTask, {
+    invokeAtMount: true,
+    recoilAtom: activeTask,
+  });
   const [setActiveTaskIpc] = useIpcInvoke(TaskEvents.SetActiveTask);
   const [activeTaskVal, setActiveTask] = useRecoilState(activeTask);
 
@@ -23,24 +26,20 @@ export const useActiveTask = () => {
 
   const handleTaskChange = useCallback(
     (_: undefined, task: Task) => {
+      if (!task.active) {
+        return;
+      }
+
       setActiveTask(task);
     },
     [setActiveTask]
   );
-  useIpcReceiver(TaskEvents.ActiveTaskUpdated, handleTaskChange);
-
-  useEffect(() => {
-    if (!didInit) {
-      setDidInit(true);
-      fetchInitialTask().then((foundTask) => {
-        setActiveTask(foundTask);
-      });
-    }
-  }, [didInit, fetchInitialTask, setActiveTask]);
+  useIpcReceiver(TaskEvents.TaskUpdated, handleTaskChange);
 
   return {
     activeTask: activeTaskVal,
     setActiveTask: handleSetActiveTask,
+    fetchInitialTask,
     loading,
     error,
   };

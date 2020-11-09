@@ -1,4 +1,3 @@
-import React from 'react';
 import { BaseIconProps } from './types';
 import { composeIcon } from './composeIcon';
 import HourglassBlack from '../../../../assets/hourglass-black.png';

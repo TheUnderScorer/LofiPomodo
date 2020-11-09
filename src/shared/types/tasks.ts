@@ -34,7 +34,10 @@ export enum TaskEvents {
   CreateTask = 'CreateTask',
   GetActiveTask = 'GetActiveTask',
   SetActiveTask = 'SetActiveTask',
-  ActiveTaskUpdated = 'ActiveTaskUpdated',
+  TaskUpdated = 'TaskUpdated',
+  GetTasksByState = 'GetTasksByState',
+  UpdateTask = 'UpdateTask',
+  CountByState = 'CountByState',
 }
 
 export interface GetTasksPayload {
@@ -42,6 +45,7 @@ export interface GetTasksPayload {
   order?: Order<Task>;
   pagination?: Pagination;
   completed?: boolean;
+  state?: TaskState;
 }
 
 export enum TaskSource {
@@ -51,6 +55,8 @@ export enum TaskSource {
 
 export enum TaskState {
   Todo = 'Todo',
-  InProgress = 'InProgress',
   Completed = 'Completed',
 }
+
+export type TasksByState = Record<TaskState, Task[]>;
+export type CountTasksByState = Record<TaskState, number>;

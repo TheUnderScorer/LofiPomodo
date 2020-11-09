@@ -1,5 +1,5 @@
 import { Input, InputProps } from '@chakra-ui/core';
-import React, { FC, forwardRef } from 'react';
+import React, { forwardRef } from 'react';
 import {
   FormControl,
   FormControlProps,

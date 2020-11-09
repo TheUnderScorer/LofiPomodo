@@ -2,7 +2,6 @@ import {
   IconButton,
   IconButtonProps,
   Popover,
-  PopoverArrow,
   PopoverBody,
   PopoverCloseButton,
   PopoverContent,
@@ -57,7 +56,6 @@ export const AddTaskBtn: FC<AddTaskBtnProps> = extendsTheme<AddTaskBtnProps>(
         </IconButton>
       </PopoverTrigger>
       <PopoverContent color="brand.textPrimary">
-        <PopoverArrow />
         <PopoverCloseButton />
         <PopoverHeader>Add task</PopoverHeader>
         <TaskForm

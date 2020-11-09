@@ -24,5 +24,11 @@ export const setupTasks = (context: AppContext) => {
     [TaskEvents.GetActiveTask]: () => context.taskRepository.getActiveTask(),
     [TaskEvents.SetActiveTask]: (_, task: Task) =>
       context.tasksService.setActiveTask(task.id),
+    [TaskEvents.GetTasksByState]: () =>
+      context.taskRepository.getAllGroupedByState(),
+    [TaskEvents.UpdateTask]: (_, task: Task) =>
+      context.taskRepository.update(task),
+    [TaskEvents.CountByState]: () =>
+      context.taskRepository.countGroupedByState(),
   });
 };

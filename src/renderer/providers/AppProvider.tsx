@@ -5,9 +5,9 @@ import {
   ColorModeProvider,
   CSSReset,
   extendTheme,
+  GlobalStyle,
   theme as chakraTheme,
   ThemeProvider,
-  useColorModePreference,
 } from '@chakra-ui/core';
 import { MemoryRouter } from 'react-router-dom';
 import History from 'history';
@@ -17,20 +17,20 @@ import { Theme } from '../types/theme';
 export interface AppProviderProps {}
 
 export const AppProvider: FC<AppProviderProps> = ({ children }) => {
-  const colorMode = useColorModePreference();
+  const colorMode = 'dark' as any;
 
   const theme: Theme = extendTheme({
     colors: {
-      white: '#FFFCFC',
       brand: {
         [PomodoroState.Work]: chakraTheme.colors.blue['300'],
         [PomodoroState.Break]: chakraTheme.colors.green['300'],
         [PomodoroState.LongBreak]: chakraTheme.colors.green['600'],
+        paper: '#eee6e6',
         primary: chakraTheme.colors.blue['300'],
+        colorModeContrast:
+          colorMode === 'dark' ? '#FFFCFC' : chakraTheme.colors.white,
         textPrimary:
-          colorMode === 'dark'
-            ? chakraTheme.colors.white
-            : chakraTheme.colors.black,
+          colorMode === 'dark' ? '#FFFCFC' : chakraTheme.colors.black,
         textSecondary: chakraTheme.colors.gray['500'],
         iconPrimary:
           colorMode === 'dark'
@@ -48,11 +48,16 @@ export const AppProvider: FC<AppProviderProps> = ({ children }) => {
       mono: 'Silkscreen',
     },
     styles: {
-      global: () => ({
+      global: {
         body: {
           fontFamily: 'Silkscreen',
+          overflow: 'visible',
         },
-      }),
+        'div.chakra-checkbox__control': {
+          borderColor:
+            colorMode === 'dark' ? '#FFFCFC' : chakraTheme.colors.black,
+        },
+      },
     },
   });
 
@@ -79,6 +84,7 @@ export const AppProvider: FC<AppProviderProps> = ({ children }) => {
     <RecoilRoot>
       <IpcRendererProvider>
         <ThemeProvider theme={theme}>
+          <GlobalStyle />
           <ColorModeProvider
             options={{
               useSystemColorMode: true,

@@ -1,4 +1,3 @@
-import React from 'react';
 import RetryBlack from '../../../../assets/retry-black.png';
 import RetryWhite from '../../../../assets/retry-white.png';
 import { composeIcon } from './composeIcon';

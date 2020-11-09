@@ -20,6 +20,8 @@ import { CommonTextarea } from '../../../ui/molecules/commonTextarea/CommonTexta
 import { FormControl } from '../../../ui/atoms/formControl/FormControl';
 import { useIpcInvoke } from '../../../shared/ipc/useIpcInvoke';
 import { useActiveTask } from '../hooks/useActiveTask';
+import { useTasksList } from '../hooks/useTasksList';
+import { useGroupedTasksCount } from '../hooks/useGroupedTasksCount';
 
 export interface TaskFormProps {
   onSubmit?: (task: Task) => any;
@@ -36,6 +38,8 @@ export const TaskForm: FC<TaskFormProps> = ({
   wrapperProps,
   footerProps,
 }) => {
+  const { getTasks } = useTasksList();
+  const { getCount } = useGroupedTasksCount();
   const [createTask] = useIpcInvoke<CreateTaskInput, Task>(
     TaskEvents.CreateTask
   );
@@ -51,6 +55,7 @@ export const TaskForm: FC<TaskFormProps> = ({
       const createdTask = await createTask(values);
 
       await setActiveTask(createdTask);
+      await Promise.all([getTasks(), getCount()]);
 
       if (onSubmit) {
         onSubmit(createdTask);
@@ -58,7 +63,7 @@ export const TaskForm: FC<TaskFormProps> = ({
 
       reset();
     },
-    [createTask, onSubmit, reset, setActiveTask]
+    [createTask, getCount, getTasks, onSubmit, reset, setActiveTask]
   );
 
   return (

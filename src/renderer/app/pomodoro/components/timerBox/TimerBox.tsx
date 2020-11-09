@@ -19,7 +19,6 @@ export const TimerBox: FC<TimerProps> = ({ containerProps = {} }) => {
 
   return (
     <Box
-      height="240px"
       bg={`brand.${pomodoro?.state ?? PomodoroState.Work}`}
       {...containerProps}
     >

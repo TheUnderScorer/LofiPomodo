@@ -5,10 +5,6 @@ import { TaskEvents } from '../../../../shared/types/tasks';
 
 export const forwardTaskUpdatesToWindows = ({ taskRepository }: AppContext) => {
   taskRepository.events.on(RepositoryEvents.EntityUpdated, (task) => {
-    if (!task.active) {
-      return;
-    }
-
-    sendEventToAllWindows(TaskEvents.ActiveTaskUpdated, task);
+    sendEventToAllWindows(TaskEvents.TaskUpdated, task);
   });
 };
