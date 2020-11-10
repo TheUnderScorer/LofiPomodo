@@ -28,6 +28,8 @@ export const setupTasks = (context: AppContext) => {
       context.taskRepository.getAllGroupedByState(),
     [TaskEvents.UpdateTask]: (_, task: Task) =>
       context.taskRepository.update(task),
+    [TaskEvents.UpdateTasks]: (_, tasks: Record<number, Task>) =>
+      context.taskRepository.updateMany(Object.values(tasks)),
     [TaskEvents.CountByState]: () =>
       context.taskRepository.countGroupedByState(),
   });

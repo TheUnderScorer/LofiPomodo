@@ -1,27 +1,20 @@
 import {
-  Button,
-  NumberInputField,
-  NumberInput,
-  Stack,
-  NumberInputStepper,
-  NumberIncrementStepper,
-  NumberDecrementStepper,
   Box,
+  Button,
+  NumberDecrementStepper,
+  NumberIncrementStepper,
+  NumberInput,
+  NumberInputField,
+  NumberInputStepper,
+  Stack,
 } from '@chakra-ui/core';
 import React, { FC, useCallback } from 'react';
 import { useForm } from 'react-hook-form';
-import {
-  CreateTaskInput,
-  Task,
-  TaskEvents,
-} from '../../../../shared/types/tasks';
+import { CreateTaskInput, Task } from '../../../../shared/types/tasks';
 import { CommonField } from '../../../ui/molecules/commonField/CommonField';
 import { CommonTextarea } from '../../../ui/molecules/commonTextarea/CommonTextarea';
 import { FormControl } from '../../../ui/atoms/formControl/FormControl';
-import { useIpcInvoke } from '../../../shared/ipc/useIpcInvoke';
-import { useActiveTask } from '../hooks/useActiveTask';
-import { useTasksList } from '../hooks/useTasksList';
-import { useGroupedTasksCount } from '../hooks/useGroupedTasksCount';
+import { useCreateTask } from '../hooks/useCreateTask';
 
 export interface TaskFormProps {
   onSubmit?: (task: Task) => any;
@@ -38,36 +31,27 @@ export const TaskForm: FC<TaskFormProps> = ({
   wrapperProps,
   footerProps,
 }) => {
-  const { getTasks } = useTasksList();
-  const { getCount } = useGroupedTasksCount();
-  const [createTask] = useIpcInvoke<CreateTaskInput, Task>(
-    TaskEvents.CreateTask
-  );
-
-  const { setActiveTask } = useActiveTask();
-
   const { register, handleSubmit, errors, reset } = useForm<CreateTaskInput>({
     mode: 'all',
   });
 
-  const submitHandler = useCallback(
-    async (values: CreateTaskInput) => {
-      const createdTask = await createTask(values);
-
-      await setActiveTask(createdTask);
-      await Promise.all([getTasks(), getCount()]);
-
+  const handleCreate = useCallback(
+    (task: Task) => {
       if (onSubmit) {
-        onSubmit(createdTask);
+        onSubmit(task);
       }
 
       reset();
     },
-    [createTask, getCount, getTasks, onSubmit, reset, setActiveTask]
+    [onSubmit, reset]
   );
 
+  const { createTask } = useCreateTask({
+    onCreate: handleCreate,
+  });
+
   return (
-    <form onSubmit={handleSubmit(submitHandler)}>
+    <form onSubmit={handleSubmit(createTask)}>
       <Wrapper {...wrapperProps}>
         <Stack spacing={6}>
           <CommonField

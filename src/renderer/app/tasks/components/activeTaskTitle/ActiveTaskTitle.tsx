@@ -3,7 +3,6 @@ import React, { FC } from 'react';
 import { useActiveTask } from '../../hooks/useActiveTask';
 import { Text } from '../../../../ui/atoms/text/Text';
 import { getTaskDurationText } from '../../getTaskDurationText';
-import { AddTaskBtn } from '../addTaskBtn/AddTaskBtn';
 
 export interface ActiveTaskTitleProps {
   color?: string;
@@ -34,7 +33,6 @@ export const ActiveTaskTitle: FC<ActiveTaskTitleProps> = ({ color }) => {
               ({getTaskDurationText(activeTask)})
             </Text>
           )}
-          <AddTaskBtn ml="2" size="sm" />
         </Center>
       }
     </>

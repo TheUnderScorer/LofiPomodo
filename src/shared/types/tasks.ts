@@ -37,6 +37,7 @@ export enum TaskEvents {
   TaskUpdated = 'TaskUpdated',
   GetTasksByState = 'GetTasksByState',
   UpdateTask = 'UpdateTask',
+  UpdateTasks = 'UpdateTasks',
   CountByState = 'CountByState',
 }
 

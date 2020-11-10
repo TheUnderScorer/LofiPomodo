@@ -17,7 +17,7 @@ import { Theme } from '../types/theme';
 export interface AppProviderProps {}
 
 export const AppProvider: FC<AppProviderProps> = ({ children }) => {
-  const colorMode = 'dark' as any;
+  const colorMode = 'light' as any;
 
   const theme: Theme = extendTheme({
     colors: {

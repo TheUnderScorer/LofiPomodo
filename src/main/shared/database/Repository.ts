@@ -69,4 +69,31 @@ export class Repository<T extends BaseModel> implements BaseRepository<T> {
 
     return Boolean(result);
   }
+
+  async updateMany(entities: T[]) {
+    const mappedEntities = entities.map((entity) => ({
+      ...entity,
+      updatedAt: new Date(),
+    }));
+
+    await this.connection.transaction(async (t) => {
+      const connection = t(this.table);
+
+      await Promise.all(
+        mappedEntities.map(async (entity) =>
+          connection.clone().where('id', entity.id).update(entity)
+        )
+      );
+
+      return t.commit();
+    });
+
+    await Promise.all(
+      mappedEntities.map((entity) =>
+        this.events.emit(RepositoryEvents.EntityUpdated, entity)
+      )
+    );
+
+    return mappedEntities;
+  }
 }

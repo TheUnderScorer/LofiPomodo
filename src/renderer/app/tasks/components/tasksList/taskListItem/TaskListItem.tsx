@@ -1,9 +1,10 @@
 import {
   Checkbox,
   Flex,
-  Input,
   ListItem,
   ListItemProps,
+  NumberInput,
+  NumberInputField,
 } from '@chakra-ui/core';
 import React, { FC } from 'react';
 import { Task, TaskState } from '../../../../../../shared/types/tasks';
@@ -19,6 +20,20 @@ export const TaskListItem: FC<TaskListItemProps> = ({
   onTaskChange,
   ...props
 }) => {
+  const handleTaskChange = <Key extends keyof Task>(
+    key: Key,
+    value: ((event: any) => Task[Key]) | Task[Key]
+  ) => (event: any) => {
+    const valueToUse = typeof value === 'function' ? value(event) : value;
+
+    if (onTaskChange) {
+      onTaskChange({
+        ...task,
+        [key]: valueToUse,
+      });
+    }
+  };
+
   return (
     <ListItem
       className="task-list-item"
@@ -27,42 +42,33 @@ export const TaskListItem: FC<TaskListItemProps> = ({
       {...props}
     >
       <Checkbox
-        onChange={() => {
-          if (onTaskChange) {
-            onTaskChange({
-              ...task,
-              state:
-                task.state === TaskState.Completed
-                  ? TaskState.Todo
-                  : TaskState.Completed,
-            });
-          }
-        }}
-        isChecked={task.state === TaskState.Completed}
+        onChange={handleTaskChange(
+          'state',
+          task.state === TaskState.Completed
+            ? TaskState.Todo
+            : TaskState.Completed
+        )}
+        defaultIsChecked={task.state === TaskState.Completed}
         size="lg"
         mr={2}
       />
       <Text>{task.title}</Text>
       <Flex flex={1} justifyContent="flex-end">
-        {task.estimatedPomodoroDuration && (
-          <Input
+        <NumberInput
+          onChange={handleTaskChange('estimatedPomodoroDuration', (val) =>
+            parseInt(val)
+          )}
+          defaultValue={task.estimatedPomodoroDuration || 0}
+        >
+          <NumberInputField
             width="40px"
             height="40px"
             padding="0"
             textAlign="center"
             borderRadius="50%"
             borderStyle="dashed"
-            onChange={(event) => {
-              if (onTaskChange) {
-                onTaskChange({
-                  ...task,
-                  estimatedPomodoroDuration: parseInt(event.target.value),
-                });
-              }
-            }}
-            value={task.estimatedPomodoroDuration}
           />
-        )}
+        </NumberInput>
       </Flex>
     </ListItem>
   );
