@@ -19,14 +19,20 @@ export const TasksList: FC<TasksListProps> = ({
   ...props
 }) => {
   return (
-    <List overflow="auto" {...props}>
+    <List className="tasks-list" overflow="auto" {...props}>
       {(!tasks.length && !loading && emptyContent) ?? (
         <Center h="100%">
           <Heading size="sm">No tasks found.</Heading>
         </Center>
       )}
       {tasks.map((task) => (
-        <TaskListItem mb={2} key={task.id} task={task} {...itemProps} />
+        <TaskListItem
+          className="task-list-item"
+          mb={2}
+          key={task.id}
+          task={task}
+          {...itemProps}
+        />
       ))}
     </List>
   );

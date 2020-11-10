@@ -30,6 +30,7 @@ export const AddTaskInput: FC<AddTaskInputProps> = () => {
       <FormControl error={errors.title?.message}>
         <InputGroup>
           <Input
+            id="task_title"
             ref={register({
               required: 'Enter task title',
             })}
@@ -37,7 +38,12 @@ export const AddTaskInput: FC<AddTaskInputProps> = () => {
             name="title"
           />
           <InputRightElement>
-            <IconButton type="submit" size="sm" aria-label="Add task">
+            <IconButton
+              id="create_task"
+              type="submit"
+              size="sm"
+              aria-label="Add task"
+            >
               <FaIcon icon={faPlus} />
             </IconButton>
           </InputRightElement>

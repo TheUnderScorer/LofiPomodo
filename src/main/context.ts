@@ -6,10 +6,11 @@ import path from 'path';
 import { WindowFactory } from './shared/windows/factories/WindowFactory';
 import AutoLaunch from 'auto-launch';
 import { app } from 'electron';
-import { setupConnection } from './shared/database/connection';
+import { getDbPath, setupConnection } from './shared/database/connection';
 import { TaskRepository } from './app/tasks/repositories/TaskRepository';
 import { Tables } from '../shared/types/database';
 import { TasksService } from './app/tasks/services/TasksService';
+import fs from 'fs';
 
 export interface AppContext {
   ipcService: IpcMainService;
@@ -23,7 +24,16 @@ export interface AppContext {
 }
 
 export const createContext = async (): Promise<AppContext> => {
+  if (process.env.CLEAR_DB_ON_RUN === 'true') {
+    const dbPath = getDbPath();
+
+    if (fs.existsSync(dbPath)) {
+      fs.unlinkSync(dbPath);
+    }
+  }
+
   const connection = await setupConnection();
+
   const taskRepository = new TaskRepository(connection, Tables.Tasks);
 
   await connection.migrate.latest();

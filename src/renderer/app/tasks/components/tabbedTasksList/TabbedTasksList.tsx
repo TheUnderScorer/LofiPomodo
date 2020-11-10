@@ -122,6 +122,7 @@ export const TabbedTasksList: FC<TabbedTasksListProps> = (props) => {
         </Center>
         {loading && (
           <Spinner
+            className="tabbed-tasks-list-spinner"
             color="brand.primary"
             position="absolute"
             right="10px"

@@ -2,8 +2,11 @@ import Knex from 'knex';
 import * as path from 'path';
 import { app } from 'electron';
 
+export const getDbPath = () =>
+  path.resolve(app.getAppPath(), './db/lofipomodo.db3');
+
 export const setupConnection = async () => {
-  const dbPath = path.resolve(app.getAppPath(), './db/lofipomodo.db3');
+  const dbPath = getDbPath();
 
   return Knex({
     client: 'sqlite3',
