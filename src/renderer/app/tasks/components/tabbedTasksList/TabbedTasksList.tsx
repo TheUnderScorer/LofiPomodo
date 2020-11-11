@@ -106,14 +106,14 @@ export const TabbedTasksList: FC<TabbedTasksListProps> = (props) => {
           <Text>Loading...</Text>
         </Center>
       )}
-      <Tabs h="100%" index={activeIndex} onChange={setActiveIndex}>
+      <Tabs isLazy h="100%" index={activeIndex} onChange={setActiveIndex}>
         <Center>
           <TabList>
             {states.map((state) => {
               const count = tasksCount ? tasksCount[state] : 0;
 
               return (
-                <Tab key={state}>
+                <Tab className={`tabbed-task-state-${state}`} key={state}>
                   <Text>
                     {taskStateDictionary[state]}({count})
                   </Text>

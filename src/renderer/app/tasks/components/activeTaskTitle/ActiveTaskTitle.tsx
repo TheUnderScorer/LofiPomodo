@@ -15,7 +15,7 @@ export const ActiveTaskTitle: FC<ActiveTaskTitleProps> = ({ color }) => {
     <>
       {loading && <Spinner />}
       {
-        <Center>
+        <Center className="active-task-title">
           <Button
             color={color}
             minW="none"

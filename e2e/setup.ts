@@ -40,6 +40,7 @@ export const bootstrapTestApp = async (env: object = {}) => {
       ...process.env,
       ...env,
       CLOSE_ON_ALL_WINDOW_CLOSE: 'true',
+      CLEAR_DB_ON_RUN: 'true',
     },
     chromeDriverArgs: [
       '--remote-debugging-port=9222',

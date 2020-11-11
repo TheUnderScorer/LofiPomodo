@@ -42,6 +42,7 @@ export const TaskListItem: FC<TaskListItemProps> = ({
       {...props}
     >
       <Checkbox
+        className="task-state-checkbox"
         onChange={handleTaskChange(
           'state',
           task.state === TaskState.Completed
@@ -52,7 +53,7 @@ export const TaskListItem: FC<TaskListItemProps> = ({
         size="lg"
         mr={2}
       />
-      <Text>{task.title}</Text>
+      <Text className="task-title">{task.title}</Text>
       <Flex flex={1} justifyContent="flex-end">
         <NumberInput
           onChange={handleTaskChange('estimatedPomodoroDuration', (val) =>
@@ -61,6 +62,7 @@ export const TaskListItem: FC<TaskListItemProps> = ({
           defaultValue={task.estimatedPomodoroDuration || 0}
         >
           <NumberInputField
+            className="task-estimation"
             width="40px"
             height="40px"
             padding="0"
