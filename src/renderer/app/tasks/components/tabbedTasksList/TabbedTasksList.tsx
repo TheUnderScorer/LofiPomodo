@@ -2,6 +2,7 @@ import {
   Box,
   Center,
   Spinner,
+  Stack,
   Tab,
   TabList,
   TabPanel,
@@ -19,6 +20,7 @@ import { AddTaskInput } from '../addTaskInput/AddTaskInput';
 import { getById } from '../../../../../shared/utils/getters';
 import { useIpcInvoke } from '../../../../shared/ipc/useIpcInvoke';
 import { useDebounce, useSet } from 'react-use';
+import { Heading } from '../../../../ui/atoms/heading/Heading';
 
 export interface TabbedTasksListProps {
   listProps?: Omit<TasksListProps, 'tasks'>;
@@ -98,13 +100,13 @@ export const TabbedTasksList: FC<TabbedTasksListProps> = (props) => {
   );
 
   return (
-    <Box position="relative">
+    <Box h="100%" position="relative">
       {loading && !didFetch && (
         <Center>
           <Text>Loading...</Text>
         </Center>
       )}
-      <Tabs index={activeIndex} onChange={setActiveIndex}>
+      <Tabs h="100%" index={activeIndex} onChange={setActiveIndex}>
         <Center>
           <TabList>
             {states.map((state) => {
@@ -129,12 +131,20 @@ export const TabbedTasksList: FC<TabbedTasksListProps> = (props) => {
             top="10px"
           />
         )}
-        <TabPanels>
-          <TabPanel pr="0.5rem" pl="0.5rem">
-            <Box mb={6}>
+        <TabPanels h="100%">
+          <TabPanel h="100%">
+            <Box mb={tasks?.length ? 6 : 0}>
               <AddTaskInput />
             </Box>
             <TasksList
+              emptyContent={
+                <Center h="100%">
+                  <Stack spacing={2} height="auto" alignItems="center">
+                    <Heading size="sm">No tasks found</Heading>
+                    <Text>Use input above to add new tasks ✌️</Text>
+                  </Stack>
+                </Center>
+              }
               loading={loading}
               tasks={tasks ?? []}
               {...listProps}
@@ -143,7 +153,7 @@ export const TabbedTasksList: FC<TabbedTasksListProps> = (props) => {
               }}
             />
           </TabPanel>
-          <TabPanel pr="0.5rem" pl="0.5rem">
+          <TabPanel h="100%">
             <TasksList
               loading={loading}
               tasks={tasks ?? []}

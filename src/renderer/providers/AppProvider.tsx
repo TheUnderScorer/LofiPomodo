@@ -17,49 +17,50 @@ import { Theme } from '../types/theme';
 export interface AppProviderProps {}
 
 export const AppProvider: FC<AppProviderProps> = ({ children }) => {
-  const colorMode = 'light' as any;
+  const colorMode = 'dark' as any;
 
-  const theme: Theme = extendTheme({
-    colors: {
-      brand: {
-        [PomodoroState.Work]: chakraTheme.colors.blue['300'],
-        [PomodoroState.Break]: chakraTheme.colors.green['300'],
-        [PomodoroState.LongBreak]: chakraTheme.colors.green['600'],
-        paper: '#eee6e6',
-        primary: chakraTheme.colors.blue['300'],
-        colorModeContrast:
-          colorMode === 'dark' ? '#FFFCFC' : chakraTheme.colors.white,
-        textPrimary:
-          colorMode === 'dark' ? '#FFFCFC' : chakraTheme.colors.black,
-        textSecondary: chakraTheme.colors.gray['500'],
-        iconPrimary:
-          colorMode === 'dark'
-            ? chakraTheme.colors.gray['400']
-            : chakraTheme.colors.gray['700'],
-      },
-    },
-    config: {
-      useSystemColorMode: false,
-      initialColorMode: 'light',
-    },
-    fonts: {
-      body: 'Silkscreen',
-      heading: 'Silkscreen',
-      mono: 'Silkscreen',
-    },
-    styles: {
-      global: {
-        body: {
-          fontFamily: 'Silkscreen',
-          overflow: 'visible',
-        },
-        'div.chakra-checkbox__control': {
-          borderColor:
-            colorMode === 'dark' ? '#FFFCFC' : chakraTheme.colors.black,
+  const theme: Theme = useMemo(() => {
+    const color = colorMode === 'dark' ? '#FFFCFC' : chakraTheme.colors.black;
+    return extendTheme({
+      colors: {
+        brand: {
+          [PomodoroState.Work]: chakraTheme.colors.blue['300'],
+          [PomodoroState.Break]: chakraTheme.colors.green['300'],
+          [PomodoroState.LongBreak]: chakraTheme.colors.green['600'],
+          paper: '#eee6e6',
+          primary: chakraTheme.colors.blue['300'],
+          colorModeContrast:
+            colorMode === 'dark' ? '#FFFCFC' : chakraTheme.colors.white,
+          textPrimary: color,
+          textSecondary: chakraTheme.colors.gray['500'],
+          iconPrimary: color,
         },
       },
-    },
-  });
+      config: {
+        useSystemColorMode: false,
+        initialColorMode: 'light',
+      },
+      fonts: {
+        body: 'Silkscreen',
+        heading: 'Silkscreen',
+        mono: 'Silkscreen',
+      },
+      styles: {
+        global: {
+          body: {
+            fontFamily: 'Silkscreen',
+            overflow: 'visible',
+          },
+          'div.chakra-checkbox__control': {
+            borderColor: color,
+          },
+          'html body input': {
+            color,
+          },
+        },
+      },
+    });
+  }, [colorMode]);
 
   const initialEntries: History.LocationDescriptor[] = useMemo(() => {
     if (!window.location.search) {

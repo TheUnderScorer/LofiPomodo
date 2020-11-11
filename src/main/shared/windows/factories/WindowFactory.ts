@@ -35,9 +35,9 @@ export class WindowFactory {
     const size = 650;
 
     const window = new BrowserWindow({
-      height: size,
+      height: size + 100,
       width: size,
-      minHeight: size,
+      minHeight: size + 100,
       minWidth: size,
       fullscreenable: false,
       maximizable: false,
