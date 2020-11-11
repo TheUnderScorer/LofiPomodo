@@ -26,17 +26,34 @@ export class TasksService {
       id: uuid(),
       source: TaskSource.Local,
       state: TaskState.Todo,
+      index: 0,
       ...input,
     };
 
-    await this.taskRepository.insert(task);
-    await this.events.emit(TasksServiceEvents.Created, task);
+    const result = await this.taskRepository.transaction(async (repository) => {
+      await repository.incrementTodoIndexes();
+      await repository.insert(task);
 
-    return task;
+      return task;
+    });
+
+    await this.events.emit(TasksServiceEvents.Created, result);
+
+    return result;
   }
 
-  async setActiveTask(taskId: string) {
-    await this.taskRepository.markActiveTaskAsNotActive();
-    await this.taskRepository.setActiveTask(taskId);
+  async updateTasks(tasks: Task[]) {
+    const mappedTasks = tasks.map((task) => ({
+      ...task,
+      index: task.state === TaskState.Completed ? 0 : task.index,
+    }));
+
+    return this.taskRepository.transaction(async (repository) => {
+      const result = await repository.updateMany(mappedTasks);
+
+      await repository.ensureIndexes();
+
+      return result;
+    });
   }
 }

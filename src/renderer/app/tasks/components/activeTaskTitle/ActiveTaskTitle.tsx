@@ -19,7 +19,6 @@ export const ActiveTaskTitle: FC<ActiveTaskTitleProps> = ({ color }) => {
           <Button
             color={color}
             minW="none"
-            maxW="90%"
             justifyContent="flex-start"
             isTruncated
             variant="link"

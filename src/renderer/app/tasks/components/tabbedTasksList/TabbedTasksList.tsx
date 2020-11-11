@@ -9,7 +9,7 @@ import {
   TabPanels,
   Tabs,
 } from '@chakra-ui/core';
-import React, { FC, useCallback, useEffect, useState } from 'react';
+import React, { FC, useCallback, useEffect, useRef, useState } from 'react';
 import { Task, TaskEvents, TaskState } from '../../../../../shared/types/tasks';
 import { taskStateDictionary } from '../../../../../shared/dictionary/tasks';
 import { TasksList, TasksListProps } from '../tasksList/TasksList';
@@ -21,6 +21,7 @@ import { getById } from '../../../../../shared/utils/getters';
 import { useIpcInvoke } from '../../../../shared/ipc/useIpcInvoke';
 import { useDebounce, useSet } from 'react-use';
 import { Heading } from '../../../../ui/atoms/heading/Heading';
+import { useActiveTask } from '../../hooks/useActiveTask';
 
 export interface TabbedTasksListProps {
   listProps?: Omit<TasksListProps, 'tasks'>;
@@ -29,14 +30,21 @@ export interface TabbedTasksListProps {
 const states = Object.values(TaskState);
 
 export const TabbedTasksList: FC<TabbedTasksListProps> = (props) => {
-  const [isDirty, setIsDirty] = useState(false);
-  const [activeIndex, setActiveIndex] = useState(0);
+  const isDragRef = useRef(false);
+
   const { count: tasksCount, getCount } = useGroupedTasksCount();
   const { tasks, loading, setTaskState, didFetch, getTasks } = useTasksList();
-  const [updateTasksMutation] = useIpcInvoke<Task[], Task[]>(
-    TaskEvents.UpdateTasks
-  );
+  const { fetchActiveTask } = useActiveTask();
+
+  const [isDirty, setIsDirty] = useState(false);
+  const [activeIndex, setActiveIndex] = useState(0);
   const [tasksState, setStoredTasks] = useState<Task[]>(tasks);
+
+  const [updateTasksMutation, { loading: isUpdating }] = useIpcInvoke<
+    Task[],
+    Task[]
+  >(TaskEvents.UpdateTasks);
+
   const [changedTasks, changedTasksSet] = useSet(new Set<string>());
 
   const { listProps } = props;
@@ -70,8 +78,6 @@ export const TabbedTasksList: FC<TabbedTasksListProps> = (props) => {
 
   const handleTaskChange = useCallback(
     async (task: Task) => {
-      console.log('Task changed', { task });
-
       const index = tasksState.findIndex(({ id }) => task.id === id);
 
       const newTasks = [...tasksState];
@@ -86,6 +92,10 @@ export const TabbedTasksList: FC<TabbedTasksListProps> = (props) => {
   );
 
   useEffect(() => {
+    if (isDragRef.current) {
+      return;
+    }
+
     setStoredTasks(tasks);
   }, [tasks]);
 
@@ -122,7 +132,7 @@ export const TabbedTasksList: FC<TabbedTasksListProps> = (props) => {
             })}
           </TabList>
         </Center>
-        {loading && (
+        {(loading || isUpdating) && (
           <Spinner
             className="tabbed-tasks-list-spinner"
             color="brand.primary"
@@ -137,6 +147,14 @@ export const TabbedTasksList: FC<TabbedTasksListProps> = (props) => {
               <AddTaskInput />
             </Box>
             <TasksList
+              onListDragEnd={async (tasks) => {
+                isDragRef.current = true;
+                setStoredTasks(tasks);
+
+                await updateTasksMutation(tasks);
+                await Promise.all([fetchActiveTask(), getTasks()]);
+                isDragRef.current = false;
+              }}
               emptyContent={
                 <Center h="100%">
                   <Stack spacing={2} height="auto" alignItems="center">
@@ -146,7 +164,7 @@ export const TabbedTasksList: FC<TabbedTasksListProps> = (props) => {
                 </Center>
               }
               loading={loading}
-              tasks={tasks ?? []}
+              tasks={tasksState}
               {...listProps}
               itemProps={{
                 onTaskChange: handleTaskChange,
@@ -155,8 +173,9 @@ export const TabbedTasksList: FC<TabbedTasksListProps> = (props) => {
           </TabPanel>
           <TabPanel h="100%">
             <TasksList
+              isDragDisabled
               loading={loading}
-              tasks={tasks ?? []}
+              tasks={tasksState}
               {...listProps}
               itemProps={{
                 onTaskChange: handleTaskChange,

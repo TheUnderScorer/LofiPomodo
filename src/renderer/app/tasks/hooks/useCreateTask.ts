@@ -14,9 +14,10 @@ export interface CreateTaskHookProps {
 }
 
 export const useCreateTask = ({ onCreate }: CreateTaskHookProps = {}) => {
-  const { setActiveTask } = useActiveTask();
   const { getTasks } = useTasksList();
   const { getCount } = useGroupedTasksCount();
+  const { fetchActiveTask } = useActiveTask();
+
   const [createTask] = useIpcInvoke<CreateTaskInput, Task>(
     TaskEvents.CreateTask
   );
@@ -25,14 +26,13 @@ export const useCreateTask = ({ onCreate }: CreateTaskHookProps = {}) => {
     async (values: CreateTaskInput) => {
       const createdTask = await createTask(values);
 
-      await setActiveTask(createdTask);
-      await Promise.all([getTasks(), getCount()]);
+      await Promise.all([getTasks(), getCount(), fetchActiveTask()]);
 
       if (onCreate) {
         onCreate(createdTask);
       }
     },
-    [createTask, getCount, getTasks, onCreate, setActiveTask]
+    [createTask, fetchActiveTask, getCount, getTasks, onCreate]
   );
 
   return { createTask: createTaskCallback };

@@ -17,11 +17,14 @@ export interface RepositoryEventsMap<T> {
   [RepositoryEvents.EntitiesCreated]: T[];
 }
 
-export class Repository<T extends BaseModel> implements BaseRepository<T> {
-  readonly events = new EventEmitter<RepositoryEventsMap<T>>();
+export abstract class Repository<
+  DbModel extends BaseModel,
+  Model extends BaseModel = DbModel
+> implements BaseRepository<DbModel, Model> {
+  readonly events = new EventEmitter<RepositoryEventsMap<Model>>();
 
   constructor(
-    private readonly connection: Knex,
+    protected readonly connection: Knex,
     private readonly table: Tables
   ) {}
 
@@ -29,48 +32,82 @@ export class Repository<T extends BaseModel> implements BaseRepository<T> {
     return this.connection(this.table);
   }
 
+  protected abstract fromDb(entity: DbModel): Model;
+  protected abstract toDb(entity: Model): DbModel;
+
+  async transaction<T>(callback: (repository: this) => Promise<T>): Promise<T> {
+    const trx = await this.connection.transaction();
+
+    try {
+      const repository = new (this as any).constructor(trx, this.table);
+      repository.events = this.events;
+
+      const result = await callback(repository);
+
+      await trx.commit();
+
+      return result;
+    } catch (e) {
+      await trx.rollback(e);
+
+      throw e;
+    }
+  }
+
   async delete(ids: string[]): Promise<number> {
     return this.getQueryBuilder().delete().whereIn('id', ids);
   }
 
-  async findMany(ids: string[]): Promise<T[]> {
-    return this.getQueryBuilder().whereIn('id', ids);
+  async findMany(ids: string[]): Promise<Model[]> {
+    const items = (await this.getQueryBuilder().whereIn(
+      'id',
+      ids
+    )) as DbModel[];
+
+    return items.map((item) => this.fromDb(item));
   }
 
-  async findOne(id: string): Promise<T> {
-    return this.getQueryBuilder().where('id', id).first();
+  async findOne(id: string): Promise<Model | null> {
+    const item = (await this.getQueryBuilder()
+      .where('id', id)
+      .first()) as DbModel | null;
+
+    return item ? this.fromDb(item) : null;
   }
 
-  async insert(entity: T | T[]): Promise<boolean> {
-    const entities = castAsArray(entity).map((entity) => {
-      (entity as T).createdAt = new Date();
+  async insert(entity: Model | Model[]): Promise<boolean> {
+    const asArray = castAsArray(entity);
+    const entities = asArray.map((entity) => {
+      (entity as Model).createdAt = new Date();
 
-      return entity;
-    }) as T[];
+      return this.toDb(entity as Model);
+    }) as DbModel[];
 
     const result = await this.getQueryBuilder().insert(entities);
 
-    await this.events.emit(RepositoryEvents.EntityUpdated, entities as any);
+    await this.events.emit(RepositoryEvents.EntityUpdated, asArray as any);
 
     return Boolean(result);
   }
 
-  async update(entity: T): Promise<boolean> {
+  async update(entity: Model): Promise<Model> {
+    const updatedEntity = {
+      ...entity,
+      updatedAt: new Date(),
+    };
+
     const result = await this.getQueryBuilder()
       .where('id', entity.id)
-      .update({
-        ...entity,
-        updatedAt: new Date(),
-      });
+      .update(this.toDb(entity));
 
     if (result) {
-      await this.events.emit(RepositoryEvents.EntityUpdated, entity);
+      await this.events.emit(RepositoryEvents.EntityUpdated, updatedEntity);
     }
 
-    return Boolean(result);
+    return updatedEntity;
   }
 
-  async updateMany(entities: T[]) {
+  async updateMany(entities: Model[]): Promise<Model[]> {
     const mappedEntities = entities.map((entity) => ({
       ...entity,
       updatedAt: new Date(),
@@ -81,7 +118,7 @@ export class Repository<T extends BaseModel> implements BaseRepository<T> {
 
       await Promise.all(
         mappedEntities.map(async (entity) =>
-          connection.clone().where('id', entity.id).update(entity)
+          connection.clone().where('id', entity.id).update(this.toDb(entity))
         )
       );
 

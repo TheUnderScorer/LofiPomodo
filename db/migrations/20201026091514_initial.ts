@@ -13,8 +13,7 @@ export async function up(knex: Knex): Promise<void> {
     table.uuid('sourceId').nullable();
     table.integer('estimatedPomodoroDuration').nullable();
     table.jsonb('pomodoroSpent').nullable();
-    table.boolean('completed').defaultTo(false);
-    table.boolean('active').defaultTo(false);
+    table.integer('index').defaultTo(0);
   });
 }
 

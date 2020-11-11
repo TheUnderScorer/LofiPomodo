@@ -10,20 +10,24 @@ import { applyPagination } from '../../../shared/database/queryHelpers/applyPagi
 import { OrderDirection } from '../../../../shared/types/database';
 import { groupTasksByState } from '../../../../shared/app/tasks/groupTasksByState';
 
-export class TaskRepository extends Repository<Task> {
+export interface TaskDb extends Omit<Task, 'pomodoroSpent'> {
+  pomodoroSpent?: string;
+}
+
+export class TaskRepository extends Repository<TaskDb, Task> {
   async listTasks({
     order,
     source,
     pagination,
     completed,
     state,
-  }: GetTasksPayload = {}) {
+  }: GetTasksPayload = {}): Promise<Task[]> {
     const query = this.getQueryBuilder();
 
     if (order) {
       applyOrder(query, order);
     } else {
-      query.orderBy('createdAt', OrderDirection.Desc);
+      query.orderBy('index', OrderDirection.Asc);
     }
 
     if (source) {
@@ -42,29 +46,46 @@ export class TaskRepository extends Repository<Task> {
       query.where('completed', completed);
     }
 
-    return query;
+    const items = (await query) as TaskDb[];
+
+    return items.map((task) => this.fromDb(task));
   }
 
-  async getActiveTask() {
-    return this.getQueryBuilder().where('active', true).first<Task | null>();
+  async incrementTodoIndexes() {
+    return this.getQueryBuilder()
+      .where('state', TaskState.Todo)
+      .increment('index', 1);
   }
 
-  async setActiveTask(id: string) {
-    await this.getQueryBuilder().where('id', id).update<Task>({
-      active: true,
-    });
-  }
+  async getActiveTask(): Promise<Task | null> {
+    const task = await this.getQueryBuilder()
+      .select()
+      .where({
+        index: 0,
+        state: TaskState.Todo,
+      })
+      .first<TaskDb | null>();
 
-  async markActiveTaskAsNotActive() {
-    await this.getQueryBuilder().where('active', true).update<Task>({
-      active: false,
-    });
+    return task ? this.fromDb(task) : null;
   }
 
   async getAllGroupedByState() {
-    const tasks = await this.getQueryBuilder().select<Task[]>();
+    const tasks = await this.getQueryBuilder().select<TaskDb[]>();
 
-    return groupTasksByState(tasks);
+    return groupTasksByState(tasks.map((task) => this.fromDb(task)));
+  }
+
+  async getLastIndex(): Promise<number | null> {
+    const task = await this.getQueryBuilder()
+      .select(['index'])
+      .orderBy('index', OrderDirection.Desc)
+      .first<Task | null>();
+
+    return task?.index ?? null;
+  }
+
+  async getWithLargestIndex(index: number): Promise<Task[]> {
+    return this.getQueryBuilder().select().where('index', '>', index);
   }
 
   async countGroupedByState() {
@@ -94,5 +115,39 @@ export class TaskRepository extends Repository<Task> {
         [TaskState.Todo]: 0,
       }
     );
+  }
+
+  /**
+   * Ensures that tasks indexes are always in correct order
+   * */
+  async ensureIndexes() {
+    const todoTasks = await this.listTasks({
+      state: TaskState.Todo,
+    });
+
+    const mappedTasks = await todoTasks.map((task, index) => ({
+      ...task,
+      index,
+    }));
+
+    await this.updateMany(mappedTasks);
+  }
+
+  protected fromDb(entity: TaskDb): Task {
+    return {
+      ...entity,
+      pomodoroSpent: entity.pomodoroSpent
+        ? JSON.parse(entity.pomodoroSpent)
+        : undefined,
+    };
+  }
+
+  protected toDb(entity: Task): TaskDb {
+    return {
+      ...entity,
+      pomodoroSpent: entity.pomodoroSpent
+        ? JSON.stringify(entity.pomodoroSpent)
+        : undefined,
+    };
   }
 }

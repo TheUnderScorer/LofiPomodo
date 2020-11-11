@@ -1,14 +1,17 @@
-import { Center, List, ListProps } from '@chakra-ui/core';
-import React, { FC, ReactNode } from 'react';
+import { Box, Center, List, ListProps } from '@chakra-ui/core';
+import React, { FC, ReactNode, useCallback } from 'react';
 import { Task } from '../../../../../shared/types/tasks';
 import { Heading } from '../../../../ui/atoms/heading/Heading';
 import { TaskListItem, TaskListItemProps } from './taskListItem/TaskListItem';
+import { DragDropContext, Droppable, DropResult } from 'react-beautiful-dnd';
 
 export interface TasksListProps extends ListProps {
   tasks: Task[];
   itemProps?: Omit<TaskListItemProps, 'task'>;
   emptyContent?: ReactNode;
   loading?: boolean;
+  onListDragEnd?: (tasks: Task[]) => any;
+  isDragDisabled?: boolean;
 }
 
 export const TasksList: FC<TasksListProps> = ({
@@ -16,8 +19,30 @@ export const TasksList: FC<TasksListProps> = ({
   itemProps,
   emptyContent,
   loading,
+  onListDragEnd,
+  isDragDisabled,
   ...props
 }) => {
+  const handleDragEnd = useCallback(
+    ({ source, destination, reason }: DropResult) => {
+      if (reason === 'CANCEL' || !destination || !onListDragEnd) {
+        return;
+      }
+
+      const newTasks = [...tasks];
+      const [removedTask] = newTasks.splice(source.index, 1);
+      newTasks.splice(destination.index, 0, removedTask);
+
+      const mappedTasks = newTasks.map((task, index) => ({
+        ...task,
+        index,
+      }));
+
+      onListDragEnd(mappedTasks);
+    },
+    [onListDragEnd, tasks]
+  );
+
   return (
     <List className="tasks-list" h="100%" overflow="auto" {...props}>
       {(!tasks.length && !loading && emptyContent) ?? (
@@ -25,15 +50,26 @@ export const TasksList: FC<TasksListProps> = ({
           <Heading size="sm">No tasks found.</Heading>
         </Center>
       )}
-      {tasks.map((task) => (
-        <TaskListItem
-          className="task-list-item"
-          mb={2}
-          key={task.id}
-          task={task}
-          {...itemProps}
-        />
-      ))}
+      <DragDropContext onDragEnd={handleDragEnd}>
+        <Droppable droppableId="droppable">
+          {({ droppableProps, innerRef, placeholder }) => (
+            <Box {...droppableProps} ref={innerRef}>
+              {tasks.map((task, index) => (
+                <TaskListItem
+                  isDragDisabled={isDragDisabled}
+                  arrIndex={index}
+                  className="task-list-item"
+                  mb={2}
+                  key={task.id}
+                  task={task}
+                  {...itemProps}
+                />
+              ))}
+              {placeholder}
+            </Box>
+          )}
+        </Droppable>
+      </DragDropContext>
     </List>
   );
 };

@@ -8,12 +8,16 @@ export enum Tables {
   Tasks = 'tasks',
 }
 
-export interface BaseRepository<T extends BaseModel> {
-  findOne: (id: string) => Promise<T>;
-  findMany: (ids: string[]) => Promise<T[]>;
+export interface BaseRepository<
+  DbModel extends BaseModel,
+  Model extends BaseModel = DbModel
+> {
+  findOne: (id: string) => Promise<Model | null>;
+  findMany: (ids: string[]) => Promise<Model[]>;
   delete: (ids: string[]) => Promise<number>;
-  insert: (entity: T) => Promise<boolean>;
-  update: (entity: T) => Promise<boolean>;
+  insert: (entity: Model | Model[]) => Promise<boolean>;
+  update: (entity: Model) => Promise<Model>;
+  updateMany: (entity: Model[]) => Promise<Model[]>;
 }
 
 export interface Pagination {

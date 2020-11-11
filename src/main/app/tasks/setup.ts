@@ -21,15 +21,15 @@ export const setupTasks = (context: AppContext) => {
     [TaskEvents.CreateTask]: (_, input: CreateTaskInput) => {
       return context.tasksService.createTask(input);
     },
-    [TaskEvents.GetActiveTask]: () => context.taskRepository.getActiveTask(),
-    [TaskEvents.SetActiveTask]: (_, task: Task) =>
-      context.tasksService.setActiveTask(task.id),
+    [TaskEvents.GetActiveTask]: async () => {
+      return context.taskRepository.getActiveTask();
+    },
     [TaskEvents.GetTasksByState]: () =>
       context.taskRepository.getAllGroupedByState(),
     [TaskEvents.UpdateTask]: (_, task: Task) =>
       context.taskRepository.update(task),
     [TaskEvents.UpdateTasks]: (_, tasks: Record<number, Task>) =>
-      context.taskRepository.updateMany(Object.values(tasks)),
+      context.tasksService.updateTasks(Object.values(tasks)),
     [TaskEvents.CountByState]: () =>
       context.taskRepository.countGroupedByState(),
   });

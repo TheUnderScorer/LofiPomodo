@@ -10,6 +10,7 @@ export interface Task extends BaseModel {
   pomodoroSpent?: TaskPomodoroSpent[];
   completed?: boolean;
   active?: boolean;
+  index?: number;
 }
 
 export interface TaskPomodoroSpent {
@@ -33,7 +34,6 @@ export enum TaskEvents {
   GetTasks = 'GetTasks',
   CreateTask = 'CreateTask',
   GetActiveTask = 'GetActiveTask',
-  SetActiveTask = 'SetActiveTask',
   TaskUpdated = 'TaskUpdated',
   GetTasksByState = 'GetTasksByState',
   UpdateTask = 'UpdateTask',
