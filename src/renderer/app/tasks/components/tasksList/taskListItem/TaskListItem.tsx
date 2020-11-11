@@ -6,15 +6,18 @@ import {
   IconButton,
   ListItem,
   ListItemProps,
+  MenuItem,
   NumberInput,
   NumberInputField,
   Stack,
 } from '@chakra-ui/core';
-import React, { FC } from 'react';
+import React, { FC, useCallback } from 'react';
 import { Task, TaskState } from '../../../../../../shared/types/tasks';
 import { Draggable } from 'react-beautiful-dnd';
 import { FaIcon } from '../../../../../ui/atoms/faIcon/FaIcon';
 import { faGripLines } from '@fortawesome/free-solid-svg-icons';
+import { ContextMenu } from '../../../../../ui/molecules/contextMenu/ContextMenu';
+import { Text } from '../../../../../ui/atoms/text/Text';
 
 export interface TaskListItemProps extends ListItemProps {
   task: Task;
@@ -30,19 +33,26 @@ export const TaskListItem: FC<TaskListItemProps> = ({
   isDragDisabled,
   ...props
 }) => {
-  const handleTaskChange = <Key extends keyof Task>(
-    key: Key,
-    value: ((event: any) => Task[Key]) | Task[Key]
-  ) => (event: any) => {
-    const valueToUse = typeof value === 'function' ? value(event) : value;
+  const handleTaskChange = useCallback(
+    <Key extends keyof Task>(
+      key: Key,
+      value: ((event: any) => Task[Key]) | Task[Key]
+    ) => (event: any) => {
+      const valueToUse = typeof value === 'function' ? value(event) : value;
 
-    if (onTaskChange) {
-      onTaskChange({
-        ...task,
-        [key]: valueToUse,
-      });
-    }
-  };
+      if (valueToUse === false) {
+        return;
+      }
+
+      if (onTaskChange) {
+        onTaskChange({
+          ...task,
+          [key]: valueToUse,
+        });
+      }
+    },
+    [onTaskChange, task]
+  );
 
   return (
     <Draggable
@@ -52,62 +62,83 @@ export const TaskListItem: FC<TaskListItemProps> = ({
       index={arrIndex}
     >
       {({ draggableProps, dragHandleProps, innerRef }) => (
-        <ListItem
-          ref={innerRef}
-          {...props}
-          {...draggableProps}
-          className="task-list-item"
-          alignItems="center"
-          d="flex"
+        <ContextMenu
+          id={task.id}
+          menu={
+            <MenuItem>
+              <Text>{task.title}</Text>
+            </MenuItem>
+          }
         >
-          <Checkbox
-            className="task-state-checkbox"
-            onChange={handleTaskChange(
-              'state',
-              task.state === TaskState.Completed
-                ? TaskState.Todo
-                : TaskState.Completed
-            )}
-            defaultIsChecked={task.state === TaskState.Completed}
-            size="lg"
-            mr={2}
-          />
-          <Editable
-            onSubmit={handleTaskChange('title', (value) => value)}
-            color="brand.textPrimary"
-            defaultValue={task.title}
-          >
-            <EditablePreview color="brand.textPrimary" />
-            <EditableInput />
-          </Editable>
-          <Stack
-            direction="row"
-            spacing={2}
-            flex={1}
-            justifyContent="flex-end"
-            alignItems="center"
-          >
-            <NumberInput
-              onChange={handleTaskChange('estimatedPomodoroDuration', (val) =>
-                parseInt(val)
-              )}
-              defaultValue={task.estimatedPomodoroDuration || 0}
+          {(bag) => (
+            <ListItem
+              onContextMenu={bag.onContextMenu}
+              ref={innerRef}
+              {...props}
+              {...draggableProps}
+              className="task-list-item"
+              alignItems="center"
+              d="flex"
             >
-              <NumberInputField
-                className="task-estimation"
-                width="40px"
-                height="40px"
-                padding="0"
-                textAlign="center"
-                borderRadius="50%"
-                borderStyle="dashed"
+              <Checkbox
+                className="task-state-checkbox"
+                onChange={handleTaskChange(
+                  'state',
+                  task.state === TaskState.Completed
+                    ? TaskState.Todo
+                    : TaskState.Completed
+                )}
+                defaultIsChecked={task.state === TaskState.Completed}
+                size="lg"
+                mr={2}
               />
-            </NumberInput>
-            <IconButton {...dragHandleProps} variant="ghost" aria-label="Drag">
-              <FaIcon icon={faGripLines} />
-            </IconButton>
-          </Stack>
-        </ListItem>
+              <Editable
+                onSubmit={handleTaskChange('title', (value) =>
+                  value === task.title ? false : value
+                )}
+                color="brand.textPrimary"
+                defaultValue={task.title}
+              >
+                <EditablePreview color="brand.textPrimary" />
+                <EditableInput />
+              </Editable>
+              <Stack
+                direction="row"
+                spacing={2}
+                flex={1}
+                justifyContent="flex-end"
+                alignItems="center"
+              >
+                <NumberInput
+                  onChange={handleTaskChange(
+                    'estimatedPomodoroDuration',
+                    (val) => parseInt(val)
+                  )}
+                  defaultValue={task.estimatedPomodoroDuration || 0}
+                >
+                  <NumberInputField
+                    className="task-estimation"
+                    width="40px"
+                    height="40px"
+                    padding="0"
+                    textAlign="center"
+                    borderRadius="50%"
+                    borderStyle="dashed"
+                  />
+                </NumberInput>
+                {!isDragDisabled && (
+                  <IconButton
+                    {...dragHandleProps}
+                    variant="ghost"
+                    aria-label="Drag"
+                  >
+                    <FaIcon icon={faGripLines} />
+                  </IconButton>
+                )}
+              </Stack>
+            </ListItem>
+          )}
+        </ContextMenu>
       )}
     </Draggable>
   );
