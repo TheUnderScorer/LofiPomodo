@@ -1,15 +1,20 @@
 import {
   Checkbox,
-  Flex,
+  Editable,
+  EditableInput,
+  EditablePreview,
+  IconButton,
   ListItem,
   ListItemProps,
   NumberInput,
   NumberInputField,
+  Stack,
 } from '@chakra-ui/core';
 import React, { FC } from 'react';
 import { Task, TaskState } from '../../../../../../shared/types/tasks';
-import { Text } from '../../../../../ui/atoms/text/Text';
 import { Draggable } from 'react-beautiful-dnd';
+import { FaIcon } from '../../../../../ui/atoms/faIcon/FaIcon';
+import { faGripLines } from '@fortawesome/free-solid-svg-icons';
 
 export interface TaskListItemProps extends ListItemProps {
   task: Task;
@@ -51,7 +56,6 @@ export const TaskListItem: FC<TaskListItemProps> = ({
           ref={innerRef}
           {...props}
           {...draggableProps}
-          {...dragHandleProps}
           className="task-list-item"
           alignItems="center"
           d="flex"
@@ -68,8 +72,21 @@ export const TaskListItem: FC<TaskListItemProps> = ({
             size="lg"
             mr={2}
           />
-          <Text className="task-title">{task.title}</Text>
-          <Flex flex={1} justifyContent="flex-end">
+          <Editable
+            onSubmit={handleTaskChange('title', (value) => value)}
+            color="brand.textPrimary"
+            defaultValue={task.title}
+          >
+            <EditablePreview color="brand.textPrimary" />
+            <EditableInput />
+          </Editable>
+          <Stack
+            direction="row"
+            spacing={2}
+            flex={1}
+            justifyContent="flex-end"
+            alignItems="center"
+          >
             <NumberInput
               onChange={handleTaskChange('estimatedPomodoroDuration', (val) =>
                 parseInt(val)
@@ -86,7 +103,10 @@ export const TaskListItem: FC<TaskListItemProps> = ({
                 borderStyle="dashed"
               />
             </NumberInput>
-          </Flex>
+            <IconButton {...dragHandleProps} variant="ghost" aria-label="Drag">
+              <FaIcon icon={faGripLines} />
+            </IconButton>
+          </Stack>
         </ListItem>
       )}
     </Draggable>

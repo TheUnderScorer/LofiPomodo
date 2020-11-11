@@ -1,15 +1,22 @@
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import {
+  FontAwesomeIcon,
+  FontAwesomeIconProps,
+} from '@fortawesome/react-fontawesome';
 import React, { FC, useMemo } from 'react';
 import { IconProp } from '@fortawesome/fontawesome-svg-core';
 import { BrandColors, Theme, ThemeColors } from '../../../types/theme';
 import { useTheme } from '@chakra-ui/core';
 
-export interface FaIconProps {
+export interface FaIconProps extends FontAwesomeIconProps {
   icon: IconProp;
   color?: keyof BrandColors | keyof ThemeColors;
 }
 
-export const FaIcon: FC<FaIconProps> = ({ icon, color = 'iconPrimary' }) => {
+export const FaIcon: FC<FaIconProps> = ({
+  icon,
+  color = 'iconPrimary',
+  ...props
+}) => {
   const theme = useTheme() as Theme;
   const iconColor = useMemo(() => {
     if (
@@ -30,5 +37,5 @@ export const FaIcon: FC<FaIconProps> = ({ icon, color = 'iconPrimary' }) => {
     }
   }, [theme, color]);
 
-  return <FontAwesomeIcon color={iconColor} icon={icon} />;
+  return <FontAwesomeIcon color={iconColor} icon={icon} {...props} />;
 };
