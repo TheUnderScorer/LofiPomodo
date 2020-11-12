@@ -5,11 +5,13 @@ import { routes } from '../shared/routes/routes';
 import { PomodoroView } from './app/pomodoro/views/pomodoroView/PomodoroView';
 import { usePomodoroListeners } from './app/pomodoro/hooks/usePomodoroListeners';
 import './fonts/fonts.css';
+import { useTasksListeners } from './app/tasks/hooks/useTaskListeners';
 
 const App = () => {
   const { colorMode } = useColorMode();
 
   usePomodoroListeners();
+  useTasksListeners();
 
   return (
     <Container

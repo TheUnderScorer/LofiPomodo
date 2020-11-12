@@ -32,5 +32,7 @@ export const setupTasks = (context: AppContext) => {
       context.tasksService.updateTasks(Object.values(tasks)),
     [TaskEvents.CountByState]: () =>
       context.taskRepository.countGroupedByState(),
+    [TaskEvents.DeleteTasks]: (_, ids: Record<number, string>) =>
+      context.tasksService.deleteTasks(Object.values(ids)),
   });
 };

@@ -82,6 +82,7 @@ export const ContextMenu: FC<ContextMenuProps> = ({ menu, children, id }) => {
         <Portal>
           <Box className="context-menu" position="fixed" left={xPos} top={yPos}>
             <Menu
+              closeOnSelect={false}
               placement="auto"
               fixed={false}
               isLazy

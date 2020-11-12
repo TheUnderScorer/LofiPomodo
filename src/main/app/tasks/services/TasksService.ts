@@ -56,4 +56,11 @@ export class TasksService {
       return result;
     });
   }
+
+  async deleteTasks(ids: string[]) {
+    await this.taskRepository.transaction(async (repository) => {
+      await repository.delete(ids);
+      await repository.ensureIndexes();
+    });
+  }
 }

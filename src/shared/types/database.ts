@@ -14,7 +14,7 @@ export interface BaseRepository<
 > {
   findOne: (id: string) => Promise<Model | null>;
   findMany: (ids: string[]) => Promise<Model[]>;
-  delete: (ids: string[]) => Promise<number>;
+  delete: (ids: string | string[]) => Promise<number>;
   insert: (entity: Model | Model[]) => Promise<boolean>;
   update: (entity: Model) => Promise<Model>;
   updateMany: (entity: Model[]) => Promise<Model[]>;

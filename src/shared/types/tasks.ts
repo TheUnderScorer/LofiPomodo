@@ -35,10 +35,12 @@ export enum TaskEvents {
   CreateTask = 'CreateTask',
   GetActiveTask = 'GetActiveTask',
   TaskUpdated = 'TaskUpdated',
+  TasksDeleted = 'TasksDeleted',
   GetTasksByState = 'GetTasksByState',
   UpdateTask = 'UpdateTask',
   UpdateTasks = 'UpdateTasks',
   CountByState = 'CountByState',
+  DeleteTasks = 'DeleteTasks',
 }
 
 export interface GetTasksPayload {

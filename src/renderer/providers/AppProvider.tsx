@@ -34,6 +34,7 @@ export const AppProvider: FC<AppProviderProps> = ({ children }) => {
           textPrimary: color,
           textSecondary: chakraTheme.colors.gray['500'],
           iconPrimary: color,
+          danger: chakraTheme.colors.red['500'],
         },
       },
       config: {

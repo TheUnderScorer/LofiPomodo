@@ -10,11 +10,13 @@ import { Typed as EventEmitter } from 'emittery';
 export enum RepositoryEvents {
   EntityUpdated = 'EntityUpdated',
   EntitiesCreated = 'EntitiesCreated',
+  EntitiesDeleted = 'EntitiesDeleted',
 }
 
 export interface RepositoryEventsMap<T> {
   [RepositoryEvents.EntityUpdated]: T;
   [RepositoryEvents.EntitiesCreated]: T[];
+  [RepositoryEvents.EntitiesDeleted]: T[];
 }
 
 export abstract class Repository<
@@ -54,8 +56,15 @@ export abstract class Repository<
     }
   }
 
-  async delete(ids: string[]): Promise<number> {
-    return this.getQueryBuilder().delete().whereIn('id', ids);
+  async delete(idOrIds: string | string[]): Promise<number> {
+    const ids = castAsArray(idOrIds) as string[];
+    const records = await this.findMany(ids);
+
+    const result = await this.getQueryBuilder().delete().whereIn('id', ids);
+
+    await this.events.emit(RepositoryEvents.EntitiesDeleted, records);
+
+    return result;
   }
 
   async findMany(ids: string[]): Promise<Model[]> {

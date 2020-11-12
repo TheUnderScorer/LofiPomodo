@@ -1,9 +1,7 @@
 import { useRecoilState } from 'recoil';
 import { activeTask } from '../state/activeTask';
-import { useCallback } from 'react';
 import { useIpcInvoke } from '../../../shared/ipc/useIpcInvoke';
-import { Task, TaskEvents, TaskState } from '../../../../shared/types/tasks';
-import { useIpcReceiver } from '../../../shared/ipc/useIpcReceiver';
+import { Task, TaskEvents } from '../../../../shared/types/tasks';
 
 export const useActiveTask = () => {
   const [fetchActiveTask, { loading, error }] = useIpcInvoke<
@@ -14,21 +12,7 @@ export const useActiveTask = () => {
     recoilAtom: activeTask,
   });
 
-  const [activeTaskVal, setActiveTask] = useRecoilState(activeTask);
-
-  const handleTaskChange = useCallback(
-    (_: undefined, task: Task) => {
-      if (task.index === 0) {
-        if (task.state === TaskState.Todo) {
-          setActiveTask(task);
-        } else {
-          setActiveTask(null);
-        }
-      }
-    },
-    [setActiveTask]
-  );
-  useIpcReceiver(TaskEvents.TaskUpdated, handleTaskChange);
+  const [activeTaskVal] = useRecoilState(activeTask);
 
   return {
     activeTask: activeTaskVal,

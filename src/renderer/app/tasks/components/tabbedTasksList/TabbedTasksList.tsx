@@ -22,6 +22,7 @@ import { useIpcInvoke } from '../../../../shared/ipc/useIpcInvoke';
 import { useDebounce, useSet } from 'react-use';
 import { Heading } from '../../../../ui/atoms/heading/Heading';
 import { useActiveTask } from '../../hooks/useActiveTask';
+import { TaskContextMenu } from '../taskContextMenu/TaskContextMenu';
 
 export interface TabbedTasksListProps {
   listProps?: Omit<TasksListProps, 'tasks'>;
@@ -109,6 +110,11 @@ export const TabbedTasksList: FC<TabbedTasksListProps> = (props) => {
     [isDirty, handleTaskUpdate]
   );
 
+  const contextMenu = useCallback(
+    (task: Task) => <TaskContextMenu task={task} />,
+    []
+  );
+
   return (
     <Box h="100%" position="relative">
       {loading && !didFetch && (
@@ -168,6 +174,7 @@ export const TabbedTasksList: FC<TabbedTasksListProps> = (props) => {
               {...listProps}
               itemProps={{
                 onTaskChange: handleTaskChange,
+                contextMenu,
               }}
             />
           </TabPanel>
@@ -179,6 +186,7 @@ export const TabbedTasksList: FC<TabbedTasksListProps> = (props) => {
               {...listProps}
               itemProps={{
                 onTaskChange: handleTaskChange,
+                contextMenu,
               }}
             />
           </TabPanel>

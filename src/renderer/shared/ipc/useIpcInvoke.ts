@@ -2,7 +2,7 @@ import { useIpcRenderer } from '../../providers/IpcRendererProvider';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { Nullable } from '../../../shared/types';
 import { atom, RecoilState, useRecoilState } from 'recoil';
-import { useFirstMountState, useMount, usePrevious } from 'react-use';
+import { useMount, usePrevious } from 'react-use';
 import { compact } from '../../utils/compact';
 import { objToKey } from '../../utils/objToKey';
 
@@ -43,7 +43,6 @@ export const useIpcInvoke = <
     variables = defaultVariables as Arg,
   }: IpcInvokeHookParams<ReturnValue, Arg> = {}
 ): [invoke: InvokeFn<Arg>, result: InvokeMeta<ReturnValue>] => {
-  const didFirstMount = useFirstMountState();
   const variablesDep = variables && objToKey(variables);
   // eslint-disable-next-line react-hooks/exhaustive-deps
   const watchVariables = useMemo(() => compact(variables), [variablesDep]);
@@ -70,6 +69,8 @@ export const useIpcInvoke = <
       console.log('Invocation:', {
         name,
         args: invokeArgs,
+        passedArgs: args,
+        watchVariables,
       });
 
       setDidFetch(true);
@@ -104,10 +105,10 @@ export const useIpcInvoke = <
   });
 
   useEffect(() => {
-    if (prevVariables && variablesDep !== prevVariables && didFirstMount) {
+    if (prevVariables && variablesDep !== prevVariables) {
       invoke();
     }
-  }, [variablesDep, invoke, didFirstMount, prevVariables]);
+  }, [variablesDep, invoke, prevVariables]);
 
   return [
     invoke,

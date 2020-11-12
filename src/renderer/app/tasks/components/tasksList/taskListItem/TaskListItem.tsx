@@ -6,24 +6,23 @@ import {
   IconButton,
   ListItem,
   ListItemProps,
-  MenuItem,
   NumberInput,
   NumberInputField,
   Stack,
 } from '@chakra-ui/core';
-import React, { FC, useCallback } from 'react';
+import React, { FC, ReactNode, useCallback } from 'react';
 import { Task, TaskState } from '../../../../../../shared/types/tasks';
 import { Draggable } from 'react-beautiful-dnd';
 import { FaIcon } from '../../../../../ui/atoms/faIcon/FaIcon';
 import { faGripLines } from '@fortawesome/free-solid-svg-icons';
 import { ContextMenu } from '../../../../../ui/molecules/contextMenu/ContextMenu';
-import { Text } from '../../../../../ui/atoms/text/Text';
 
 export interface TaskListItemProps extends ListItemProps {
   task: Task;
   onTaskChange?: (task: Task) => any;
   arrIndex: number;
   isDragDisabled?: boolean;
+  contextMenu?: (task: Task) => ReactNode;
 }
 
 export const TaskListItem: FC<TaskListItemProps> = ({
@@ -31,6 +30,7 @@ export const TaskListItem: FC<TaskListItemProps> = ({
   onTaskChange,
   arrIndex,
   isDragDisabled,
+  contextMenu,
   ...props
 }) => {
   const handleTaskChange = useCallback(
@@ -62,14 +62,7 @@ export const TaskListItem: FC<TaskListItemProps> = ({
       index={arrIndex}
     >
       {({ draggableProps, dragHandleProps, innerRef }) => (
-        <ContextMenu
-          id={task.id}
-          menu={
-            <MenuItem>
-              <Text>{task.title}</Text>
-            </MenuItem>
-          }
-        >
+        <ContextMenu id={task.id} menu={contextMenu ? contextMenu(task) : null}>
           {(bag) => (
             <ListItem
               onContextMenu={bag.onContextMenu}
@@ -114,7 +107,7 @@ export const TaskListItem: FC<TaskListItemProps> = ({
                     'estimatedPomodoroDuration',
                     (val) => parseInt(val)
                   )}
-                  defaultValue={task.estimatedPomodoroDuration || 0}
+                  value={task.estimatedPomodoroDuration || 0}
                 >
                   <NumberInputField
                     className="task-estimation"

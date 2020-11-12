@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useState } from 'react';
 import { Order } from '../../../../shared/types/database';
 import {
   GetTasksPayload,
@@ -9,19 +9,19 @@ import {
 import { useIpcInvoke } from '../../../shared/ipc/useIpcInvoke';
 import { getById } from '../../../../shared/utils/getters';
 import { tasksListStore } from '../state/tasksList';
-import { useRecoilState } from 'recoil';
-import { useIpcReceiver } from '../../../shared/ipc/useIpcReceiver';
+import { atom, useRecoilState } from 'recoil';
 
 export interface TasksHookProps {
   defaultOrder?: Order<Task>;
-  defaultState?: TaskState;
 }
 
-export const useTasksList = ({
-  defaultOrder,
-  defaultState = TaskState.Todo,
-}: TasksHookProps = {}) => {
-  const [state, setTaskState] = useState<TaskState>(defaultState);
+const stateAtom = atom<TaskState>({
+  default: TaskState.Todo,
+  key: 'taskState',
+});
+
+export const useTasksList = ({ defaultOrder }: TasksHookProps = {}) => {
+  const [state, setTaskState] = useRecoilState(stateAtom);
   const [order, setOrder] = useState<Order<Task> | undefined>(defaultOrder);
 
   const [updateTaskMutation] = useIpcInvoke<Task, Task>(TaskEvents.UpdateTask);
@@ -36,7 +36,7 @@ export const useTasksList = ({
       order,
     },
   });
-  const [tasks, setTasks] = useRecoilState(tasksListStore);
+  const [tasks] = useRecoilState(tasksListStore);
 
   const updateTask = useCallback(
     async (id: string, callback: (taskToUpdate: Task) => Task) => {
@@ -55,28 +55,6 @@ export const useTasksList = ({
     },
     [getTasks, tasks, updateTaskMutation]
   );
-
-  // Sync task changes in bg with store
-  const handleTaskChange = useCallback(
-    (_: any, task: Task) => {
-      const index = tasks?.findIndex((storedTask) => storedTask.id === task.id);
-
-      if (index > -1) {
-        const newTasks = [...tasks];
-        newTasks[index] = task;
-
-        setTasks(newTasks);
-      }
-    },
-    [setTasks, tasks]
-  );
-  useIpcReceiver(TaskEvents.TaskUpdated, handleTaskChange);
-
-  useEffect(() => {
-    getTasks({
-      state,
-    });
-  }, [getTasks, state]);
 
   return {
     order,
