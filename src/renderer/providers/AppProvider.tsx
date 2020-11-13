@@ -13,11 +13,12 @@ import { MemoryRouter } from 'react-router-dom';
 import History from 'history';
 import { PomodoroState } from '../../shared/types';
 import { Theme } from '../types/theme';
+import { usePrefersColorScheme } from '../shared/hooks/usePrefersColorScheme';
 
 export interface AppProviderProps {}
 
 export const AppProvider: FC<AppProviderProps> = ({ children }) => {
-  const colorMode = 'dark' as any;
+  const colorMode = usePrefersColorScheme();
 
   const theme: Theme = useMemo(() => {
     const color = colorMode === 'dark' ? '#FFFCFC' : chakraTheme.colors.black;
@@ -38,8 +39,7 @@ export const AppProvider: FC<AppProviderProps> = ({ children }) => {
         },
       },
       config: {
-        useSystemColorMode: false,
-        initialColorMode: 'light',
+        initialColorMode: colorMode,
       },
       fonts: {
         body: 'Silkscreen',
@@ -89,9 +89,9 @@ export const AppProvider: FC<AppProviderProps> = ({ children }) => {
           <GlobalStyle />
           <ColorModeProvider
             options={{
-              useSystemColorMode: true,
-              initialColorMode: 'light',
+              initialColorMode: colorMode,
             }}
+            value={colorMode}
           >
             <CSSReset />
             <MemoryRouter initialEntries={initialEntries}>

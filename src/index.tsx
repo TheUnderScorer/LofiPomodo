@@ -8,7 +8,7 @@ import { ColorModeScript } from '@chakra-ui/core';
 
 ReactDOM.render(
   <React.StrictMode>
-    <ColorModeScript initialColorMode="light" />
+    <ColorModeScript initialColorMode="system" />
     <AppProvider>
       <App />
     </AppProvider>
