@@ -3,6 +3,17 @@ import isDev from 'electron-is-dev';
 import { AppContext, createContext } from './context';
 import { setupPomodoro } from './app/pomodoro/setup';
 import { setupTasks } from './app/tasks/setup';
+import log from 'electron-log';
+
+if (!isDev) {
+  Object.assign(console, log.functions);
+}
+
+log.catchErrors({
+  showDialog: true,
+});
+
+log.debug(`Dirname: ${__dirname}`);
 
 let mainWindow: BrowserWindow | null;
 
