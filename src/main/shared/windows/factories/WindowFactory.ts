@@ -32,7 +32,7 @@ export class WindowFactory {
   }
 
   async createTimerWindow() {
-    const size = 650;
+    const size = 500;
 
     const window = new BrowserWindow({
       height: size + 100,

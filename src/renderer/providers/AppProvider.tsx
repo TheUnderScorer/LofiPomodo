@@ -42,14 +42,14 @@ export const AppProvider: FC<AppProviderProps> = ({ children }) => {
         initialColorMode: colorMode,
       },
       fonts: {
-        body: 'Silkscreen',
-        heading: 'Silkscreen',
-        mono: 'Silkscreen',
+        body: 'PixelFont',
+        heading: 'PixelFont',
+        mono: 'PixelFont',
       },
       styles: {
         global: {
           body: {
-            fontFamily: 'Silkscreen',
+            fontFamily: 'PixelFont',
             overflow: 'visible',
           },
           'div.chakra-checkbox__control': {

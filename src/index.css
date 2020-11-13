@@ -1,6 +1,18 @@
+@font-face {
+  font-family: "PixelFont";
+  src: url(./fonts/slkscr.ttf) format("truetype");
+  font-weight: normal;
+}
+
+@font-face {
+  font-family: "PixelFont";
+  src: url(./fonts/slkscrb.ttf) format("truetype");
+  font-weight: bold;
+}
+
 body {
   margin: 0;
-  font-family: Silkscreen, -apple-system, SansSerif, serif;
+  font-family: "PixelFont", -apple-system, SansSerif, serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }

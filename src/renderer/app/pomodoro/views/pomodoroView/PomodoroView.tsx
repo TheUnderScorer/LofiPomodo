@@ -6,6 +6,7 @@ import { TitleBar } from '../../../../ui/atoms/titleBar/TitleBar';
 import { PomodoroMenu } from '../../components/pomodoroMenu/PomodoroMenu';
 import { TimerBox } from '../../components/timerBox/TimerBox';
 import { TabbedTasksList } from '../../../tasks/components/tabbedTasksList/TabbedTasksList';
+import { getPlatform } from '../../../../shared/platform/getPlatform';
 
 export interface PomodoroViewProps {
   breakMode?: boolean;
@@ -47,8 +48,8 @@ export const PomodoroView: FC<PomodoroViewProps> = ({ breakMode = false }) => {
             <>
               <TimerBox
                 containerProps={{
-                  pt: 10,
-                  height: '240px',
+                  pt: getPlatform() !== 'win32' ? 10 : 0,
+                  pb: 5,
                 }}
               />
               <Box flex={1} overflow="hidden">
