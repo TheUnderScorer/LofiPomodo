@@ -1,18 +1,15 @@
 import React, { FC } from 'react';
 import { Box, Container, Flex, useColorMode } from '@chakra-ui/core';
 import { usePomodoro } from '../../hooks/usePomodoro';
-import { PomodoroState } from '../../../../../shared/types';
 import { TitleBar } from '../../../../ui/atoms/titleBar/TitleBar';
 import { PomodoroMenu } from '../../components/pomodoroMenu/PomodoroMenu';
 import { TimerBox } from '../../components/timerBox/TimerBox';
 import { TabbedTasksList } from '../../../tasks/components/tabbedTasksList/TabbedTasksList';
 import { getPlatform } from '../../../../../shared/platform/getPlatform';
 
-export interface PomodoroViewProps {
-  breakMode?: boolean;
-}
+export interface PomodoroViewProps {}
 
-export const PomodoroView: FC<PomodoroViewProps> = ({ breakMode = false }) => {
+export const PomodoroView: FC<PomodoroViewProps> = () => {
   const { pomodoro } = usePomodoro();
 
   const colorMode = useColorMode();
@@ -37,11 +34,6 @@ export const PomodoroView: FC<PomodoroViewProps> = ({ breakMode = false }) => {
         centerContent
         width="100%"
         maxW="100%"
-        bg={
-          breakMode
-            ? `brand.${pomodoro?.state ?? PomodoroState.Work}`
-            : undefined
-        }
       >
         <Box h="100%" w="100%" d="flex" flexDirection="column">
           {pomodoro && (

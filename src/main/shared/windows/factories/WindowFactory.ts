@@ -79,7 +79,7 @@ export class WindowFactory {
       minimizable: false,
       maximizable: false,
       title: WindowTitles.Break,
-      titleBarStyle: 'customButtonsOnHover',
+      titleBarStyle: 'hidden',
       resizable: false,
       webPreferences: {
         preload: this.preloadPath,
@@ -89,7 +89,7 @@ export class WindowFactory {
 
     window.setAlwaysOnTop(true, 'floating');
 
-    await setupWindow(window, routes.timer(true));
+    await setupWindow(window, routes.breakWindow());
 
     return window;
   }

@@ -5,6 +5,7 @@ import { routes } from '../shared/routes/routes';
 import { PomodoroView } from './app/pomodoro/views/pomodoroView/PomodoroView';
 import { usePomodoroListeners } from './app/pomodoro/hooks/usePomodoroListeners';
 import { useTasksListeners } from './app/tasks/hooks/useTaskListeners';
+import { BreakView } from './app/pomodoro/views/breakView/BreakView';
 
 const App = () => {
   const { colorMode } = useColorMode();
@@ -24,8 +25,8 @@ const App = () => {
         <Route exact path={routes.timer()}>
           <PomodoroView />
         </Route>
-        <Route path={routes.timer(true)}>
-          <PomodoroView breakMode />
+        <Route path={routes.breakWindow()}>
+          <BreakView />
         </Route>
       </Switch>
     </Container>
