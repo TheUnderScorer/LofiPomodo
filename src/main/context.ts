@@ -49,7 +49,7 @@ export const createContext = async (): Promise<AppContext> => {
   const menuFactory = new MenuFactory(pomodoro);
   const windowFactory = new WindowFactory(preload, menuFactory);
 
-  if (process.env.CLEAR_STORE_ON_APP_RUN) {
+  if (process.env.CLEAR_STORE_ON_APP_RUN === 'true') {
     store.clear();
   }
 
