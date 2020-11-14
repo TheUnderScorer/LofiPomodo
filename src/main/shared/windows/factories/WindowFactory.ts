@@ -2,6 +2,8 @@ import { BrowserWindow } from 'electron';
 import { setupWindow } from './setup';
 import { routes } from '../../../../shared/routes/routes';
 import { getWindowByTitle } from '../getWindowByTitle';
+import { is } from 'electron-util';
+import { MenuFactory } from '../../menu/MenuFactory';
 
 export enum WindowTitles {
   Timer = 'Lofi Pomodoro',
@@ -17,7 +19,10 @@ export class WindowFactory {
     [WindowTitles.Break]: 'createBreakWindow',
   };
 
-  constructor(private readonly preloadPath: string) {}
+  constructor(
+    private readonly preloadPath: string,
+    private readonly menuFactory: MenuFactory
+  ) {}
 
   async getOrCreateWindow(title: WindowTitles) {
     const foundWindow = getWindowByTitle(title);
@@ -45,7 +50,8 @@ export class WindowFactory {
       fullscreen: false,
       minimizable: false,
       title: WindowTitles.Timer,
-      titleBarStyle: 'hiddenInset',
+      titleBarStyle: is.windows ? 'customButtonsOnHover' : 'hiddenInset',
+      frame: !is.windows,
       webPreferences: {
         preload: this.preloadPath,
         nodeIntegration: false,
@@ -54,6 +60,9 @@ export class WindowFactory {
 
     await setupWindow(window, routes.timer());
 
+    const menu = this.menuFactory.createAppMenu();
+    window.setMenu(menu);
+
     return window;
   }
 
@@ -61,6 +70,7 @@ export class WindowFactory {
     const window = new BrowserWindow({
       height: 600,
       width: 600,
+      frame: false,
       minHeight: 600,
       minWidth: 600,
       fullscreenable: true,
@@ -69,7 +79,7 @@ export class WindowFactory {
       minimizable: false,
       maximizable: false,
       title: WindowTitles.Break,
-      titleBarStyle: 'hiddenInset',
+      titleBarStyle: 'customButtonsOnHover',
       resizable: false,
       webPreferences: {
         preload: this.preloadPath,

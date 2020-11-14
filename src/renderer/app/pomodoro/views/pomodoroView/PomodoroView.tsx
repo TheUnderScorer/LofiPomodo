@@ -6,7 +6,7 @@ import { TitleBar } from '../../../../ui/atoms/titleBar/TitleBar';
 import { PomodoroMenu } from '../../components/pomodoroMenu/PomodoroMenu';
 import { TimerBox } from '../../components/timerBox/TimerBox';
 import { TabbedTasksList } from '../../../tasks/components/tabbedTasksList/TabbedTasksList';
-import { getPlatform } from '../../../../shared/platform/getPlatform';
+import { getPlatform } from '../../../../../shared/platform/getPlatform';
 
 export interface PomodoroViewProps {
   breakMode?: boolean;

@@ -208,4 +208,8 @@ export class PomodoroService
       openFullWindowOnBreak: this.openFullWindowOnBreak,
     };
   }
+
+  toggle() {
+    this.isRunning = !this.isRunning;
+  }
 }

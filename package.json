@@ -28,6 +28,7 @@
     "electron-is-dev": "^1.2.0",
     "electron-log": "^4.3.0",
     "electron-store": "^6.0.0",
+    "electron-util": "^0.14.2",
     "emittery": "^0.7.1",
     "framer-motion": "2.9.4",
     "knex": "^0.21.7",

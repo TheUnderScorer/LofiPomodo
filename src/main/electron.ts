@@ -1,4 +1,4 @@
-import { app, BrowserWindow } from 'electron';
+import { app, BrowserWindow, Menu } from 'electron';
 import isDev from 'electron-is-dev';
 import { AppContext, createContext } from './context';
 import { setupPomodoro } from './app/pomodoro/setup';
@@ -37,9 +37,18 @@ const createWindow = async (context: AppContext) => {
   }
 };
 
+const setupAppMenu = (context: AppContext) => {
+  Menu.setApplicationMenu(context.menuFactory.createAppMenu());
+
+  context.pomodoro.subscribe(() => {
+    Menu.setApplicationMenu(context.menuFactory.createAppMenu());
+  });
+};
+
 app.whenReady().then(async () => {
   const context = await createContext();
 
+  setupAppMenu(context);
   setupPomodoro(context);
   setupTasks(context);
 

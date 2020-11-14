@@ -11,6 +11,7 @@ import { TaskRepository } from './app/tasks/repositories/TaskRepository';
 import { Tables } from '../shared/types/database';
 import { TasksService } from './app/tasks/services/TasksService';
 import fs from 'fs';
+import { MenuFactory } from './shared/menu/MenuFactory';
 
 export interface AppContext {
   ipcService: IpcMainService;
@@ -18,6 +19,7 @@ export interface AppContext {
   pomodoro: PomodoroService;
   preloadPath: string;
   windowFactory: WindowFactory;
+  menuFactory: MenuFactory;
   autoLaunch: AutoLaunch;
   tasksService: TasksService;
   taskRepository: TaskRepository;
@@ -43,7 +45,9 @@ export const createContext = async (): Promise<AppContext> => {
   const preload = path.join(__dirname, 'preload.js');
   const store = new ElectronStore<AppStore>();
   const pomodoro = new PomodoroService(store);
-  const windowFactory = new WindowFactory(preload);
+
+  const menuFactory = new MenuFactory(pomodoro);
+  const windowFactory = new WindowFactory(preload, menuFactory);
 
   return {
     ipcService: new IpcMainService(),
@@ -52,6 +56,7 @@ export const createContext = async (): Promise<AppContext> => {
     pomodoro,
     preloadPath: preload,
     windowFactory,
+    menuFactory,
     tasksService,
     autoLaunch: new AutoLaunch({
       isHidden: true,
