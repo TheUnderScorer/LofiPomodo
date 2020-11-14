@@ -22,6 +22,8 @@ export interface ContextMenuProps {
   id: string;
 }
 
+const maxMenuOffset = 200;
+
 const contextMenus = atom<Record<string, boolean>>({
   default: {},
   key: 'contextMenu',
@@ -46,7 +48,14 @@ export const ContextMenu: FC<ContextMenuProps> = ({ menu, children, id }) => {
 
   const toggleMenu: MouseEventHandler<HTMLElement> = useCallback(
     (event) => {
-      const newXPos = `${event.clientX}px`;
+      const { innerWidth } = window;
+
+      const x =
+        innerWidth - event.clientX < maxMenuOffset
+          ? event.clientX - maxMenuOffset
+          : event.clientX;
+
+      const newXPos = `${x}px`;
       const newYPos = `${event.clientY}px`;
 
       setxPos(newXPos);
@@ -85,6 +94,7 @@ export const ContextMenu: FC<ContextMenuProps> = ({ menu, children, id }) => {
               closeOnSelect={false}
               placement="auto"
               fixed={false}
+              preventOverflow
               isLazy
               isOpen={open}
               onClose={() => toggleOpen()}
