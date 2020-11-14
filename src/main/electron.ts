@@ -46,6 +46,8 @@ const setupAppMenu = (context: AppContext) => {
 };
 
 app.whenReady().then(async () => {
+  app.dock.hide();
+
   const context = await createContext();
 
   setupAppMenu(context);
