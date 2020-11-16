@@ -47,6 +47,7 @@ export class WindowFactory {
       fullscreenable: false,
       maximizable: false,
       simpleFullscreen: false,
+      center: true,
       fullscreen: false,
       minimizable: false,
       title: WindowTitles.Timer,
@@ -75,6 +76,7 @@ export class WindowFactory {
       minWidth: 600,
       fullscreenable: true,
       fullscreen: true,
+      center: true,
       alwaysOnTop: true,
       minimizable: false,
       maximizable: false,
@@ -88,6 +90,7 @@ export class WindowFactory {
     });
 
     window.setAlwaysOnTop(true, 'floating');
+    window.setMenu(this.menuFactory.createAppMenu());
 
     await setupWindow(window, routes.breakWindow());
 

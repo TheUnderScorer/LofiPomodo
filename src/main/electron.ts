@@ -4,6 +4,7 @@ import { AppContext, createContext } from './context';
 import { setupPomodoro } from './app/pomodoro/setup';
 import { setupTasks } from './app/tasks/setup';
 import log from 'electron-log';
+import { setupSystem } from './app/system/setup';
 
 if (!isDev) {
   Object.assign(console, log.functions);
@@ -51,6 +52,7 @@ app.whenReady().then(async () => {
   setupAppMenu(context);
   setupPomodoro(context);
   setupTasks(context);
+  setupSystem(context);
 
   await createWindow(context);
 
