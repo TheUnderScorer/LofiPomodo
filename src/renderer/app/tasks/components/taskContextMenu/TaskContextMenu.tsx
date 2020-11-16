@@ -59,7 +59,11 @@ export const TaskContextMenu: FC<TaskContextMenuProps> = ({ task }) => {
         <Text>Remove 1 pomodoro</Text>
       </MenuItem>
       <MenuDivider />
-      <MenuItem onClick={handleDeleteClick} color="brand.danger">
+      <MenuItem
+        className="delete-task"
+        onClick={handleDeleteClick}
+        color="brand.danger"
+      >
         {loading ? 'Deleting...' : deleteText}
       </MenuItem>
     </>

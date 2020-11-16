@@ -30,6 +30,32 @@ describe('Tasks list - as an user', () => {
     expect(await activeTaskTitle.getText()).toEqual('Test task\n(0/5)');
   });
 
+  it('I should be able to delete task', async () => {
+    const app = await bootstrapTestApp();
+
+    await createTask(app);
+
+    const title = await app.client.$('.task-title-editable');
+
+    await title.click({
+      button: 2,
+    });
+
+    const deleteTask = await app.client.$('.context-menu .delete-task');
+    await deleteTask.waitForClickable();
+    await deleteTask.click();
+
+    expect(await deleteTask.getText()).toEqual('Delete?');
+
+    await deleteTask.click();
+
+    const listItems = await app.client.$$('.task-list-item');
+    expect(listItems).toHaveLength(0);
+
+    const todoTab = await app.client.$(`.tabbed-task-state-${TaskState.Todo}`);
+    expect(await todoTab.getText()).toEqual('Todo\n0');
+  });
+
   it('I should be able to mark task as done', async () => {
     const app = await bootstrapTestApp();
 
@@ -40,17 +66,19 @@ describe('Tasks list - as an user', () => {
 
     await wait(1500);
 
-    const todoListItems = await app.client.$$('.task-list-item');
+    await app.client.waitUntil(async () => {
+      const todoListItems = await app.client.$$('.task-list-item');
 
-    expect(todoListItems).toHaveLength(0);
+      return todoListItems.length === 0;
+    });
 
     const todoTab = await app.client.$(`.tabbed-task-state-${TaskState.Todo}`);
     const completedTab = await app.client.$(
       `.tabbed-task-state-${TaskState.Completed}`
     );
 
-    expect(await todoTab.getText()).toEqual('Todo(0)');
-    expect(await completedTab.getText()).toEqual('Done(1)');
+    expect(await todoTab.getText()).toEqual('Todo\n0');
+    expect(await completedTab.getText()).toEqual('Done\n1');
 
     await completedTab.click();
 

@@ -1,8 +1,6 @@
 import { BaseIconProps, ColorIconMap } from './types';
-import { FC, useMemo } from 'react';
-import React from 'react';
+import React, { FC, Fragment, useMemo } from 'react';
 import { BoxProps, Image, useColorMode, useTheme } from '@chakra-ui/core';
-import { ColorMode } from '../../../../shared/types/color';
 import { Theme } from '../../../types/theme';
 
 export interface ComposeIconParams<AdditionalProps extends object>
@@ -25,18 +23,27 @@ export const composeIcon = <Props extends BaseIconProps>(
     [props, theme]
   );
 
+  const icons = useMemo(() => Object.entries(params.iconMap), []);
+
+  console.log({ icons, colorMode, alt: params.alt });
+
   return (
     <>
-      {params.type === 'img' && (
-        <Image
-          width={props.width}
-          height={props.height}
-          src={params.iconMap[colorMode as ColorMode] as string}
-          alt={params.alt!}
-          {...(props as any)}
-          {...(additionalProps as any)}
-        />
-      )}
+      {icons.map(([iconColor, icon]) => (
+        <Fragment key={iconColor}>
+          {params.type === 'img' && (
+            <Image
+              display={iconColor === colorMode ? 'block' : 'none'}
+              width={props.width}
+              height={props.height}
+              src={icon}
+              alt={params.alt!}
+              {...(props as any)}
+              {...(additionalProps as any)}
+            />
+          )}
+        </Fragment>
+      ))}
     </>
   );
 };

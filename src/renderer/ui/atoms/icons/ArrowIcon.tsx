@@ -1,12 +1,14 @@
 import { BaseIconProps } from './types';
 import { composeIcon } from './composeIcon';
-import ArrowWhite from '../../../../assets/arrow-white.png';
-import ArrowBlack from '../../../../assets/arrow-black.png';
+import '../../../../assets/pointer-white.png';
+import '../../../../assets/pointer-black.png';
+import ArrowWhite from '../../../../assets/pointer-white.png';
+import ArrowBlack from '../../../../assets/pointer-black.png';
 
 type Direction = 'up' | 'left' | 'right' | 'down';
 
 export interface ArrowIconProps extends BaseIconProps {
-  direction: Direction;
+  iconDirection?: Direction;
 }
 
 const directionTransforms: Record<Direction, number> = {
@@ -30,8 +32,10 @@ export const ArrowIcon = composeIcon<ArrowIconProps>({
     light: ArrowBlack,
   },
   type: 'img',
-  alt: 'Arrow',
+  alt: '',
   additionalProps: (props) => ({
-    transform: `rotate(${getTransform(props.direction)}deg)`,
+    transform: props.iconDirection
+      ? `rotate(${getTransform(props.iconDirection)}deg)`
+      : undefined,
   }),
 });

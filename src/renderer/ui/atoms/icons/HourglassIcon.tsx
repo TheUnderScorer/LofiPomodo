@@ -11,5 +11,5 @@ export const HourglassIcon = composeIcon<HourglassIconProps>({
     light: HourglassBlack,
     dark: HourglassWhite,
   },
-  alt: 'Hourglass',
+  alt: '',
 });

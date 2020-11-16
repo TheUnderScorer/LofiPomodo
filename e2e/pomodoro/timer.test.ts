@@ -14,7 +14,9 @@ describe('Timer - as an user', () => {
 
     await expect(timer.isExisting()).resolves.toEqual(true);
 
-    const progress = await timer.$('.timer-progress');
+    const progress = await timer.$('.remaining-time');
+    await progress.waitForExist();
+
     const progressText = await progress.getText();
 
     expect(progressText).toEqual(
@@ -28,26 +30,19 @@ describe('Timer - as an user', () => {
     });
 
     const controlBtn = await app.client.$('#control');
-    const timerTextEl = await app.client.$('.timer-text');
-    const icon = await controlBtn.$('.pomodoro-control-icon');
+    const timerTextEl = await app.client.$('.remaining-time');
 
     const timerText = await timerTextEl.getText();
     expect(timerText).toEqual('00:10');
 
     await controlBtn.click();
 
-    let iconClass = await icon.getAttribute('class');
-
-    expect(iconClass).toContain('fa-pause');
-
     await wait(2000);
 
     await controlBtn.click();
 
-    iconClass = await icon.getAttribute('class');
     const newTimerText = await timerTextEl.getText();
 
-    expect(iconClass).toContain('fa-play');
     expect(newTimerText).toEqual('00:08');
   });
 

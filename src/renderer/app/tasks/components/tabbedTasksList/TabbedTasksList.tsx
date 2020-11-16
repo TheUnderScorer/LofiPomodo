@@ -1,4 +1,5 @@
 import {
+  Badge,
   Box,
   Center,
   Spinner,
@@ -130,9 +131,8 @@ export const TabbedTasksList: FC<TabbedTasksListProps> = (props) => {
 
               return (
                 <Tab className={`tabbed-task-state-${state}`} key={state}>
-                  <Text>
-                    {taskStateDictionary[state]}({count})
-                  </Text>
+                  <Text mr={1}>{taskStateDictionary[state]}</Text>
+                  <Badge>{count}</Badge>
                 </Tab>
               );
             })}

@@ -11,5 +11,5 @@ export const RetryIcon = composeIcon<RetryIconProps>({
     light: RetryWhite,
   },
   type: 'img',
-  alt: 'Retry',
+  alt: '',
 });

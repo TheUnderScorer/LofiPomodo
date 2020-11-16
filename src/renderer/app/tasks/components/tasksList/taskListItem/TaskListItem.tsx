@@ -86,6 +86,7 @@ export const TaskListItem: FC<TaskListItemProps> = ({
                 mr={2}
               />
               <Editable
+                className="task-title-editable task-title"
                 onSubmit={handleTaskChange('title', (value) =>
                   value === task.title ? false : value
                 )}
