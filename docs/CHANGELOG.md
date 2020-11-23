@@ -1,3 +1,24 @@
+# [1.1.0](https://github.com/TheUnderScorer/LofiPomodo/compare/v1.0.0...v1.1.0) (2020-11-23)
+
+
+### Bug Fixes
+
+* Use correct color mode from system ([93b59b6](https://github.com/TheUnderScorer/LofiPomodo/commit/93b59b6840051f7f5e8e00c3335fd57c7a03d77a))
+
+
+### Features
+
+* Add task and display it in timer ([185aa7a](https://github.com/TheUnderScorer/LofiPomodo/commit/185aa7aafa09c96e660d14140c6b483c47f24939))
+* Add task context menu ([1251679](https://github.com/TheUnderScorer/LofiPomodo/commit/1251679ba55c828a2771a61025a74ee702381035))
+* Add tasks list ([6776e3a](https://github.com/TheUnderScorer/LofiPomodo/commit/6776e3a894d1239c63321d8c91701c22ec160a49))
+* Change ui to pixel art ([660ea25](https://github.com/TheUnderScorer/LofiPomodo/commit/660ea25ada58a07620700954973595a5dafa5e33))
+* Delete all completed tasks ([8931d05](https://github.com/TheUnderScorer/LofiPomodo/commit/8931d0597e62b8e38560c56237a7e8d63b14faa9))
+* Edit task title ([f37318d](https://github.com/TheUnderScorer/LofiPomodo/commit/f37318dc4d137bca2c8f328f65b2180dfebbf12f))
+* Hide app in dock ([c8efe4a](https://github.com/TheUnderScorer/LofiPomodo/commit/c8efe4a9df6dfe8e32fb6ee3ea665e11180a0956))
+* Order tasks by drag and drop ([822a0fe](https://github.com/TheUnderScorer/LofiPomodo/commit/822a0fe5e4ed0229fb6df672b8a7166501b2a531))
+* Setup app menu ([00b140d](https://github.com/TheUnderScorer/LofiPomodo/commit/00b140d7feaf23549872801df91557a03c98f546))
+* Use custom window controls on windows ([04da504](https://github.com/TheUnderScorer/LofiPomodo/commit/04da504f42c140dd0d1a3c0d8c38df36ab826363))
+
 # 1.0.0 (2020-10-28)
 
 
