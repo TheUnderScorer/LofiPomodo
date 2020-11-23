@@ -41,6 +41,7 @@ export enum TaskEvents {
   UpdateTasks = 'UpdateTasks',
   CountByState = 'CountByState',
   DeleteTasks = 'DeleteTasks',
+  DeleteCompletedTasks = 'DeleteCompletedTasks',
 }
 
 export interface GetTasksPayload {

@@ -1,9 +1,9 @@
 import {
+  Box,
   Checkbox,
   Editable,
   EditableInput,
   EditablePreview,
-  IconButton,
   ListItem,
   ListItemProps,
   NumberInput,
@@ -98,7 +98,7 @@ export const TaskListItem: FC<TaskListItemProps> = ({
               </Editable>
               <Stack
                 direction="row"
-                spacing={2}
+                spacing={4}
                 flex={1}
                 justifyContent="flex-end"
                 alignItems="center"
@@ -121,13 +121,14 @@ export const TaskListItem: FC<TaskListItemProps> = ({
                   />
                 </NumberInput>
                 {!isDragDisabled && (
-                  <IconButton
+                  <Box
+                    textAlign="center"
+                    width="35px"
+                    aria-label="Drag task"
                     {...dragHandleProps}
-                    variant="ghost"
-                    aria-label="Drag"
                   >
                     <FaIcon icon={faGripLines} />
-                  </IconButton>
+                  </Box>
                 )}
               </Stack>
             </ListItem>

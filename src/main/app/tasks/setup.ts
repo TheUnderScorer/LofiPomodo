@@ -34,5 +34,7 @@ export const setupTasks = (context: AppContext) => {
       context.taskRepository.countGroupedByState(),
     [TaskEvents.DeleteTasks]: (_, ids: Record<number, string>) =>
       context.tasksService.deleteTasks(Object.values(ids)),
+    [TaskEvents.DeleteCompletedTasks]: () =>
+      context.taskRepository.deleteCompletedTasks(),
   });
 };

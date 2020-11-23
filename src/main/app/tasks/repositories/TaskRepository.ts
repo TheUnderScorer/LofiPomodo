@@ -133,6 +133,10 @@ export class TaskRepository extends Repository<TaskDb, Task> {
     await this.updateMany(mappedTasks);
   }
 
+  async deleteCompletedTasks() {
+    return this.getQueryBuilder().where('state', TaskState.Completed).delete();
+  }
+
   protected fromDb(entity: TaskDb): Task {
     return {
       ...entity,

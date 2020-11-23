@@ -2,7 +2,6 @@ import {
   Badge,
   Box,
   Center,
-  Spinner,
   Stack,
   Tab,
   TabList,
@@ -10,7 +9,14 @@ import {
   TabPanels,
   Tabs,
 } from '@chakra-ui/core';
-import React, { FC, useCallback, useEffect, useRef, useState } from 'react';
+import React, {
+  FC,
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from 'react';
 import { Task, TaskEvents, TaskState } from '../../../../../shared/types/tasks';
 import { taskStateDictionary } from '../../../../../shared/dictionary/tasks';
 import { TasksList, TasksListProps } from '../tasksList/TasksList';
@@ -24,6 +30,7 @@ import { useDebounce, useSet } from 'react-use';
 import { Heading } from '../../../../ui/atoms/heading/Heading';
 import { useActiveTask } from '../../hooks/useActiveTask';
 import { TaskContextMenu } from '../taskContextMenu/TaskContextMenu';
+import { TasksMenu } from '../tasksMenu/TasksMenu';
 
 export interface TabbedTasksListProps {
   listProps?: Omit<TasksListProps, 'tasks'>;
@@ -42,6 +49,8 @@ export const TabbedTasksList: FC<TabbedTasksListProps> = (props) => {
   const [activeIndex, setActiveIndex] = useState(0);
   const [tasksState, setStoredTasks] = useState<Task[]>(tasks);
 
+  const activeState = useMemo(() => states[activeIndex], [activeIndex]);
+
   const [updateTasksMutation, { loading: isUpdating }] = useIpcInvoke<
     Task[],
     Task[]
@@ -52,8 +61,8 @@ export const TabbedTasksList: FC<TabbedTasksListProps> = (props) => {
   const { listProps } = props;
 
   useEffect(() => {
-    setTaskState(states[activeIndex]);
-  }, [activeIndex, setTaskState]);
+    setTaskState(activeState);
+  }, [activeState, setTaskState]);
 
   const handleTaskUpdate = useCallback(async () => {
     const tasksToUpdate = Array.from(changedTasks)
@@ -137,16 +146,18 @@ export const TabbedTasksList: FC<TabbedTasksListProps> = (props) => {
               );
             })}
           </TabList>
-        </Center>
-        {(loading || isUpdating) && (
-          <Spinner
-            className="tabbed-tasks-list-spinner"
-            color="brand.primary"
-            position="absolute"
-            right="10px"
-            top="10px"
+
+          <TasksMenu
+            loading={loading || isUpdating}
+            menuButtonProps={{
+              position: 'absolute',
+              top: '10px',
+              right: '15px',
+              width: '30px',
+              height: '30px',
+            }}
           />
-        )}
+        </Center>
         <TabPanels h="100%">
           <TabPanel h="100%">
             <Box mb={tasks?.length ? 6 : 0}>
