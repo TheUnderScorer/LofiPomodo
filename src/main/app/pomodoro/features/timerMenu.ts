@@ -3,7 +3,7 @@ import { PomodoroState, ToggleMenuPayload } from '../../../../shared/types';
 import { Menu } from 'electron';
 import { getWindowByTitle } from '../../../shared/windows/getWindowByTitle';
 import { WindowTitles } from '../../../shared/windows/factories/WindowFactory';
-import { createSectionTitle } from '../../../shared/menu/menuFactory';
+import { createSectionTitle } from '../../../shared/menu/sectionTitle';
 import { createErrorDialog } from '../../../shared/dialog/factories/errorDialog';
 import { AppError } from '../../../errors/AppError';
 import { createDurationsMenu } from '../menu/menuFactory';

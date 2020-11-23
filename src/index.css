@@ -1,0 +1,36 @@
+@font-face {
+  font-family: "PixelFont";
+  src: url(./fonts/slkscr.ttf) format("truetype");
+  font-weight: normal;
+}
+
+@font-face {
+  font-family: "PixelFont";
+  src: url(./fonts/slkscrb.ttf) format("truetype");
+  font-weight: bold;
+}
+
+body {
+  margin: 0;
+  font-family: "PixelFont", -apple-system, SansSerif, serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+html, body {
+  overflow: hidden;
+}
+
+code {
+  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
+    monospace;
+}
+
+#root {
+  height: 100%;
+  min-height: 100vh !important;
+}
+
+* {
+  user-select: none;
+}

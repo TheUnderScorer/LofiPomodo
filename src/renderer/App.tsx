@@ -2,13 +2,16 @@ import React from 'react';
 import { Container, useColorMode } from '@chakra-ui/core';
 import { Route, Switch } from 'react-router-dom';
 import { routes } from '../shared/routes/routes';
-import { Timer } from './app/pomodoro/views/Timer';
+import { PomodoroView } from './app/pomodoro/views/pomodoroView/PomodoroView';
 import { usePomodoroListeners } from './app/pomodoro/hooks/usePomodoroListeners';
+import { useTasksListeners } from './app/tasks/hooks/useTaskListeners';
+import { BreakView } from './app/pomodoro/views/breakView/BreakView';
 
 const App = () => {
   const { colorMode } = useColorMode();
 
   usePomodoroListeners();
+  useTasksListeners();
 
   return (
     <Container
@@ -19,9 +22,11 @@ const App = () => {
       bg={colorMode === 'dark' ? 'gray.900' : 'gray.50'}
     >
       <Switch>
-        <Route exact path={routes.timer()} component={Timer} />
-        <Route path={routes.timer(true)}>
-          <Timer breakMode />
+        <Route exact path={routes.timer()}>
+          <PomodoroView />
+        </Route>
+        <Route path={routes.breakWindow()}>
+          <BreakView />
         </Route>
       </Switch>
     </Container>

@@ -1,7 +1,7 @@
 {
   "extends": "./tsconfig.json",
   "compilerOptions": {
-    "target": "ES6",
+    "target": "ES2019",
     "module": "CommonJS",
     "moduleResolution": "node",
     "outDir": "build",
@@ -15,7 +15,8 @@
   "include": [
     "src/main/*.ts",
     "src/typings/*.ts",
-    "src/shared/*.ts"
+    "src/shared/*.ts",
+    "db/migrations/*.ts"
   ],
   "exclude": [
     "node_modules"

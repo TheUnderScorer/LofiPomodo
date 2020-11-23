@@ -1,12 +1,17 @@
 {
   "name": "lofi-pomodo",
   "productName": "Lofi Pomodo",
+  "homepage": "./",
+  "author": {
+    "email": "przemyslawzydek@gmail.com",
+    "name": "Przemysław Żydek"
+  },
   "version": "1.0.0",
   "private": true,
   "main": "build/electron.js",
   "dependencies": {
-    "@chakra-ui/core": "1.0.0-rc.5",
-    "@chakra-ui/icons": "1.0.0-next.3",
+    "@chakra-ui/core": "1.0.0-rc.8",
+    "@chakra-ui/icons": "1.0.0-next.7",
     "@fortawesome/fontawesome-svg-core": "^1.2.32",
     "@fortawesome/free-solid-svg-icons": "^5.15.1",
     "@fortawesome/react-fontawesome": "^0.1.11",
@@ -21,19 +26,29 @@
     "auto-launch": "^5.0.5",
     "electron-debug": "^3.1.0",
     "electron-is-dev": "^1.2.0",
+    "electron-log": "^4.3.0",
     "electron-store": "^6.0.0",
+    "electron-util": "^0.14.2",
     "emittery": "^0.7.1",
+    "framer-motion": "2.9.4",
+    "knex": "^0.21.7",
     "lodash.debounce": "^4.0.8",
+    "lodash.isplainobject": "^4.0.6",
     "node-fetch": "^2.6.1",
     "ramda": "^0.27.1",
     "react": "^17.0.0",
+    "react-beautiful-dnd": "^13.0.0",
     "react-dom": "^17.0.0",
+    "react-hook-form": "^6.11.0",
+    "react-hotkeys-hook": "^2.4.0",
     "react-router-dom": "^5.2.0",
     "react-scripts": "4.0.0",
     "react-use": "^15.3.4",
     "recoil": "0.0.13",
     "spectron": "^12.0.0",
-    "typescript": "4.0.3"
+    "sqlite3": "^5.0.0",
+    "typescript": "4.0.3",
+    "uuid": "^8.3.1"
   },
   "devDependencies": {
     "@craco/craco": "5.7.0",
@@ -43,10 +58,13 @@
     "@semantic-release/github": "^7.0.7",
     "@semantic-release/npm": "^7.0.5",
     "@types/auto-launch": "^5.0.1",
+    "@types/lodash.isplainobject": "^4.0.6",
     "@types/node-fetch": "^2.5.7",
     "@types/ramda": "^0.27.28",
+    "@types/react-beautiful-dnd": "^13.0.0",
     "@types/react-router-dom": "^5.1.6",
     "@types/recoil": "0.0.1",
+    "@types/uuid": "^8.3.0",
     "@typescript-eslint/eslint-plugin": "4.4.0",
     "@typescript-eslint/parser": "4.4.0",
     "electron": "^10.1.2",
@@ -60,7 +78,7 @@
     "ts-jest": "26.1.1",
     "ts-loader": "^8.0.4",
     "tsconfig-paths-webpack-plugin": "^3.3.0",
-    "webpack-cli": "^3.3.12",
+    "webpack-cli": "4.2.0",
     "webpack-node-externals": "^2.5.2"
   },
   "resolutions": {
@@ -73,15 +91,16 @@
     "lint": "eslint . --ext .ts,tsx",
     "lint:fix": "eslint . --ext .ts,tsx --fix",
     "test": "SKIP_PREFLIGHT_CHECK=true craco test",
-    "test:e2e": "jest --config jest.config.e2e.js",
+    "test:e2e": "jest --config jest.config.e2e.js --runInBand",
     "test:e2e-docker": "docker-compose up e2e",
     "build-electron": "NODE_ENV=\"production\" webpack --config webpack.electron.js",
     "watch-electron": "webpack --config webpack.electron.js -w",
     "start-electron": "electron ./build/electron.js --remote-debugging-port=9444",
-    "build-windows": "electron-builder -w",
-    "build-macos": "electron-builder -m",
+    "pack-windows": "electron-builder -w",
+    "pack-macos": "electron-builder -m",
     "postinstall": "electron-builder install-app-deps",
-    "semantic-release": "semantic-release"
+    "semantic-release": "semantic-release",
+    "create-migration": "knex migrate:make -x ts --"
   },
   "build": {
     "productName": "Lofi Pomodo",
@@ -98,6 +117,7 @@
     },
     "files": [
       "build/**",
+      "!build/db/lofipomodo.db3",
       "package.json"
     ],
     "artifactName": "LofiPomodo.${ext}",

@@ -1,0 +1,9 @@
+.title-bar {
+    -webkit-user-select: none;
+    -webkit-app-region: drag;
+}
+
+.title-bar .close {
+    -webkit-user-select: none;
+    -webkit-app-region: none;
+}

@@ -8,6 +8,8 @@ export type BrandColors = Record<PomodoroState, string> & {
   textPrimary: string;
   textSecondary: string;
   iconPrimary: string;
+  colorModeContrast: string;
+  danger: string;
 };
 
 export interface ThemeColors extends Colors {

@@ -1,23 +1,29 @@
-import { IconButton } from '@chakra-ui/core';
+import { IconButton, IconButtonProps, Tooltip } from '@chakra-ui/core';
 import React, { FC } from 'react';
-import { FaIcon } from '../../../../../ui/atoms/faIcon/FaIcon';
-import { faArrowRight } from '@fortawesome/free-solid-svg-icons';
 import { useIpcInvoke } from '../../../../../shared/ipc/useIpcInvoke';
 import { PomodoroEvents } from '../../../../../../shared/types';
+import { ArrowIcon } from '../../../../../ui/atoms/icons';
 
-export interface SkipBreakProps {}
+export interface SkipBreakProps extends Omit<IconButtonProps, 'aria-label'> {}
 
-export const SkipBreak: FC<SkipBreakProps> = () => {
+export const SkipBreak: FC<SkipBreakProps> = (props) => {
   const [invoke] = useIpcInvoke(PomodoroEvents.SkipBreak);
 
   return (
-    <IconButton
-      onClick={() => invoke()}
-      isRound
-      aria-label="Skip break"
-      variant="link"
-    >
-      <FaIcon icon={faArrowRight} />
-    </IconButton>
+    <Tooltip label="Skip break">
+      <IconButton
+        className="skip-break"
+        onClick={() => invoke()}
+        aria-label="Skip break"
+        {...props}
+      >
+        <ArrowIcon
+          variant="dark"
+          width="auto"
+          height="20px"
+          iconDirection="left"
+        />
+      </IconButton>
+    </Tooltip>
   );
 };

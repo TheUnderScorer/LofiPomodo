@@ -50,6 +50,11 @@ export class PomodoroService
 
   events = new TypedEmittery<PomodoroServiceEventsMap>();
 
+  public static readonly breakEventsMap = [
+    PomodoroServiceEvents.LongBreakStarted,
+    PomodoroServiceEvents.BreakStarted,
+  ];
+
   private static newStateEventMap = {
     [PomodoroState.Work]: PomodoroServiceEvents.WorkStarted,
     [PomodoroState.LongBreak]: PomodoroServiceEvents.LongBreakStarted,
@@ -57,8 +62,9 @@ export class PomodoroService
   };
 
   constructor(private readonly store: ElectronStore<AppStore>) {
-    // TODO Fetch pomodoro state from store
-    this.fill(getInitialPomodoro());
+    const storeValue = store.get('pomodoroState');
+
+    this.fill(storeValue ?? getInitialPomodoro());
   }
 
   fill(pomodoro: Partial<Pomodoro>) {
@@ -67,7 +73,7 @@ export class PomodoroService
   }
 
   onChange() {
-    this.store.set('pomodoroState', this.state);
+    this.store.set('pomodoroState', this.toJSON());
 
     this.schedule();
   }
@@ -202,5 +208,9 @@ export class PomodoroService
       remainingPercentage: this.remainingPercentage,
       openFullWindowOnBreak: this.openFullWindowOnBreak,
     };
+  }
+
+  toggle() {
+    this.isRunning = !this.isRunning;
   }
 }
