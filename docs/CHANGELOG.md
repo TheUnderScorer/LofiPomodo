@@ -1,3 +1,10 @@
+## [1.1.1](https://github.com/TheUnderScorer/LofiPomodo/compare/v1.1.0...v1.1.1) (2020-11-25)
+
+
+### Bug Fixes
+
+* Use portable build in windows ([8f66417](https://github.com/TheUnderScorer/LofiPomodo/commit/8f6641754517ace2aa1d29734a39bd753350d546))
+
 # [1.1.0](https://github.com/TheUnderScorer/LofiPomodo/compare/v1.0.0...v1.1.0) (2020-11-23)
 
 
