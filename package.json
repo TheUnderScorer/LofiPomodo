@@ -96,8 +96,8 @@
     "build-electron": "NODE_ENV=\"production\" webpack --config webpack.electron.js",
     "watch-electron": "webpack --config webpack.electron.js -w",
     "start-electron": "electron ./build/electron.js --remote-debugging-port=9444",
-    "pack-windows": "electron-builder -w",
-    "pack-macos": "electron-builder -m",
+    "pack-windows": "electron-builder -w --x64",
+    "pack-macos": "electron-builder -m --x64",
     "postinstall": "electron-builder install-app-deps",
     "semantic-release": "semantic-release",
     "create-migration": "knex migrate:make -x ts --"
@@ -107,7 +107,7 @@
     "appId": "com.pz.lofiPomodo",
     "win": {
       "target": [
-        "nsis"
+        "portable"
       ]
     },
     "mac": {
