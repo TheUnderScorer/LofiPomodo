@@ -5,12 +5,14 @@ import { TitleBar } from '../../../../ui/molecules/titleBar/TitleBar';
 import { PomodoroMenu } from '../../components/pomodoroMenu/PomodoroMenu';
 import { TimerBox } from '../../components/timerBox/TimerBox';
 import { TabbedTasksList } from '../../../tasks/components/tabbedTasksList/TabbedTasksList';
-import { getPlatform } from '../../../../../shared/platform/getPlatform';
+import { usePlatform } from '../../../system/hooks/usePlatform';
 
 export interface PomodoroViewProps {}
 
 export const PomodoroView: FC<PomodoroViewProps> = () => {
   const { pomodoro } = usePomodoro();
+
+  const platform = usePlatform();
 
   const colorMode = useColorMode();
 
@@ -38,7 +40,7 @@ export const PomodoroView: FC<PomodoroViewProps> = () => {
             <>
               <TimerBox
                 containerProps={{
-                  pt: getPlatform() === 'win32' ? 3 : 10,
+                  pt: platform === 'win32' ? 3 : 10,
                   pb: 5,
                 }}
               />

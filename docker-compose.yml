@@ -1,6 +1,17 @@
 version: "3.8"
 
 services:
+  pack-windows:
+    image: electronuserland/builder:wine-mono
+
+    command: bash -c "npm run pack-windows"
+    volumes:
+      - ./node_modules:/project/node_modules
+      - ./package.json:/project/package.json
+      - ./electron:/project/electron
+      - ./.env:/project/.env
+      - ./build:/project/build
+
   e2e:
     environment:
       SHORT_BREAK_DURATION_SECONDS: ${SHORT_BREAK_DURATION_SECONDS}
@@ -16,6 +27,6 @@ services:
       sh -c "npm run test:e2e --forceExit"
     volumes:
     - ./e2e:/app/e2e
-    - ./env:/app/env
+    - ./env:/app/.env
     - ./build:/app/build
     - ./jest.config.e2e.js:/app/jest.config.e2e.js
