@@ -177,7 +177,7 @@
       [
         "@semantic-release/exec",
         {
-          "prepareCmd": "electron-builder -m --x64 && npm run pack-windows-docker"
+          "prepareCmd": "electron-builder -m --x64 & npm run pack-windows-docker"
         }
       ],
       [
