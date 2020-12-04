@@ -1,15 +1,15 @@
 import React, { FC } from 'react';
 import { Flex, FlexProps, IconButton } from '@chakra-ui/core';
 import './TitleBar.css';
-import { getPlatform } from '../../../../shared/platform/getPlatform';
 import { useIpcInvoke } from '../../../shared/ipc/useIpcInvoke';
 import { AppSystemEvents } from '../../../../shared/types/system';
 import { Text } from '../../atoms/text/Text';
+import { usePlatform } from '../../../app/system/hooks/usePlatform';
 
 export interface TitleBarProps extends FlexProps {}
 
 export const TitleBar: FC<TitleBarProps> = ({ children, ...props }) => {
-  const platform = getPlatform();
+  const platform = usePlatform();
 
   const [closeWindow] = useIpcInvoke(AppSystemEvents.CloseWindow);
 

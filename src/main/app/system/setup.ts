@@ -24,5 +24,8 @@ export const setupSystem = (context: AppContext) => {
         window?.minimize();
       }
     },
+    [AppSystemEvents.GetPlatform]: () => {
+      return process.platform;
+    },
   });
 };
