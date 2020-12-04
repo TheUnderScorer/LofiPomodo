@@ -1,9 +1,8 @@
 version: "3.8"
 
 services:
-  pack-windows:
+  windows-packer:
     image: electronuserland/builder:wine-mono
-
     command: bash -c "npm run pack-windows"
     volumes:
       - ./node_modules:/project/node_modules

@@ -98,7 +98,7 @@
     "build-electron": "NODE_ENV=\"production\" webpack --config webpack.electron.js",
     "watch-electron": "webpack --config webpack.electron.js -w",
     "start-electron": "electron ./build/electron.js --remote-debugging-port=9444",
-    "pack-windows-docker": "docker-compose up pack-windows",
+    "pack-windows-docker": "docker-compose up windows-packer",
     "pack-windows": "electron-builder -w --x64",
     "pack-macos": "electron-builder -m --x64",
     "build-windows": "scripts/build_windows.sh",
