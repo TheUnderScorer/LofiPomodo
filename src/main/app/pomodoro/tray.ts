@@ -2,7 +2,6 @@ import { AppContext } from '../../context';
 import { nativeImage, Tray } from 'electron';
 import { PomodoroService } from './services/PomodoroService';
 import { pomodoroStateDictionary } from '../../../shared/dictionary/pomodoro';
-import { WindowTitles } from '../../shared/windows/factories/WindowFactory';
 
 export const setupTray = (context: AppContext) => {
   const img = nativeImage.createEmpty();
@@ -15,7 +14,7 @@ export const setupTray = (context: AppContext) => {
 
   tray.on('click', async () => {
     await context.windowFactory
-      .getOrCreateWindow(WindowTitles.Timer)
+      .createTimerWindow()
       .then((window) => window.focus());
   });
 

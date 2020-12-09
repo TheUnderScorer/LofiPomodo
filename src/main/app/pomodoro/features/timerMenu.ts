@@ -1,8 +1,6 @@
 import { AppContext } from '../../../context';
 import { PomodoroState, ToggleMenuPayload } from '../../../../shared/types';
 import { Menu } from 'electron';
-import { getWindowByTitle } from '../../../shared/windows/getWindowByTitle';
-import { WindowTitles } from '../../../shared/windows/factories/WindowFactory';
 import { createSectionTitle } from '../../../shared/menu/sectionTitle';
 import { createErrorDialog } from '../../../shared/dialog/factories/errorDialog';
 import { AppError } from '../../../errors/AppError';
@@ -12,7 +10,12 @@ export const handleTimerMenu = (context: AppContext) => async (
   _: unknown,
   { x, y }: ToggleMenuPayload
 ) => {
-  const window = getWindowByTitle(WindowTitles.Timer);
+  const window = context.windowFactory.timerWindow;
+
+  if (!window) {
+    return;
+  }
+
   const isAutoLaunch = await context.autoLaunch.isEnabled();
 
   const menu = Menu.buildFromTemplate([

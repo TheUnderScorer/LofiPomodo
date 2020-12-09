@@ -1,43 +1,35 @@
 import { BrowserWindow } from 'electron';
 import { setupWindow } from './setup';
 import { routes } from '../../../../shared/routes/routes';
-import { getWindowByTitle } from '../getWindowByTitle';
 import { is } from 'electron-util';
 import { MenuFactory } from '../../menu/MenuFactory';
+import { Nullable } from '../../../../shared/types';
 
 export enum WindowTitles {
   Timer = 'Lofi Pomodoro',
   Break = 'Break',
 }
 
+type WindowKeys = 'timerWindow' | 'breakWindow';
+
 export class WindowFactory {
-  private static windowMap: Record<
-    WindowTitles,
-    keyof Pick<WindowFactory, 'createBreakWindow' | 'createTimerWindow'>
-  > = {
-    [WindowTitles.Timer]: 'createTimerWindow',
-    [WindowTitles.Break]: 'createBreakWindow',
-  };
+  // Timer window is a main window with a pomodoro timer and tasks list
+  public timerWindow: Nullable<BrowserWindow> = null;
+
+  // Break window is an full-screen window that opens once break starts
+  public breakWindow: Nullable<BrowserWindow> = null;
 
   constructor(
     private readonly preloadPath: string,
     private readonly menuFactory: MenuFactory
   ) {}
 
-  async getOrCreateWindow(title: WindowTitles) {
-    const foundWindow = getWindowByTitle(title);
-
-    if (foundWindow) {
-      return foundWindow;
-    }
-
-    const method = WindowFactory.windowMap[title];
-
-    return this[method]();
-  }
-
-  async createTimerWindow() {
+  async createTimerWindow(): Promise<BrowserWindow> {
     const size = 500;
+
+    if (this.timerWindow) {
+      return this.timerWindow;
+    }
 
     const window = new BrowserWindow({
       height: size + 100,
@@ -64,10 +56,12 @@ export class WindowFactory {
     const menu = this.menuFactory.createAppMenu();
     window.setMenu(menu);
 
+    this.registerWindow(window, 'timerWindow');
+
     return window;
   }
 
-  async createBreakWindow() {
+  async createBreakWindow(): Promise<BrowserWindow> {
     const window = new BrowserWindow({
       height: 600,
       width: 600,
@@ -94,6 +88,17 @@ export class WindowFactory {
 
     await setupWindow(window, routes.breakWindow());
 
+    this.registerWindow(window, 'breakWindow');
+
     return window;
+  }
+
+  // Registers new window into class property, and listens on "closed" events after which the reference to window is removed
+  private registerWindow(window: BrowserWindow, key: WindowKeys) {
+    this[key] = window;
+
+    window.once('close', () => {
+      this[key] = null;
+    });
   }
 }
