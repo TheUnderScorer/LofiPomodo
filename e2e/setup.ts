@@ -6,7 +6,7 @@ import fetch from 'node-fetch';
 let runningApps: Application[] = [];
 
 const waitForRenderer = async () => {
-  return new Promise((resolve) => {
+  return new Promise<void>((resolve) => {
     const intervalId = setInterval(async () => {
       try {
         const response = await fetch('http://localhost:3000');

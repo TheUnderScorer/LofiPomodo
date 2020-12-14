@@ -17,6 +17,7 @@ The app is still in early stage, and I have plans for more features in the futur
 * Time reports
 * Break suggestions.
 * Sounds
+* On full screen break window - show random pixel art animation.
 
 
 ### Screenshots
