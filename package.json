@@ -68,9 +68,9 @@
     "@types/uuid": "^8.3.0",
     "@typescript-eslint/eslint-plugin": "4.4.0",
     "@typescript-eslint/parser": "4.4.0",
-    "electron": "^10.1.2",
-    "electron-builder": "^22.8.1",
-    "electron-builder-squirrel-windows": "^22.9.1",
+    "electron": "11.1.0",
+    "electron-builder": "22.9.1",
+    "electron-builder-squirrel-windows": "22.10.0",
     "eslint": "7.11.0",
     "eslint-import-resolver-typescript": "^2.3.0",
     "eslint-plugin-prettier": "^3.1.3",
@@ -98,12 +98,13 @@
     "build-electron": "NODE_ENV=\"production\" webpack --config webpack.electron.js",
     "watch-electron": "webpack --config webpack.electron.js -w",
     "start-electron": "electron ./build/electron.js --remote-debugging-port=9444",
-    "pack-windows-docker": "docker-compose up windows-packer",
-    "pack-windows": "electron-builder -w --x64",
+    "pack-docker-all": "docker-compose up builder",
+    "pack-windows": "electron-builder -w --x64 ",
     "pack-macos": "electron-builder -m --x64",
+    "pack-all": "electron-builder -m -w --x64",
     "build-windows": "scripts/build_windows.sh",
     "build-macos": "scripts/build_macos.sh.sh",
-    "postinstall": "electron-builder install-app-deps",
+    "install-app-deps": "electron-builder install-app-deps",
     "semantic-release": "semantic-release",
     "create-migration": "knex migrate:make -x ts --"
   },
@@ -112,7 +113,7 @@
     "appId": "com.pz.lofiPomodo",
     "win": {
       "target": [
-        "nsis"
+        "Squirrel"
       ]
     },
     "mac": {
@@ -177,7 +178,7 @@
       [
         "@semantic-release/exec",
         {
-          "prepareCmd": "electron-builder -m --x64 & npm run pack-windows-docker"
+          "prepareCmd": "npm run pack-docker-all"
         }
       ],
       [
