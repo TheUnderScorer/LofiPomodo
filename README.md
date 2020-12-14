@@ -8,6 +8,7 @@ Pixel Pomodo is an app built using React & Electron.
 * Tasks list with drag and drop support and pomodoro tracking.
 * Customizable session durations.
 * Full-screen break overlay (with option to switch it off).
+* Dark mode.
 
 The app is still in early stage, and I have plans for more features in the future ;).
 
@@ -18,7 +19,6 @@ The app is still in early stage, and I have plans for more features in the futur
 * Break suggestions.
 * Sounds
 * On full screen break window - show random pixel art animation.
-
 
 ### Screenshots
 
@@ -62,5 +62,8 @@ To build and pack the app run:
 
 Note: Linux support is planned in the future, feel free to submit PRs!
 
+### Releases
+
+Releases are handled via `semantic-release` and are triggered automatically via commits on `master` branch. In order to run release manually run `npm run semantic-release`
 
 
