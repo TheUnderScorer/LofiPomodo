@@ -1,3 +1,10 @@
+## [1.1.2](https://github.com/TheUnderScorer/LofiPomodo/compare/v1.1.1...v1.1.2) (2020-12-14)
+
+
+### Bug Fixes
+
+* Determine platform correctly ([47b0612](https://github.com/TheUnderScorer/LofiPomodo/commit/47b0612ce61b94f39457e25a7f63249f1ad77adb))
+
 ## [1.1.1](https://github.com/TheUnderScorer/LofiPomodo/compare/v1.1.0...v1.1.1) (2020-11-25)
 
 
