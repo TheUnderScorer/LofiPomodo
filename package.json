@@ -1,6 +1,7 @@
 {
-  "name": "lofi-pomodo",
-  "productName": "Lofi Pomodo",
+  "name": "pixel-pomodo",
+  "productName": "Pixel Pomodo",
+  "description": "Pomodoro app made with pixel-art like ui.",
   "homepage": "./",
   "author": {
     "email": "przemyslawzydek@gmail.com",
@@ -108,7 +109,7 @@
     "create-migration": "knex migrate:make -x ts --"
   },
   "build": {
-    "productName": "Lofi Pomodo",
+    "productName": "Pixel Pomodo",
     "appId": "com.pz.lofiPomodo",
     "win": {
       "target": [
@@ -125,7 +126,7 @@
       "!build/db/lofipomodo.db3",
       "package.json"
     ],
-    "artifactName": "LofiPomodo.${ext}",
+    "artifactName": "PixelPomodo.${ext}",
     "squirrelWindows": {
       "iconUrl": "http://www.iconj.com/ico/e/7/e7x2lf2sk8.ico"
     },
@@ -195,16 +196,16 @@
         {
           "assets": [
             {
-              "path": "electron/output/LofiPomodo.exe",
-              "label": "LofiPomodo.exe"
+              "path": "electron/output/PixelPomodo.exe",
+              "label": "PixelPomodo.exe"
             },
             {
-              "path": "electron/output/LofiPomodo.exe.blockmap",
-              "label": "LofiPomodo.exe.blockmap"
+              "path": "electron/output/PixelPomodo.exe.blockmap",
+              "label": "PixelPomodo.exe.blockmap"
             },
             {
-              "path": "electron/output/LofiPomodo.dmg",
-              "label": "LofiPomodo.dmg"
+              "path": "electron/output/PixelPomodo.dmg",
+              "label": "PixelPomodo.dmg"
             }
           ]
         }

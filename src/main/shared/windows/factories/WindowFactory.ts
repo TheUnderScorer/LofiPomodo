@@ -6,7 +6,7 @@ import { MenuFactory } from '../../menu/MenuFactory';
 import { Nullable } from '../../../../shared/types';
 
 export enum WindowTitles {
-  Timer = 'Lofi Pomodoro',
+  Timer = 'Pixel Pomodoro',
   Break = 'Break',
 }
 

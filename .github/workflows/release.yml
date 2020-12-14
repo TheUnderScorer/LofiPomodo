@@ -14,7 +14,7 @@ jobs:
         run: |
           git config --global user.name 'TheUnderScorer'
           git config --global user.email 'przemyslawzydek@gmail.com'
-          git remote set-url origin https://TheUnderScorer:$GITHUB_TOKEN@github.com/TheUnderScorer/LofiPomodo
+          git remote set-url origin https://TheUnderScorer:$GITHUB_TOKEN@github.com/TheUnderScorer/pixel-pomodo
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
@@ -42,12 +42,12 @@ jobs:
         id: upload_artifact_windows
         uses: actions/upload-artifact@v1
         with:
-          name: LofiPomodo.exe
-          path: electron/output/LofiPomodo.exe
+          name: PixelPomodo.exe
+          path: electron/output/PixelPomodo.exe
 
       - name: Upload Artifact
         id: upload_artifact_mac
         uses: actions/upload-artifact@v1
         with:
-          name: LofiPomodo.dmg
-          path: electron/output/LofiPomodo.dmg
+          name: PixelPomodo.dmg
+          path: electron/output/PixelPomodo.dmg
