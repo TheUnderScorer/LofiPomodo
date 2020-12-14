@@ -26,6 +26,6 @@ services:
       sh -c "npm run test:e2e --forceExit"
     volumes:
     - ./e2e:/app/e2e
-    - ./env:/app/.env
+    - ./.env:/app/.env
     - ./build:/app/build
     - ./jest.config.e2e.js:/app/jest.config.e2e.js
