@@ -70,7 +70,7 @@ describe('PomodoroService', () => {
     jest.advanceTimersByTime(2000);
     jest.useRealTimers();
 
-    await wait(1000);
+    await wait(2000);
 
     expect(service.isRunning).toEqual(true);
     expect(service.state).toEqual(PomodoroState.Break);
