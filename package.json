@@ -98,10 +98,9 @@
     "build-electron": "NODE_ENV=\"production\" webpack --config webpack.electron.js",
     "watch-electron": "webpack --config webpack.electron.js -w",
     "start-electron": "electron ./build/electron.js --remote-debugging-port=9444",
-    "pack-docker-all": "docker-compose up builder",
+    "pack-windows-docker": "docker-compose up windows-packer",
     "pack-windows": "electron-builder -w --x64 ",
     "pack-macos": "electron-builder -m --x64",
-    "pack-all": "electron-builder -m -w --x64",
     "build-windows": "scripts/build_windows.sh",
     "build-macos": "scripts/build_macos.sh.sh",
     "install-app-deps": "electron-builder install-app-deps",
@@ -113,7 +112,7 @@
     "appId": "com.pz.lofiPomodo",
     "win": {
       "target": [
-        "Squirrel"
+        "portable"
       ]
     },
     "mac": {
@@ -178,7 +177,7 @@
       [
         "@semantic-release/exec",
         {
-          "prepareCmd": "npm run pack-docker-all"
+          "prepareCmd": "electron-builder -m -w --x64"
         }
       ],
       [
