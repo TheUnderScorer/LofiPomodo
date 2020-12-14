@@ -1,44 +1,65 @@
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+# Pixel Pomodo ⏱
 
-## Available Scripts
+Pixel Pomodo is an app built using React & Electron.
 
-In the project directory, you can run:
+## Features:
 
-### `yarn start`
+* Pixel-art like ui.
+* Tasks list with drag and drop support and pomodoro tracking.
+* Customizable session durations.
+* Full-screen break overlay (with option to switch it off).
 
-Runs the app in the development mode.<br />
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+The app is still in early stage, and I have plans for more features in the future ;).
 
-The page will reload if you make edits.<br />
-You will also see any lint errors in the console.
+### Plans for future features:
 
-### `yarn test`
+* Integration with various providers, like Jira, Trello etc. with time tracking.
+* Time reports
+* Break suggestions.
+* Sounds
 
-Launches the test runner in the interactive watch mode.<br />
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
 
-### `yarn build`
+### Screenshots
 
-Builds the app for production to the `build` folder.<br />
-It correctly bundles React in production mode and optimizes the build for the best performance.
+![](readmeAssets/1.png)
+![](readmeAssets/2.png)
+![](readmeAssets/3.png)
 
-The build is minified and the filenames include the hashes.<br />
-Your app is ready to be deployed!
+<hr>
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+### Development
 
-### `yarn eject`
+In order to develop the app run:
 
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
+* `npm run watch-electron` - Watches changes made on electron side
+* `npm run start-renderer` - To start the renderer on `http://localhost:3000` (via `create-react-app`)
+* `npm run start-electron` - Starts the electron app in development mode.
 
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+### Testing
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
+#### Unit
 
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
+In order to execute unit tests run `npm run test`
 
-## Learn More
+#### E2E
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+In order to execute E2E tests (via cypress) make sure that the renderer is running (`npm run start-renderer`) and then run `npm run test:e2e`
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+> Hint: You can also run the E2E tests in docker via `npm run test:e2e-docker` 
+
+
+### Lint
+
+To lint the project run `npm run lint`
+
+### Packing
+
+To build and pack the app run:
+
+* For macos build run `npm run build-macos`
+* For windows build run `npm run build-windows`
+
+Note: Linux support is planned in the future, feel free to submit PRs!
+
+
+
