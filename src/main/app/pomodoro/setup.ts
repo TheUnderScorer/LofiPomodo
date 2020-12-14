@@ -5,12 +5,14 @@ import { breakWindow } from './features/breakWindow';
 import { sendUpdatesToWindows } from './features/rendererUpdates';
 import { handleTimerMenu } from './features/timerMenu';
 import { BrowserWindow } from 'electron';
+import { showTrayProgress } from './features/showTrayProgress';
 
 export const setupPomodoro = (context: AppContext) => {
   sendUpdatesToWindows(context);
   breakWindow(context);
   setupTray(context);
   forwardPomodoroEventsToIpc(context);
+  showTrayProgress(context);
 
   context.ipcService.registerAsMap({
     [PomodoroEvents.Update]: (_, payload: Pomodoro) => {
