@@ -16,7 +16,7 @@ jobs:
           git config --global user.email 'przemyslawzydek@gmail.com'
           git remote set-url origin https://TheUnderScorer:$GITHUB_TOKEN@github.com/TheUnderScorer/pixel-pomodo
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GH_ADMIN_TOKEN }}
 
       - name: Install Node.js, NPM and Yarn
         uses: actions/setup-node@v1
@@ -35,7 +35,7 @@ jobs:
         run: |
           npm run semantic-release
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GH_ADMIN_TOKEN }}
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
 
       - name: Upload Artifact
