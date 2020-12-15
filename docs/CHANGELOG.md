@@ -1,3 +1,10 @@
+## [1.2.1](https://github.com/TheUnderScorer/pixel-pomodo/compare/v1.2.0...v1.2.1) (2020-12-15)
+
+
+### Bug Fixes
+
+* Not working build on mac and windows ([1615960](https://github.com/TheUnderScorer/pixel-pomodo/commit/1615960ed2d156ea11a7ddf07f0b6ace3028284c))
+
 # [1.2.0](https://github.com/TheUnderScorer/pixel-pomodo/compare/v1.1.2...v1.2.0) (2020-12-15)
 
 
