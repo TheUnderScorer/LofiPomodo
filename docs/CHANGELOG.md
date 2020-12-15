@@ -1,3 +1,18 @@
+# [1.3.0](https://github.com/TheUnderScorer/pixel-pomodo/compare/v1.2.1...v1.3.0) (2020-12-15)
+
+
+### Bug Fixes
+
+* Crop too long task title ([56a4dd3](https://github.com/TheUnderScorer/pixel-pomodo/commit/56a4dd3d541d2abc473e843f61745387589dfd37))
+* Don't allow empty task title ([02100b1](https://github.com/TheUnderScorer/pixel-pomodo/commit/02100b1a9929fc739f1986d1bd328e817d884501))
+* Limit task duration to 99 ([9023fdf](https://github.com/TheUnderScorer/pixel-pomodo/commit/9023fdf3b5a3f801e0918ab616673db5f53c1dcd))
+* Remove delay on task update ([638925c](https://github.com/TheUnderScorer/pixel-pomodo/commit/638925cc89df15f359cbc49e26576eaa69ba76bb))
+
+
+### Features
+
+* Add minimize button on windows ([8ef8dec](https://github.com/TheUnderScorer/pixel-pomodo/commit/8ef8dec788437fb1c429fc63c189775f39f97eb9))
+
 ## [1.2.1](https://github.com/TheUnderScorer/pixel-pomodo/compare/v1.2.0...v1.2.1) (2020-12-15)
 
 
