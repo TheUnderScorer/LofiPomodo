@@ -56,7 +56,7 @@ describe('Tasks list - as an user', () => {
         return listItems.length === 0;
       },
       {
-        timeout: 3000,
+        timeout: 5000,
         interval: 250,
       }
     );
