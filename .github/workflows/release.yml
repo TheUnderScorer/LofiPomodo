@@ -38,7 +38,7 @@ jobs:
 
       - name: Build main & renderer
         run: |
-          npm run build-renderer & npm run build-electron
+          npm run build-renderer && npm run build-electron
 
       - name: Build & Release
         run: |
