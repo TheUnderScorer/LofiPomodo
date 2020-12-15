@@ -1,4 +1,4 @@
-import { Button, Center, Spinner, Tooltip } from '@chakra-ui/core';
+import { Center, Spinner, Tooltip } from '@chakra-ui/core';
 import React, { FC } from 'react';
 import { useActiveTask } from '../../hooks/useActiveTask';
 import { Text } from '../../../../ui/atoms/text/Text';
@@ -16,19 +16,14 @@ export const ActiveTaskTitle: FC<ActiveTaskTitleProps> = ({ color }) => {
       {loading && <Spinner />}
       {
         <Center className="active-task-title">
-          <Button
-            color={color}
-            minW="none"
-            justifyContent="flex-start"
-            isTruncated
-            variant="link"
-          >
+          <Text maxWidth="50%" isTruncated>
             <Tooltip label={activeTask?.title} isDisabled={!activeTask}>
               {activeTask ? activeTask.title : 'No task selected'}
             </Tooltip>
-          </Button>
+          </Text>
+
           {activeTask && (
-            <Text color={color} ml="1">
+            <Text color={color} ml="1" isTruncated>
               ({getTaskDurationText(activeTask)})
             </Text>
           )}

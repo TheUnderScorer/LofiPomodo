@@ -86,6 +86,7 @@ export const TaskListItem: FC<TaskListItemProps> = ({
                 mr={2}
               />
               <Editable
+                maxWidth="70%"
                 className="task-title-editable task-title"
                 onSubmit={handleTaskChange('title', (value) =>
                   value === task.title ? false : value
@@ -93,8 +94,14 @@ export const TaskListItem: FC<TaskListItemProps> = ({
                 color="brand.textPrimary"
                 defaultValue={task.title}
               >
-                <EditablePreview color="brand.textPrimary" />
-                <EditableInput />
+                <EditablePreview
+                  width="100%"
+                  textOverflow="ellipsis"
+                  overflow="hidden"
+                  whiteSpace="nowrap"
+                  color="brand.textPrimary"
+                />
+                <EditableInput width="100%" />
               </Editable>
               <Stack
                 direction="row"
