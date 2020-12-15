@@ -28,14 +28,6 @@ const createWindow = async (context: AppContext) => {
   mainWindow.on('closed', () => {
     mainWindow = null;
   });
-
-  if (isDev) {
-    mainWindow.webContents.once('dom-ready', () => {
-      mainWindow!.webContents.openDevTools({
-        mode: 'right',
-      });
-    });
-  }
 };
 
 const setupAppMenu = (context: AppContext) => {
