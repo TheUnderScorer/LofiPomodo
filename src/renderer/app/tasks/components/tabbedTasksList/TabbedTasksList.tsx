@@ -116,7 +116,7 @@ export const TabbedTasksList: FC<TabbedTasksListProps> = (props) => {
         await handleTaskUpdate();
       }
     },
-    1000,
+    50,
     [isDirty, handleTaskUpdate]
   );
 
