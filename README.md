@@ -32,6 +32,7 @@ The app is still in early stage, and I have plans for more features in the futur
 
 In order to develop the app run:
 
+* `npm run install && npm run install-app-edps` - Installs dependencies for app and for electron-builder
 * `npm run watch-electron` - Watches changes made on electron side
 * `npm run start-renderer` - To start the renderer on `http://localhost:3000` (via `create-react-app`)
 * `npm run start-electron` - Starts the electron app in development mode.
