@@ -38,6 +38,7 @@ export const TaskListItem: FC<TaskListItemProps> = ({
   isDisabled,
   ...props
 }) => {
+  const [title, setTitle] = useState(task.title);
   const [duration, setDuration] = useState(task.estimatedPomodoroDuration ?? 0);
   const prevDuration = usePrevious(duration);
 
@@ -56,6 +57,24 @@ export const TaskListItem: FC<TaskListItemProps> = ({
         onTaskChange({
           ...task,
           [key]: valueToUse,
+        });
+      }
+    },
+    [onTaskChange, task]
+  );
+
+  const handleTitleChange = useCallback(
+    (title: string) => {
+      if (!title) {
+        setTitle(task.title);
+
+        return;
+      }
+
+      if (onTaskChange) {
+        onTaskChange({
+          ...task,
+          title,
         });
       }
     },
@@ -115,12 +134,12 @@ export const TaskListItem: FC<TaskListItemProps> = ({
               <Editable
                 isDisabled={isDisabled}
                 maxWidth="70%"
+                width="100%"
                 className="task-title-editable task-title"
-                onSubmit={handleTaskChange('title', (value) =>
-                  value === task.title ? false : value
-                )}
+                onChange={setTitle}
+                onSubmit={handleTitleChange}
                 color="brand.textPrimary"
-                defaultValue={task.title}
+                value={title}
               >
                 <EditablePreview
                   width="100%"

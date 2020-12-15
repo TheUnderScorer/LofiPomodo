@@ -93,6 +93,19 @@ export const TabbedTasksList: FC<TabbedTasksListProps> = (props) => {
     []
   );
 
+  const handleListDragEnd = useCallback(
+    async (tasks: Task[]) => {
+      isDragRef.current = true;
+      setStoredTasks(tasks);
+
+      await updateTasksMutation(tasks);
+      await Promise.all([fetchActiveTask(), getTasks()]);
+
+      isDragRef.current = false;
+    },
+    [fetchActiveTask, getTasks, updateTasksMutation]
+  );
+
   return (
     <Box h="100%" position="relative">
       {loading && !didFetch && (
@@ -132,14 +145,7 @@ export const TabbedTasksList: FC<TabbedTasksListProps> = (props) => {
               <AddTaskInput />
             </Box>
             <TasksList
-              onListDragEnd={async (tasks) => {
-                isDragRef.current = true;
-                setStoredTasks(tasks);
-
-                await updateTasksMutation(tasks);
-                await Promise.all([fetchActiveTask(), getTasks()]);
-                isDragRef.current = false;
-              }}
+              onListDragEnd={handleListDragEnd}
               emptyContent={
                 <Center h="100%">
                   <Stack spacing={2} height="auto" alignItems="center">
