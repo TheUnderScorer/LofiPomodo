@@ -99,6 +99,7 @@ export const TaskListItem: FC<TaskListItemProps> = ({
               d="flex"
             >
               <Checkbox
+                transition="none"
                 isDisabled={isDisabled}
                 className="task-state-checkbox"
                 onChange={handleTaskChange(
