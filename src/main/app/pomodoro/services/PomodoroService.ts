@@ -65,6 +65,7 @@ export class PomodoroService
     const storeValue = store.get('pomodoroState');
 
     this.fill(storeValue ?? getInitialPomodoro());
+    this.schedule();
   }
 
   fill(pomodoro: Partial<Pomodoro>) {
@@ -83,7 +84,9 @@ export class PomodoroService
   }
 
   get remainingPercentage(): number {
-    return percent(this.remainingSeconds, getDurationByState(this));
+    const duration = getDurationByState(this);
+
+    return percent(this.remainingSeconds, duration);
   }
 
   stop() {
