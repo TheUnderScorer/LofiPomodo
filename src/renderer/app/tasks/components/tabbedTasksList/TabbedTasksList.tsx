@@ -24,9 +24,7 @@ import { Text } from '../../../../ui/atoms/text/Text';
 import { useTasksList } from '../../hooks/useTasksList';
 import { useGroupedTasksCount } from '../../hooks/useGroupedTasksCount';
 import { AddTaskInput } from '../addTaskInput/AddTaskInput';
-import { getById } from '../../../../../shared/utils/getters';
 import { useIpcInvoke } from '../../../../shared/ipc/useIpcInvoke';
-import { useDebounce, useSet } from 'react-use';
 import { Heading } from '../../../../ui/atoms/heading/Heading';
 import { useActiveTask } from '../../hooks/useActiveTask';
 import { TaskContextMenu } from '../taskContextMenu/TaskContextMenu';
@@ -41,11 +39,17 @@ const states = Object.values(TaskState);
 export const TabbedTasksList: FC<TabbedTasksListProps> = (props) => {
   const isDragRef = useRef(false);
 
-  const { count: tasksCount, getCount } = useGroupedTasksCount();
-  const { tasks, loading, setTaskState, didFetch, getTasks } = useTasksList();
+  const { count: tasksCount } = useGroupedTasksCount();
+  const {
+    tasks,
+    loading,
+    setTaskState,
+    didFetch,
+    getTasks,
+    updateTask,
+  } = useTasksList();
   const { fetchActiveTask } = useActiveTask();
 
-  const [isDirty, setIsDirty] = useState(false);
   const [activeIndex, setActiveIndex] = useState(0);
   const [tasksState, setStoredTasks] = useState<Task[]>(tasks);
 
@@ -56,36 +60,11 @@ export const TabbedTasksList: FC<TabbedTasksListProps> = (props) => {
     Task[]
   >(TaskEvents.UpdateTasks);
 
-  const [changedTasks, changedTasksSet] = useSet(new Set<string>());
-
   const { listProps } = props;
 
   useEffect(() => {
     setTaskState(activeState);
   }, [activeState, setTaskState]);
-
-  const handleTaskUpdate = useCallback(async () => {
-    const tasksToUpdate = Array.from(changedTasks)
-      .map((id) => getById(tasksState, id))
-      .filter(Boolean) as Task[];
-
-    changedTasksSet.reset();
-
-    setIsDirty(false);
-
-    console.log('Updating tasks...', { tasksToUpdate });
-
-    await updateTasksMutation(tasksToUpdate);
-
-    await Promise.all([getCount(), getTasks()]);
-  }, [
-    changedTasks,
-    changedTasksSet,
-    getCount,
-    getTasks,
-    tasksState,
-    updateTasksMutation,
-  ]);
 
   const handleTaskChange = useCallback(
     async (task: Task) => {
@@ -95,11 +74,10 @@ export const TabbedTasksList: FC<TabbedTasksListProps> = (props) => {
       newTasks[index] = task;
 
       setStoredTasks(newTasks);
-      changedTasksSet.add(task.id);
 
-      setIsDirty(true);
+      await updateTask(task.id, () => task);
     },
-    [changedTasksSet, tasksState]
+    [tasksState, updateTask]
   );
 
   useEffect(() => {
@@ -110,19 +88,22 @@ export const TabbedTasksList: FC<TabbedTasksListProps> = (props) => {
     setStoredTasks(tasks);
   }, [tasks]);
 
-  useDebounce(
-    async () => {
-      if (isDirty) {
-        await handleTaskUpdate();
-      }
-    },
-    1000,
-    [isDirty, handleTaskUpdate]
-  );
-
   const contextMenu = useCallback(
     (task: Task) => <TaskContextMenu task={task} />,
     []
+  );
+
+  const handleListDragEnd = useCallback(
+    async (tasks: Task[]) => {
+      isDragRef.current = true;
+      setStoredTasks(tasks);
+
+      await updateTasksMutation(tasks);
+      await Promise.all([fetchActiveTask(), getTasks()]);
+
+      isDragRef.current = false;
+    },
+    [fetchActiveTask, getTasks, updateTasksMutation]
   );
 
   return (
@@ -164,14 +145,7 @@ export const TabbedTasksList: FC<TabbedTasksListProps> = (props) => {
               <AddTaskInput />
             </Box>
             <TasksList
-              onListDragEnd={async (tasks) => {
-                isDragRef.current = true;
-                setStoredTasks(tasks);
-
-                await updateTasksMutation(tasks);
-                await Promise.all([fetchActiveTask(), getTasks()]);
-                isDragRef.current = false;
-              }}
+              onListDragEnd={handleListDragEnd}
               emptyContent={
                 <Center h="100%">
                   <Stack spacing={2} height="auto" alignItems="center">

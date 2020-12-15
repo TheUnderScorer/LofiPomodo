@@ -12,6 +12,7 @@ export interface TasksListProps extends ListProps {
   loading?: boolean;
   onListDragEnd?: (tasks: Task[]) => any;
   isDragDisabled?: boolean;
+  isDirty?: boolean;
 }
 
 export const TasksList: FC<TasksListProps> = ({
@@ -19,6 +20,7 @@ export const TasksList: FC<TasksListProps> = ({
   itemProps,
   emptyContent,
   loading,
+  isDirty,
   onListDragEnd,
   isDragDisabled,
   ...props
@@ -56,6 +58,7 @@ export const TasksList: FC<TasksListProps> = ({
             <Box {...droppableProps} ref={innerRef}>
               {tasks.map((task, index) => (
                 <TaskListItem
+                  isDisabled={isDirty}
                   isDragDisabled={isDragDisabled}
                   arrIndex={index}
                   className="task-list-item"

@@ -25,8 +25,6 @@ export const composeIcon = <Props extends BaseIconProps>(
 
   const icons = useMemo(() => Object.entries(params.iconMap), []);
 
-  console.log({ icons, colorMode, alt: params.alt });
-
   return (
     <>
       {icons.map(([iconColor, icon]) => (

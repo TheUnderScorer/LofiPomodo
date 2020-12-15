@@ -49,8 +49,17 @@ describe('Tasks list - as an user', () => {
 
     await deleteTask.click();
 
-    const listItems = await app.client.$$('.task-list-item');
-    expect(listItems).toHaveLength(0);
+    await app.client.waitUntil(
+      async () => {
+        const listItems = await app.client.$$('.task-list-item');
+
+        return listItems.length === 0;
+      },
+      {
+        timeout: 5000,
+        interval: 250,
+      }
+    );
 
     const todoTab = await app.client.$(`.tabbed-task-state-${TaskState.Todo}`);
     expect(await todoTab.getText()).toEqual('Todo\n0');

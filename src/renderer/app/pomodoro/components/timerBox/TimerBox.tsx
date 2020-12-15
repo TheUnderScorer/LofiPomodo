@@ -17,6 +17,8 @@ import { PomodoroControl } from '../buttons/pomodoroControl/PomodoroControl';
 import { ResetState } from '../buttons/resetState/ResetState';
 import { ActiveTaskTitle } from '../../../tasks/components/activeTaskTitle/ActiveTaskTitle';
 import { SkipBreak } from '../buttons/skipBreak/SkipBreak';
+import { usePlatform } from '../../../system/hooks/usePlatform';
+import { PomodoroMenu } from '../pomodoroMenu/PomodoroMenu';
 
 export interface TimerProps {
   containerProps?: BoxProps;
@@ -28,6 +30,7 @@ export const TimerBox: FC<TimerProps> = ({
   stackProps = {},
 }) => {
   const { pomodoro } = usePomodoro();
+  const platform = usePlatform();
 
   return (
     <Box
@@ -70,6 +73,7 @@ export const TimerBox: FC<TimerProps> = ({
           <Stack direction="row" spacing={2}>
             <PomodoroControl color="white" />
             <ResetState iconProps={{ variant: 'light' }} />
+            {platform === 'win32' && <PomodoroMenu variant="outline" />}
           </Stack>
         </Center>
       </Stack>

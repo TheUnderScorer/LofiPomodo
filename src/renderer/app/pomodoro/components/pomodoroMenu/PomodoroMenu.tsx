@@ -1,13 +1,14 @@
 import React, { FC, MouseEventHandler, useCallback } from 'react';
 import { faEllipsisV } from '@fortawesome/free-solid-svg-icons';
-import { IconButton, Stack } from '@chakra-ui/core';
+import { IconButton, IconButtonProps, Stack } from '@chakra-ui/core';
 import { FaIcon } from '../../../../ui/atoms/faIcon/FaIcon';
 import { PomodoroEvents, ToggleMenuPayload } from '../../../../../shared/types';
 import { useIpcInvoke } from '../../../../shared/ipc/useIpcInvoke';
 
-export interface PomodoroMenuProps {}
+export interface PomodoroMenuProps
+  extends Omit<IconButtonProps, 'aria-label' | 'onClick'> {}
 
-export const PomodoroMenu: FC<PomodoroMenuProps> = () => {
+export const PomodoroMenu: FC<PomodoroMenuProps> = (props) => {
   const [invoke, { loading }] = useIpcInvoke<ToggleMenuPayload>(
     PomodoroEvents.ToggleTimerMenu
   );
@@ -31,6 +32,7 @@ export const PomodoroMenu: FC<PomodoroMenuProps> = () => {
         variant="ghost"
         onClick={handleClick}
         aria-label="Toggle menu"
+        {...props}
       >
         <FaIcon icon={faEllipsisV} />
       </IconButton>

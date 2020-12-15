@@ -10,6 +10,7 @@ import { useIpcInvoke } from '../../../shared/ipc/useIpcInvoke';
 import { getById } from '../../../../shared/utils/getters';
 import { tasksListStore } from '../state/tasksList';
 import { atom, useRecoilState } from 'recoil';
+import { useGroupedTasksCount } from './useGroupedTasksCount';
 
 export interface TasksHookProps {
   defaultOrder?: Order<Task>;
@@ -21,6 +22,8 @@ const stateAtom = atom<TaskState>({
 });
 
 export const useTasksList = ({ defaultOrder }: TasksHookProps = {}) => {
+  const { getCount } = useGroupedTasksCount();
+
   const [state, setTaskState] = useRecoilState(stateAtom);
   const [order, setOrder] = useState<Order<Task> | undefined>(defaultOrder);
 
@@ -50,10 +53,9 @@ export const useTasksList = ({ defaultOrder }: TasksHookProps = {}) => {
 
       await updateTaskMutation(updatedTask);
 
-      // Re-fetch tasks after update
-      await getTasks();
+      await Promise.all([getTasks(), getCount()]);
     },
-    [getTasks, tasks, updateTaskMutation]
+    [getCount, getTasks, tasks, updateTaskMutation]
   );
 
   return {

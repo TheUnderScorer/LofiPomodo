@@ -10,12 +10,13 @@ import {
   NumberInputField,
   Stack,
 } from '@chakra-ui/core';
-import React, { FC, ReactNode, useCallback } from 'react';
+import React, { FC, ReactNode, useCallback, useState } from 'react';
 import { Task, TaskState } from '../../../../../../shared/types/tasks';
 import { Draggable } from 'react-beautiful-dnd';
 import { FaIcon } from '../../../../../ui/atoms/faIcon/FaIcon';
 import { faGripLines } from '@fortawesome/free-solid-svg-icons';
 import { ContextMenu } from '../../../../../ui/molecules/contextMenu/ContextMenu';
+import { useDebounce, usePrevious } from 'react-use';
 
 export interface TaskListItemProps extends ListItemProps {
   task: Task;
@@ -23,7 +24,10 @@ export interface TaskListItemProps extends ListItemProps {
   arrIndex: number;
   isDragDisabled?: boolean;
   contextMenu?: (task: Task) => ReactNode;
+  isDisabled?: boolean;
 }
+
+const maxDuration = 99;
 
 export const TaskListItem: FC<TaskListItemProps> = ({
   task,
@@ -31,8 +35,13 @@ export const TaskListItem: FC<TaskListItemProps> = ({
   arrIndex,
   isDragDisabled,
   contextMenu,
+  isDisabled,
   ...props
 }) => {
+  const [title, setTitle] = useState(task.title);
+  const [duration, setDuration] = useState(task.estimatedPomodoroDuration ?? 0);
+  const prevDuration = usePrevious(duration);
+
   const handleTaskChange = useCallback(
     <Key extends keyof Task>(
       key: Key,
@@ -52,6 +61,41 @@ export const TaskListItem: FC<TaskListItemProps> = ({
       }
     },
     [onTaskChange, task]
+  );
+
+  const handleTitleChange = useCallback(
+    (title: string) => {
+      if (!title) {
+        setTitle(task.title);
+
+        return;
+      }
+
+      if (onTaskChange) {
+        onTaskChange({
+          ...task,
+          title,
+        });
+      }
+    },
+    [onTaskChange, task]
+  );
+
+  useDebounce(
+    () => {
+      if (
+        onTaskChange &&
+        !Number.isNaN(duration) &&
+        duration !== prevDuration
+      ) {
+        onTaskChange({
+          ...task,
+          estimatedPomodoroDuration: duration,
+        });
+      }
+    },
+    500,
+    [onTaskChange, duration]
   );
 
   return (
@@ -74,6 +118,8 @@ export const TaskListItem: FC<TaskListItemProps> = ({
               d="flex"
             >
               <Checkbox
+                transition="none"
+                isDisabled={isDisabled}
                 className="task-state-checkbox"
                 onChange={handleTaskChange(
                   'state',
@@ -86,15 +132,23 @@ export const TaskListItem: FC<TaskListItemProps> = ({
                 mr={2}
               />
               <Editable
+                isDisabled={isDisabled}
+                maxWidth="70%"
+                width="100%"
                 className="task-title-editable task-title"
-                onSubmit={handleTaskChange('title', (value) =>
-                  value === task.title ? false : value
-                )}
+                onChange={setTitle}
+                onSubmit={handleTitleChange}
                 color="brand.textPrimary"
-                defaultValue={task.title}
+                value={title}
               >
-                <EditablePreview color="brand.textPrimary" />
-                <EditableInput />
+                <EditablePreview
+                  width="100%"
+                  textOverflow="ellipsis"
+                  overflow="hidden"
+                  whiteSpace="nowrap"
+                  color="brand.textPrimary"
+                />
+                <EditableInput width="100%" />
               </Editable>
               <Stack
                 direction="row"
@@ -104,11 +158,18 @@ export const TaskListItem: FC<TaskListItemProps> = ({
                 alignItems="center"
               >
                 <NumberInput
-                  onChange={handleTaskChange(
-                    'estimatedPomodoroDuration',
-                    (val) => parseInt(val)
-                  )}
-                  value={task.estimatedPomodoroDuration || 0}
+                  onChange={(val) => {
+                    const parsed = parseInt(val);
+
+                    if (Number.isNaN(parsed)) {
+                      setDuration(0);
+
+                      return;
+                    }
+
+                    setDuration(parsed > maxDuration ? maxDuration : parsed);
+                  }}
+                  value={Number.isNaN(duration) ? 0 : duration}
                 >
                   <NumberInputField
                     className="task-estimation"
