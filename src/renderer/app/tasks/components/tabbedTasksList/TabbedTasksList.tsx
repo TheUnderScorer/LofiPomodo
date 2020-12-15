@@ -87,8 +87,20 @@ export const TabbedTasksList: FC<TabbedTasksListProps> = (props) => {
     updateTasksMutation,
   ]);
 
+  const [, cancelDebounce] = useDebounce(
+    async () => {
+      if (isDirty) {
+        await handleTaskUpdate();
+      }
+    },
+    50,
+    [isDirty, handleTaskUpdate]
+  );
+
   const handleTaskChange = useCallback(
     async (task: Task) => {
+      cancelDebounce();
+
       const index = tasksState.findIndex(({ id }) => task.id === id);
 
       const newTasks = [...tasksState];
@@ -109,16 +121,6 @@ export const TabbedTasksList: FC<TabbedTasksListProps> = (props) => {
 
     setStoredTasks(tasks);
   }, [tasks]);
-
-  useDebounce(
-    async () => {
-      if (isDirty) {
-        await handleTaskUpdate();
-      }
-    },
-    50,
-    [isDirty, handleTaskUpdate]
-  );
 
   const contextMenu = useCallback(
     (task: Task) => <TaskContextMenu task={task} />,
@@ -164,6 +166,7 @@ export const TabbedTasksList: FC<TabbedTasksListProps> = (props) => {
               <AddTaskInput />
             </Box>
             <TasksList
+              isDirty={isDirty}
               onListDragEnd={async (tasks) => {
                 isDragRef.current = true;
                 setStoredTasks(tasks);
@@ -191,6 +194,7 @@ export const TabbedTasksList: FC<TabbedTasksListProps> = (props) => {
           </TabPanel>
           <TabPanel h="100%">
             <TasksList
+              isDirty={isDirty}
               isDragDisabled
               loading={loading}
               tasks={tasksState}

@@ -15,15 +15,15 @@ export const ActiveTaskTitle: FC<ActiveTaskTitleProps> = ({ color }) => {
     <>
       {loading && <Spinner />}
       {
-        <Center className="active-task-title">
-          <Text maxWidth="50%" isTruncated>
+        <Center maxWidth="70%" className="active-task-title">
+          <Text isTruncated>
             <Tooltip label={activeTask?.title} isDisabled={!activeTask}>
               {activeTask ? activeTask.title : 'No task selected'}
             </Tooltip>
           </Text>
 
           {activeTask && (
-            <Text color={color} ml="1" isTruncated>
+            <Text color={color} ml="1">
               ({getTaskDurationText(activeTask)})
             </Text>
           )}
