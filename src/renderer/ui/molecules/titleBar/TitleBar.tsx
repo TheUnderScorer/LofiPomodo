@@ -12,6 +12,7 @@ export const TitleBar: FC<TitleBarProps> = ({ children, ...props }) => {
   const platform = usePlatform();
 
   const [closeWindow] = useIpcInvoke(AppSystemEvents.CloseWindow);
+  const [minimizeWindow] = useIpcInvoke(AppSystemEvents.MinimizeWindow);
 
   return (
     <Flex
@@ -25,14 +26,24 @@ export const TitleBar: FC<TitleBarProps> = ({ children, ...props }) => {
     >
       {children}
       {platform === 'win32' && (
-        <IconButton
-          className="close"
-          aria-label="Close window"
-          onClick={() => closeWindow()}
-          variant="ghost"
-        >
-          <Text>X</Text>
-        </IconButton>
+        <>
+          <IconButton
+            className="minimize"
+            aria-label="Minimize window"
+            onClick={() => minimizeWindow()}
+            variant="ghost"
+          >
+            <Text>_</Text>
+          </IconButton>
+          <IconButton
+            className="close"
+            aria-label="Close window"
+            onClick={() => closeWindow()}
+            variant="ghost"
+          >
+            <Text>X</Text>
+          </IconButton>
+        </>
       )}
     </Flex>
   );

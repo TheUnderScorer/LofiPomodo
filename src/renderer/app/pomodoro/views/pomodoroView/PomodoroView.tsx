@@ -23,7 +23,7 @@ export const PomodoroView: FC<PomodoroViewProps> = () => {
   return (
     <>
       <TitleBar pt={2} pr={2}>
-        <PomodoroMenu />
+        {platform !== 'win32' && <PomodoroMenu />}
       </TitleBar>
       <Container
         className={`pomodoro-view-${colorMode}`}
