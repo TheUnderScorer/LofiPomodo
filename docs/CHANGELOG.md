@@ -1,3 +1,16 @@
+# [1.2.0](https://github.com/TheUnderScorer/pixel-pomodo/compare/v1.1.2...v1.2.0) (2020-12-15)
+
+
+### Bug Fixes
+
+* Pomodoro timer not running automatically if it was closed in running state ([67d1f3f](https://github.com/TheUnderScorer/pixel-pomodo/commit/67d1f3ffe1f7db24f75a6729467297ec4213957a))
+* Restore windows portable build ([1ab0447](https://github.com/TheUnderScorer/pixel-pomodo/commit/1ab04479b13794b07be46689ad2fba6b84e0066c))
+
+
+### Features
+
+* Show pomodoro progress in taskbar on windows ([844a94d](https://github.com/TheUnderScorer/pixel-pomodo/commit/844a94d1a973244db6d7e0ee6627082ed5328939))
+
 ## [1.1.2](https://github.com/TheUnderScorer/PixelPomodo/compare/v1.1.1...v1.1.2) (2020-12-14)
 
 

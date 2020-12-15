@@ -7,7 +7,7 @@
     "email": "przemyslawzydek@gmail.com",
     "name": "Przemysław Żydek"
   },
-  "version": "1.1.2",
+  "version": "1.2.0",
   "private": true,
   "main": "build/electron.js",
   "dependencies": {
