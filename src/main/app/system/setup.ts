@@ -1,5 +1,8 @@
 import { BrowserWindow } from 'electron';
-import { AppSystemEvents } from '../../../shared/types/system';
+import {
+  AppSystemEvents,
+  ResizeWindowPayload,
+} from '../../../shared/types/system';
 import { AppContext } from '../../context';
 
 export const setupSystem = (context: AppContext) => {
@@ -26,6 +29,14 @@ export const setupSystem = (context: AppContext) => {
     },
     [AppSystemEvents.GetPlatform]: () => {
       return process.platform;
+    },
+    [AppSystemEvents.ResizeWindow]: (
+      _,
+      { height, width, animate = true }: ResizeWindowPayload
+    ) => {
+      const window = BrowserWindow.getFocusedWindow();
+
+      window?.setSize(width, height, animate);
     },
   });
 };

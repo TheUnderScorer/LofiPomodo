@@ -4,11 +4,8 @@ import { routes } from '../../../../shared/routes/routes';
 import { is } from 'electron-util';
 import { MenuFactory } from '../../menu/MenuFactory';
 import { Nullable } from '../../../../shared/types';
-
-export enum WindowTitles {
-  Timer = 'Pixel Pomodoro',
-  Break = 'Break',
-}
+import { windowProps } from '../../../../shared/windows/constants';
+import { WindowTitles } from '../../../../shared/types/system';
 
 type WindowKeys = 'timerWindow' | 'breakWindow';
 
@@ -25,17 +22,12 @@ export class WindowFactory {
   ) {}
 
   async createTimerWindow(): Promise<BrowserWindow> {
-    const size = 500;
-
     if (this.timerWindow) {
       return this.timerWindow;
     }
 
     const window = new BrowserWindow({
-      height: size + 100,
-      width: size,
-      minHeight: size + 100,
-      minWidth: size,
+      ...windowProps[WindowTitles.Timer],
       fullscreenable: false,
       maximizable: false,
       simpleFullscreen: false,
@@ -63,11 +55,8 @@ export class WindowFactory {
 
   async createBreakWindow(): Promise<BrowserWindow> {
     const window = new BrowserWindow({
-      height: 600,
-      width: 600,
+      ...windowProps[WindowTitles.Break],
       frame: false,
-      minHeight: 600,
-      minWidth: 600,
       fullscreenable: true,
       fullscreen: true,
       center: true,
