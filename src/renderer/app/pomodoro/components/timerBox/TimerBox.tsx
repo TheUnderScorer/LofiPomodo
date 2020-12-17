@@ -50,7 +50,21 @@ export const TimerBox: FC<TimerProps> = ({
           alignItems="center"
           spacing={1}
         >
-          <Stack direction="row" spacing={2} alignItems="baseline">
+          <Stack
+            direction="row"
+            spacing={2}
+            alignItems="baseline"
+            position="relative"
+          >
+            <Text
+              fontSize="xs"
+              color="white"
+              position="absolute"
+              top="-20px"
+              left="12px"
+            >
+              {pomodoro?.shortBreakCount}/{pomodoro?.longBreakInterval}
+            </Text>
             <HourglassIcon width="16px" height="27px" variant="dark" />
             <Heading
               className="remaining-time"

@@ -75,7 +75,7 @@ describe('Timer - as an user', () => {
 
     await wait(3000);
 
-    const skipBreak = await app.client.$('.skip-break');
+    const skipBreak = await app.client.$('.move-to-next-state');
 
     await skipBreak.click();
 
