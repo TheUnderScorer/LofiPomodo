@@ -45,7 +45,7 @@ In order to execute unit tests run `npm run test`
 
 #### E2E
 
-In order to execute E2E tests (via cypress) make sure that the renderer is running (`npm run start-renderer`) and then run `npm run test:e2e`
+In order to execute E2E tests (via spectron) make sure that the renderer is running (`npm run start-renderer`) and then run `npm run test:e2e`
 
 > Hint: You can also run the E2E tests in docker via `npm run test:e2e-docker` 
 

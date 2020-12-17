@@ -16,7 +16,7 @@ import { HourglassIcon } from '../../../../ui/atoms/icons';
 import { PomodoroControl } from '../buttons/pomodoroControl/PomodoroControl';
 import { ResetState } from '../buttons/resetState/ResetState';
 import { ActiveTaskTitle } from '../../../tasks/components/activeTaskTitle/ActiveTaskTitle';
-import { SkipBreak } from '../buttons/skipBreak/SkipBreak';
+import { NextStateBtn } from '../buttons/skipBreak/NextStateBtn';
 import { usePlatform } from '../../../system/hooks/usePlatform';
 import { PomodoroMenu } from '../pomodoroMenu/PomodoroMenu';
 
@@ -50,20 +50,31 @@ export const TimerBox: FC<TimerProps> = ({
           alignItems="center"
           spacing={1}
         >
-          <Stack direction="row" spacing={2} alignItems="baseline">
+          <Stack
+            direction="row"
+            spacing={2}
+            alignItems="baseline"
+            position="relative"
+          >
+            <Text
+              fontSize="xs"
+              color="white"
+              position="absolute"
+              top="-20px"
+              left="12px"
+            >
+              {pomodoro?.shortBreakCount}/{pomodoro?.longBreakInterval}
+            </Text>
             <HourglassIcon width="16px" height="27px" variant="dark" />
             <Heading
               className="remaining-time"
               as="h1"
-              size="4xl"
-              fontSize="2.5rem"
+              fontSize="4xl"
               color="white"
             >
               {pomodoro!.remainingTime}
             </Heading>
-            {pomodoro?.state !== PomodoroState.Work && (
-              <SkipBreak variant="outline" bottom="3px" />
-            )}
+            <NextStateBtn size="xs" variant="outline" />
           </Stack>
         </Stack>
         <Center>

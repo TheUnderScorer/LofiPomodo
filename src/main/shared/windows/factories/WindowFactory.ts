@@ -4,11 +4,11 @@ import { routes } from '../../../../shared/routes/routes';
 import { is } from 'electron-util';
 import { MenuFactory } from '../../menu/MenuFactory';
 import { Nullable } from '../../../../shared/types';
-
-export enum WindowTitles {
-  Timer = 'Pixel Pomodoro',
-  Break = 'Break',
-}
+import { windowProps } from '../../../../shared/windows/constants';
+import { WindowProps, WindowTypes } from '../../../../shared/types/system';
+import { AppStore } from '../../../../shared/types/store';
+import ElectronStore from 'electron-store';
+import { windowTitles } from '../../../../shared/dictionary/system';
 
 type WindowKeys = 'timerWindow' | 'breakWindow';
 
@@ -21,28 +21,24 @@ export class WindowFactory {
 
   constructor(
     private readonly preloadPath: string,
-    private readonly menuFactory: MenuFactory
+    private readonly menuFactory: MenuFactory,
+    private readonly store: ElectronStore<AppStore>
   ) {}
 
   async createTimerWindow(): Promise<BrowserWindow> {
-    const size = 500;
-
     if (this.timerWindow) {
       return this.timerWindow;
     }
 
     const window = new BrowserWindow({
-      height: size + 100,
-      width: size,
-      minHeight: size + 100,
-      minWidth: size,
+      ...this.getWindowProps(WindowTypes.Timer),
       fullscreenable: false,
       maximizable: false,
       simpleFullscreen: false,
       center: true,
       fullscreen: false,
       minimizable: false,
-      title: WindowTitles.Timer,
+      title: windowTitles[WindowTypes.Timer],
       titleBarStyle: is.windows ? 'customButtonsOnHover' : 'hiddenInset',
       frame: !is.windows,
       webPreferences: {
@@ -56,25 +52,22 @@ export class WindowFactory {
     const menu = this.menuFactory.createAppMenu();
     window.setMenu(menu);
 
-    this.registerWindow(window, 'timerWindow');
+    this.registerWindow(window, 'timerWindow', WindowTypes.Timer);
 
     return window;
   }
 
   async createBreakWindow(): Promise<BrowserWindow> {
     const window = new BrowserWindow({
-      height: 600,
-      width: 600,
+      ...this.getWindowProps(WindowTypes.Break),
       frame: false,
-      minHeight: 600,
-      minWidth: 600,
       fullscreenable: true,
       fullscreen: true,
       center: true,
       alwaysOnTop: true,
       minimizable: false,
       maximizable: false,
-      title: WindowTitles.Break,
+      title: windowTitles[WindowTypes.Break],
       titleBarStyle: 'hidden',
       resizable: false,
       webPreferences: {
@@ -88,13 +81,44 @@ export class WindowFactory {
 
     await setupWindow(window, routes.breakWindow());
 
-    this.registerWindow(window, 'breakWindow');
+    this.registerWindow(window, 'breakWindow', WindowTypes.Break);
 
     return window;
   }
 
-  // Registers new window into class property, and listens on "closed" events after which the reference to window is removed
-  private registerWindow(window: BrowserWindow, key: WindowKeys) {
+  // Registers new window into class property and binds events
+  private registerWindow(
+    window: BrowserWindow,
+    key: WindowKeys,
+    type: WindowTypes
+  ) {
+    this.saveWindow(key, window);
+
+    window.on('resize', () => {
+      const [width, height] = window.getSize();
+
+      this.store.set(`${type}Props`, {
+        width,
+        height,
+      });
+    });
+  }
+
+  private getWindowProps(type: WindowTypes): WindowProps {
+    const storeProps = this.store.get(`${type}Props`) as
+      | WindowProps
+      | undefined;
+
+    return {
+      ...windowProps[type],
+      ...(storeProps ?? {}),
+    };
+  }
+
+  private saveWindow(
+    key: 'timerWindow' | 'breakWindow',
+    window: Electron.BrowserWindow
+  ) {
     this[key] = window;
 
     window.once('close', () => {

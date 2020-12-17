@@ -75,12 +75,11 @@ describe('Timer - as an user', () => {
 
     await wait(3000);
 
-    const skipBreak = await app.client.$('.skip-break');
+    const nextStateBtn = await app.client.$('.move-to-next-state');
 
-    await skipBreak.click();
+    await nextStateBtn.click();
 
     expect(await stateText.getText()).toEqual('Work');
-    expect(await skipBreak.isExisting()).toEqual(false);
   });
 
   it('I should be able to track duration of active task', async () => {

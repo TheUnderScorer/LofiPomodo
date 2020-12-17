@@ -15,8 +15,8 @@ export const ActiveTaskTitle: FC<ActiveTaskTitleProps> = ({ color }) => {
     <>
       {loading && <Spinner />}
       {
-        <Center maxWidth="70%" className="active-task-title">
-          <Text isTruncated>
+        <Center maxWidth="70%" minWidth="400px" className="active-task-title">
+          <Text isTruncated color={color}>
             <Tooltip label={activeTask?.title} isDisabled={!activeTask}>
               {activeTask ? activeTask.title : 'No task selected'}
             </Tooltip>

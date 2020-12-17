@@ -26,7 +26,7 @@ export const setupPomodoro = (context: AppContext) => {
     [PomodoroEvents.ToggleTimerMenu]: handleTimerMenu(context),
     [PomodoroEvents.RestartCurrentState]: () =>
       context.pomodoro.resetCurrentState(),
-    [PomodoroEvents.SkipBreak]: () => context.pomodoro.skipBreak(),
+    [PomodoroEvents.MoveToNextState]: () => context.pomodoro.moveToNextState(),
   });
 };
 

@@ -54,6 +54,24 @@ describe('PomodoroService', () => {
     expect(service.remainingTime).toMatchInlineSnapshot(`"00:05"`);
   });
 
+  it('should advance to long break', async () => {
+    service.fill({
+      isRunning: true,
+      autoRunBreak: true,
+      autoRunWork: true,
+      workDurationSeconds: 1,
+      remainingSeconds: 1,
+      shortBreakDurationSeconds: 1,
+      longBreakInterval: 2,
+      shortBreakCount: 1,
+      state: PomodoroState.Work,
+    });
+
+    await wait(4000);
+
+    expect(service.state).toEqual(PomodoroState.LongBreak);
+  });
+
   it('should automatically run next timer if autoRunBreak and autoRunWork is set to true', async () => {
     jest.useFakeTimers();
 

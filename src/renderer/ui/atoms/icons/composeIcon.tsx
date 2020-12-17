@@ -1,5 +1,5 @@
 import { BaseIconProps, ColorIconMap } from './types';
-import React, { FC, Fragment, useMemo } from 'react';
+import React, { FC, useMemo } from 'react';
 import { BoxProps, Image, useColorMode, useTheme } from '@chakra-ui/core';
 import { Theme } from '../../../types/theme';
 
@@ -28,7 +28,7 @@ export const composeIcon = <Props extends BaseIconProps>(
   return (
     <>
       {icons.map(([iconColor, icon]) => (
-        <Fragment key={iconColor}>
+        <span key={iconColor}>
           {params.type === 'img' && (
             <Image
               display={iconColor === colorMode ? 'block' : 'none'}
@@ -40,7 +40,7 @@ export const composeIcon = <Props extends BaseIconProps>(
               {...(additionalProps as any)}
             />
           )}
-        </Fragment>
+        </span>
       ))}
     </>
   );
