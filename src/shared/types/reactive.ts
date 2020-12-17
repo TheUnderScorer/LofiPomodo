@@ -1,5 +1,5 @@
 export interface Changable {
-  onChange: () => void | Promise<void>;
+  onChange?: () => void | Promise<void>;
 }
 
 export type Subscriber<T> = (

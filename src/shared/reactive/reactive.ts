@@ -1,3 +1,4 @@
+import debounce from 'lodash.debounce';
 import { CanSubscribe, Changable } from '../types';
 
 export const reactive = <T extends Changable>(
@@ -6,18 +7,21 @@ export const reactive = <T extends Changable>(
   const subscribers: Function[] = [];
 
   const triggerSubscribers = async (target: T) => {
-    await Promise.all(subscribers.map(sub => sub(target)));
+    await Promise.all(subscribers.map((sub) => sub(target)));
   };
 
   const castedObject = object as T & CanSubscribe<T>;
-  const orgOnChange = castedObject.onChange.bind(castedObject);
+  const orgOnChange = castedObject.onChange?.bind(castedObject) ?? (() => {});
 
-  castedObject.onChange = function() {
+  const onChange = function (this: T & CanSubscribe<T>) {
     orgOnChange();
+
     triggerSubscribers(this);
   };
 
-  castedObject.subscribe = function(handler) {
+  castedObject.onChange = debounce(onChange, 2);
+
+  castedObject.subscribe = function (handler) {
     const index = subscribers.push(handler) - 1;
 
     return () => {
@@ -29,7 +33,7 @@ export const reactive = <T extends Changable>(
     set(target: T, p: keyof T, value: any): boolean {
       target[p] = value;
 
-      target.onChange.call(target);
+      target.onChange!.call(target);
 
       return true;
     },
