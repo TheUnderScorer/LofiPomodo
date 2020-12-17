@@ -27,7 +27,7 @@ export enum PomodoroEvents {
   GetState = 'GetState',
   ToggleTimerMenu = 'ToggleTimerMenu',
   RestartCurrentState = 'RestartCurrentState',
-  SkipBreak = 'SkipBreak',
+  MoveToNextState = 'MoveToNextState',
 }
 
 export interface ToggleMenuPayload {

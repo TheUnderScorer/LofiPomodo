@@ -4,17 +4,18 @@ import { useIpcInvoke } from '../../../../../shared/ipc/useIpcInvoke';
 import { PomodoroEvents } from '../../../../../../shared/types';
 import { ArrowIcon } from '../../../../../ui/atoms/icons';
 
-export interface SkipBreakProps extends Omit<IconButtonProps, 'aria-label'> {}
+export interface NextStateBtnProps
+  extends Omit<IconButtonProps, 'aria-label'> {}
 
-export const SkipBreak: FC<SkipBreakProps> = (props) => {
-  const [invoke] = useIpcInvoke(PomodoroEvents.SkipBreak);
+export const NextStateBtn: FC<NextStateBtnProps> = (props) => {
+  const [invoke] = useIpcInvoke(PomodoroEvents.MoveToNextState);
 
   return (
-    <Tooltip label="Skip break">
+    <Tooltip label="Move to next state">
       <IconButton
-        className="skip-break"
+        className="move-to-next-state"
         onClick={() => invoke()}
-        aria-label="Skip break"
+        aria-label="Move to next state"
         {...props}
       >
         <ArrowIcon
