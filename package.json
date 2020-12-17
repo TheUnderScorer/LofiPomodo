@@ -103,7 +103,7 @@
     "pack-windows": "electron-builder -w --x64 ",
     "pack-macos": "electron-builder -m --x64",
     "build-windows": "scripts/build_windows.sh",
-    "build-macos": "scripts/build_macos.sh.sh",
+    "build-macos": "scripts/build_macos.sh",
     "install-app-deps": "electron-builder install-app-deps",
     "semantic-release": "semantic-release",
     "create-migration": "knex migrate:make -x ts --"
