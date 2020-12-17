@@ -1,16 +1,16 @@
-import { WindowProps, WindowTitles } from '../types/system';
+import { WindowProps, WindowTypes } from '../types/system';
 
 const timerWindowSize = 500;
 const breakWindowSize = 600;
 
-export const windowProps: Record<WindowTitles, WindowProps> = {
-  [WindowTitles.Timer]: {
+export const windowProps: Record<WindowTypes, WindowProps> = {
+  [WindowTypes.Timer]: {
     height: timerWindowSize + 100,
     width: timerWindowSize,
-    minHeight: timerWindowSize + 100,
+    minHeight: 216,
     minWidth: timerWindowSize,
   },
-  [WindowTitles.Break]: {
+  [WindowTypes.Break]: {
     height: breakWindowSize,
     width: breakWindowSize,
     minHeight: breakWindowSize,

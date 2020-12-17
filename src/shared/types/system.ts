@@ -17,7 +17,7 @@ export interface WindowProps extends ResizeWindowPayload {
   minWidth?: number;
 }
 
-export enum WindowTitles {
-  Timer = 'Pixel Pomodoro',
+export enum WindowTypes {
+  Timer = 'PixelPomodoro',
   Break = 'Break',
 }
