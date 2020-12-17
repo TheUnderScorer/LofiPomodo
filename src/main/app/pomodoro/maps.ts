@@ -7,7 +7,7 @@ export const nextStateMap: Record<
   [PomodoroState.LongBreak]: () => PomodoroState.Work,
   [PomodoroState.Break]: () => PomodoroState.Work,
   [PomodoroState.Work]: (pomodoro) => {
-    if (pomodoro.shortBreakCount >= pomodoro.longBreakInterval - 1) {
+    if (pomodoro.shortBreakCount >= pomodoro.longBreakInterval) {
       return PomodoroState.LongBreak;
     }
 
