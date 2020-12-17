@@ -1,3 +1,24 @@
+# [1.4.0](https://github.com/TheUnderScorer/pixel-pomodo/compare/v1.3.0...v1.4.0) (2020-12-17)
+
+
+### Bug Fixes
+
+* Correctly calculate when long break should happen ([ddecd82](https://github.com/TheUnderScorer/pixel-pomodo/commit/ddecd82c31304a03e6972323424cb6b7abe49677))
+* Increase minimal width of active task title ([9751a6f](https://github.com/TheUnderScorer/pixel-pomodo/commit/9751a6f96dab1e005f10ea0d9eb85af9027c87f1))
+* Use correct text color in active task title ([18be17d](https://github.com/TheUnderScorer/pixel-pomodo/commit/18be17df0ae4679cf3870ae5a8a807f23671f1cb))
+
+
+### Features
+
+* Always show button for skipping state ([1c76605](https://github.com/TheUnderScorer/pixel-pomodo/commit/1c766055b70d83a0b5d33e80abd9cb1923fa40b3))
+* Hide tasks list ([4214753](https://github.com/TheUnderScorer/pixel-pomodo/commit/4214753f85f38dc0f1e9e20ee0d4bf9e4a0a74f2))
+* Show breaks count in timer ([7ae7e0f](https://github.com/TheUnderScorer/pixel-pomodo/commit/7ae7e0f3c0ed1afd2a19f13aae53b4da44600c21))
+
+
+### Performance Improvements
+
+* Debounce "onChange" calls in reactive ([35a8c76](https://github.com/TheUnderScorer/pixel-pomodo/commit/35a8c7691cdb92d82ca69efa019d11d209975b8f))
+
 # [1.3.0](https://github.com/TheUnderScorer/pixel-pomodo/compare/v1.2.1...v1.3.0) (2020-12-15)
 
 
