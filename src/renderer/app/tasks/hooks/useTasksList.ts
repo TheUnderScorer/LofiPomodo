@@ -11,6 +11,7 @@ import { getById } from '../../../../shared/utils/getters';
 import { tasksListStore } from '../state/tasksList';
 import { atom, useRecoilState } from 'recoil';
 import { useGroupedTasksCount } from './useGroupedTasksCount';
+import { useActiveTask } from './useActiveTask';
 
 export interface TasksHookProps {
   defaultOrder?: Order<Task>;
@@ -23,6 +24,7 @@ const stateAtom = atom<TaskState>({
 
 export const useTasksList = ({ defaultOrder }: TasksHookProps = {}) => {
   const { getCount } = useGroupedTasksCount();
+  const { fetchActiveTask } = useActiveTask();
 
   const [state, setTaskState] = useRecoilState(stateAtom);
   const [order, setOrder] = useState<Order<Task> | undefined>(defaultOrder);
@@ -53,9 +55,9 @@ export const useTasksList = ({ defaultOrder }: TasksHookProps = {}) => {
 
       await updateTaskMutation(updatedTask);
 
-      await Promise.all([getTasks(), getCount()]);
+      await Promise.all([getTasks(), getCount(), fetchActiveTask()]);
     },
-    [getCount, getTasks, tasks, updateTaskMutation]
+    [fetchActiveTask, getCount, getTasks, tasks, updateTaskMutation]
   );
 
   return {
