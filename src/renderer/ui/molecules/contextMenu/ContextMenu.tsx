@@ -67,8 +67,6 @@ export const ContextMenu: FC<ContextMenuProps> = ({ menu, children, id }) => {
           key === id ? !value : false,
         ]);
 
-        console.log({ entries });
-
         return Object.fromEntries(entries);
       });
     },

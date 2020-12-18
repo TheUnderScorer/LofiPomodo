@@ -6,6 +6,7 @@ import { PomodoroView } from './app/pomodoro/views/pomodoroView/PomodoroView';
 import { usePomodoroListeners } from './app/pomodoro/hooks/usePomodoroListeners';
 import { useTasksListeners } from './app/tasks/hooks/useTaskListeners';
 import { BreakView } from './app/pomodoro/views/breakView/BreakView';
+import { SettingsFormView } from './app/settings/views/SettingsFormView';
 
 const App = () => {
   const { colorMode } = useColorMode();
@@ -27,6 +28,9 @@ const App = () => {
         </Route>
         <Route path={routes.breakWindow()}>
           <BreakView />
+        </Route>
+        <Route path={routes.settings()}>
+          <SettingsFormView />
         </Route>
       </Switch>
     </Container>

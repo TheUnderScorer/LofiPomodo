@@ -15,7 +15,7 @@ export const composeIcon = <Props extends BaseIconProps>(
   params: ComposeIconParams<Props>
 ): FC<Props> => (props) => {
   const theme = useTheme() as Theme;
-  const themeColorMode = useColorMode();
+  const { colorMode: themeColorMode } = useColorMode();
   const colorMode = props.variant ?? themeColorMode ?? 'light';
 
   const additionalProps = useMemo(

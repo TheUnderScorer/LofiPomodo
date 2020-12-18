@@ -1,36 +1,21 @@
-import React, { FC, MouseEventHandler, useCallback } from 'react';
+import React, { FC } from 'react';
 import { faEllipsisV } from '@fortawesome/free-solid-svg-icons';
 import { IconButton, IconButtonProps, Stack } from '@chakra-ui/core';
 import { FaIcon } from '../../../../ui/atoms/faIcon/FaIcon';
-import { PomodoroEvents, ToggleMenuPayload } from '../../../../../shared/types';
-import { useIpcInvoke } from '../../../../shared/ipc/useIpcInvoke';
+import { routes } from '../../../../../shared/routes/routes';
+import { useHistory } from 'react-router-dom';
 
 export interface PomodoroMenuProps
   extends Omit<IconButtonProps, 'aria-label' | 'onClick'> {}
 
 export const PomodoroMenu: FC<PomodoroMenuProps> = (props) => {
-  const [invoke, { loading }] = useIpcInvoke<ToggleMenuPayload>(
-    PomodoroEvents.ToggleTimerMenu
-  );
-
-  const handleClick: MouseEventHandler<HTMLElement> = useCallback(
-    async (event) => {
-      const rect = event.currentTarget.getBoundingClientRect();
-
-      await invoke({
-        x: rect.x,
-        y: rect.y + event.currentTarget.clientHeight,
-      });
-    },
-    [invoke]
-  );
+  const history = useHistory();
 
   return (
     <Stack direction="row">
       <IconButton
-        isLoading={loading}
+        onClick={() => history.push(routes.settings())}
         variant="ghost"
-        onClick={handleClick}
         aria-label="Toggle menu"
         {...props}
       >

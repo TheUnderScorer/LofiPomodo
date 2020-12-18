@@ -1,4 +1,4 @@
-import { Input, InputProps } from '@chakra-ui/core';
+import { Input, InputGroup, InputProps } from '@chakra-ui/core';
 import React, { forwardRef } from 'react';
 import {
   FormControl,
@@ -10,10 +10,13 @@ export interface CommonFieldProps extends FormControlProps {
 }
 
 export const CommonField = forwardRef<HTMLInputElement, CommonFieldProps>(
-  ({ name, inputProps = {}, ...rest }, ref) => {
+  ({ name, inputProps = {}, children, ...rest }, ref) => {
     return (
       <FormControl name={name} {...rest}>
-        <Input name={name} ref={ref} {...inputProps} />
+        <InputGroup>
+          <Input name={name} ref={ref} {...inputProps} />
+          {children}
+        </InputGroup>
       </FormControl>
     );
   }
