@@ -21,7 +21,7 @@ const formControlProps: Partial<FormControlProps> = {
 };
 
 export const PomodoroForm: FC<PomodoroFormProps> = ({ form }) => {
-  const { errors, control, register } = form;
+  const { errors, control } = form;
 
   return (
     <Stack spacing={6}>

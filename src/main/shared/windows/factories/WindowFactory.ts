@@ -27,6 +27,8 @@ export class WindowFactory {
 
   async createTimerWindow(): Promise<BrowserWindow> {
     if (this.timerWindow) {
+      this.timerWindow.focus();
+
       return this.timerWindow;
     }
 
@@ -58,6 +60,12 @@ export class WindowFactory {
   }
 
   async createBreakWindow(): Promise<BrowserWindow> {
+    if (this.breakWindow) {
+      this.breakWindow.focus();
+
+      return this.breakWindow;
+    }
+
     const window = new BrowserWindow({
       ...this.getWindowProps(WindowTypes.Break),
       frame: false,

@@ -143,6 +143,7 @@ export const SettingsFormView: FC<SettingsFormViewProps> = () => {
               {tab === 'Pomodoro' && <PomodoroForm form={form} />}
             </Flex>
             <Button
+              id="submit_settings"
               type="submit"
               minWidth="150px"
               isLoading={loading}

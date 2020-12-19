@@ -30,8 +30,8 @@ export const DurationField = forwardRef<HTMLInputElement, DurationFieldProps>(
     const [unit, setUnit] = useState<TimeUnits>(TimeUnits.Minutes);
 
     const parsedValue = useMemo(() => {
-      if (!value) {
-        return 0;
+      if (value === null || value === undefined) {
+        return null;
       }
 
       let formattedValue: number;
@@ -66,6 +66,14 @@ export const DurationField = forwardRef<HTMLInputElement, DurationFieldProps>(
           return;
         }
 
+        if (parsed > max) {
+          if (onChange) {
+            onChange(max);
+          }
+
+          return;
+        }
+
         let converted: number;
 
         switch (unit) {
@@ -89,7 +97,7 @@ export const DurationField = forwardRef<HTMLInputElement, DurationFieldProps>(
       <InputGroup minWidth="100px" maxWidth="200px" {...rest}>
         <NumberInput
           {...inputProps}
-          value={parsedValue}
+          value={parsedValue ?? ''}
           onChange={handleChange}
           precision={2}
           max={9999}

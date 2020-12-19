@@ -3,8 +3,7 @@ import React, { FC, useMemo } from 'react';
 import { BoxProps, Image, useColorMode, useTheme } from '@chakra-ui/core';
 import { Theme } from '../../../types/theme';
 
-export interface ComposeIconParams<AdditionalProps extends object>
-  extends BoxProps {
+export interface ComposeIconParams<AdditionalProps extends object> {
   iconMap: ColorIconMap;
   type: 'img' | 'svg';
   alt?: string;
@@ -13,7 +12,7 @@ export interface ComposeIconParams<AdditionalProps extends object>
 
 export const composeIcon = <Props extends BaseIconProps>(
   params: ComposeIconParams<Props>
-): FC<Props> => (props) => {
+): FC<Props & BoxProps> => (props) => {
   const theme = useTheme() as Theme;
   const { colorMode: themeColorMode } = useColorMode();
   const colorMode = props.variant ?? themeColorMode ?? 'light';

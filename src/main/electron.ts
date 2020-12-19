@@ -1,4 +1,4 @@
-import { app, BrowserWindow, Menu } from 'electron';
+import { app, Menu } from 'electron';
 import isDev from 'electron-is-dev';
 import { AppContext, createContext } from './context';
 import { setupPomodoro } from './app/pomodoro/setup';
@@ -17,20 +17,6 @@ log.catchErrors({
 
 log.debug(`Dirname: ${__dirname}`);
 
-let mainWindow: BrowserWindow | null;
-
-const createWindow = async (context: AppContext) => {
-  if (mainWindow) {
-    return;
-  }
-
-  mainWindow = await context.windowFactory.createTimerWindow();
-
-  mainWindow.on('closed', () => {
-    mainWindow = null;
-  });
-};
-
 const setupAppMenu = (context: AppContext) => {
   Menu.setApplicationMenu(context.menuFactory.createAppMenu());
 
@@ -48,10 +34,10 @@ app.whenReady().then(async () => {
   setupSystem(context);
   setupSettings(context);
 
-  await createWindow(context);
+  await context.windowFactory.createTimerWindow();
 
   app.on('activate', async () => {
-    await createWindow(context);
+    await context.windowFactory.createTimerWindow();
   });
 });
 

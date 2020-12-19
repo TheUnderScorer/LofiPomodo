@@ -1,26 +1,26 @@
 import React, { FC } from 'react';
-import { faEllipsisV } from '@fortawesome/free-solid-svg-icons';
-import { IconButton, IconButtonProps, Stack } from '@chakra-ui/core';
-import { FaIcon } from '../../../../ui/atoms/faIcon/FaIcon';
+import { IconButton, IconButtonProps, Tooltip } from '@chakra-ui/core';
 import { routes } from '../../../../../shared/routes/routes';
 import { useHistory } from 'react-router-dom';
+import { CogIcon } from '../../../../ui/atoms/icons/CogIcon';
 
 export interface PomodoroMenuProps
-  extends Omit<IconButtonProps, 'aria-label' | 'onClick'> {}
+  extends Partial<Omit<IconButtonProps, 'aria-label' | 'onClick'>> {}
 
-export const PomodoroMenu: FC<PomodoroMenuProps> = (props) => {
+export const PomodoroMenuBtn: FC<PomodoroMenuProps> = (props) => {
   const history = useHistory();
 
   return (
-    <Stack direction="row">
+    <Tooltip label="Open settings">
       <IconButton
         onClick={() => history.push(routes.settings())}
         variant="ghost"
         aria-label="Toggle menu"
+        className="settings-btn"
         {...props}
       >
-        <FaIcon icon={faEllipsisV} />
+        <CogIcon width="20px" height="20px" />
       </IconButton>
-    </Stack>
+    </Tooltip>
   );
 };
