@@ -1,3 +1,10 @@
+## [1.5.1](https://github.com/TheUnderScorer/pixel-pomodo/compare/v1.5.0...v1.5.1) (2020-12-20)
+
+
+### Bug Fixes
+
+* Invalid window min height on windows ([fd5b797](https://github.com/TheUnderScorer/pixel-pomodo/commit/fd5b7972bff90a74bd12d36fdd85740e96be201b))
+
 # [1.5.0](https://github.com/TheUnderScorer/pixel-pomodo/compare/v1.4.0...v1.5.0) (2020-12-20)
 
 
