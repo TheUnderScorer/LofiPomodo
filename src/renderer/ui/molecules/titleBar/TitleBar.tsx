@@ -26,7 +26,7 @@ export const TitleBar: FC<TitleBarProps> = ({ children, ...props }) => {
     >
       {children}
       {platform === 'win32' && (
-        <>
+        <Flex position="absolute" right={1}>
           <IconButton
             className="minimize"
             aria-label="Minimize window"
@@ -43,7 +43,7 @@ export const TitleBar: FC<TitleBarProps> = ({ children, ...props }) => {
           >
             <Text>X</Text>
           </IconButton>
-        </>
+        </Flex>
       )}
     </Flex>
   );

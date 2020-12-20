@@ -82,6 +82,7 @@ export const SettingsFormView: FC<SettingsFormViewProps> = () => {
           <IconButton
             className="go-back-btn"
             left="0"
+            top={platform === 'win32' ? 1 : 0}
             onClick={() => history.goBack()}
             aria-label="Go back"
           >
@@ -105,8 +106,9 @@ export const SettingsFormView: FC<SettingsFormViewProps> = () => {
         pl={0}
         pr={0}
         pt={12}
+        pb={3}
         id="settings"
-        height="calc(100vh - 60px)"
+        height={platform === 'win32' ? '100vh' : 'calc(100vh - 60px)'}
         centerContent
         width="100%"
         maxW="100%"
