@@ -12,6 +12,7 @@ import { Tables } from '../shared/types/database';
 import { TasksService } from './app/tasks/services/TasksService';
 import fs from 'fs';
 import { MenuFactory } from './shared/menu/MenuFactory';
+import { SettingsService } from './app/settings/services/SettingsService';
 
 export interface AppContext {
   ipcService: IpcMainService;
@@ -23,6 +24,7 @@ export interface AppContext {
   autoLaunch: AutoLaunch;
   tasksService: TasksService;
   taskRepository: TaskRepository;
+  settingsService: SettingsService;
 }
 
 export const createContext = async (): Promise<AppContext> => {
@@ -53,6 +55,11 @@ export const createContext = async (): Promise<AppContext> => {
     store.clear();
   }
 
+  const autoLaunch = new AutoLaunch({
+    isHidden: true,
+    name: app.getName(),
+  });
+
   return {
     ipcService: new IpcMainService(),
     taskRepository,
@@ -62,9 +69,7 @@ export const createContext = async (): Promise<AppContext> => {
     windowFactory,
     menuFactory,
     tasksService,
-    autoLaunch: new AutoLaunch({
-      isHidden: true,
-      name: app.getName(),
-    }),
+    autoLaunch,
+    settingsService: new SettingsService(pomodoro, autoLaunch),
   };
 };

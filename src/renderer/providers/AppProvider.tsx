@@ -29,6 +29,7 @@ export const AppProvider: FC<AppProviderProps> = ({ children }) => {
           [PomodoroState.Break]: chakraTheme.colors.green['300'],
           [PomodoroState.LongBreak]: chakraTheme.colors.green['600'],
           paper: '#eee6e6',
+          success: chakraTheme.colors.green['500'],
           primary: chakraTheme.colors.blue['300'],
           colorModeContrast:
             colorMode === 'dark' ? '#FFFCFC' : chakraTheme.colors.white,

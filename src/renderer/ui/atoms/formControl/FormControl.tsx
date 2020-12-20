@@ -23,8 +23,12 @@ export const FormControl: FC<FormControlProps> = ({
   ...rest
 }) => {
   return (
-    <BaseFormControl isInvalid={Boolean(error)} id={name} {...rest}>
-      {label && <FormLabel>{label}</FormLabel>}
+    <BaseFormControl isInvalid={Boolean(error)} {...rest}>
+      {label && (
+        <FormLabel color="brand.textPrimary" htmlFor={name}>
+          {label}
+        </FormLabel>
+      )}
       {children}
       {helperText && <FormHelperText>{helperText}</FormHelperText>}
       {error && <FormErrorMessage>{error}</FormErrorMessage>}

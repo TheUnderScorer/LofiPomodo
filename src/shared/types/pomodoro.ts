@@ -30,6 +30,18 @@ export enum PomodoroEvents {
   MoveToNextState = 'MoveToNextState',
 }
 
+export interface PomodoroSettings
+  extends Pick<
+    Pomodoro,
+    | 'longBreakInterval'
+    | 'openFullWindowOnBreak'
+    | 'autoRunBreak'
+    | 'autoRunWork'
+    | 'workDurationSeconds'
+    | 'longBreakDurationSeconds'
+    | 'shortBreakDurationSeconds'
+  > {}
+
 export interface ToggleMenuPayload {
   y: number;
   x: number;

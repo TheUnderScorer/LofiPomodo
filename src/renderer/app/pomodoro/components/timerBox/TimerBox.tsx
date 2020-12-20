@@ -18,7 +18,7 @@ import { ResetState } from '../buttons/resetState/ResetState';
 import { ActiveTaskTitle } from '../../../tasks/components/activeTaskTitle/ActiveTaskTitle';
 import { NextStateBtn } from '../buttons/skipBreak/NextStateBtn';
 import { usePlatform } from '../../../system/hooks/usePlatform';
-import { PomodoroMenu } from '../pomodoroMenu/PomodoroMenu';
+import { PomodoroMenuBtn } from '../pomodoroMenu/PomodoroMenuBtn';
 
 export interface TimerProps {
   containerProps?: BoxProps;
@@ -84,7 +84,7 @@ export const TimerBox: FC<TimerProps> = ({
           <Stack direction="row" spacing={2}>
             <PomodoroControl color="white" />
             <ResetState iconProps={{ variant: 'light' }} />
-            {platform === 'win32' && <PomodoroMenu variant="outline" />}
+            {platform === 'win32' && <PomodoroMenuBtn variant="outline" />}
           </Stack>
         </Center>
       </Stack>

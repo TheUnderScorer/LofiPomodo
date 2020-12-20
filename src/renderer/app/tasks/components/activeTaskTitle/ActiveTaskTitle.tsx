@@ -13,8 +13,8 @@ export const ActiveTaskTitle: FC<ActiveTaskTitleProps> = ({ color }) => {
 
   return (
     <>
-      {loading && <Spinner />}
-      {
+      {loading && <Spinner color="brand.primary" />}
+      {!loading && (
         <Center maxWidth="70%" minWidth="400px" className="active-task-title">
           <Text isTruncated color={color}>
             <Tooltip label={activeTask?.title} isDisabled={!activeTask}>
@@ -28,7 +28,7 @@ export const ActiveTaskTitle: FC<ActiveTaskTitleProps> = ({ color }) => {
             </Text>
           )}
         </Center>
-      }
+      )}
     </>
   );
 };

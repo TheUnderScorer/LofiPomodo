@@ -2,7 +2,7 @@ import { useIpcRenderer } from '../../providers/IpcRendererProvider';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { Nullable } from '../../../shared/types';
 import { atom, RecoilState, useRecoilState } from 'recoil';
-import { useMount, usePrevious } from 'react-use';
+import { useMount, usePrevious, useUnmount } from 'react-use';
 import { compact } from '../../utils/compact';
 import { objToKey } from '../../utils/objToKey';
 
@@ -21,6 +21,7 @@ export interface IpcInvokeHookParams<T, Variables> {
   recoilAtom?: RecoilState<T>;
   invokeAtMount?: boolean;
   variables?: Variables;
+  onComplete?: (value: T | undefined) => any;
 }
 
 const defaultAtom = atom<any>({
@@ -41,6 +42,7 @@ export const useIpcInvoke = <
     recoilAtom,
     invokeAtMount = false,
     variables = defaultVariables as Arg,
+    onComplete,
   }: IpcInvokeHookParams<ReturnValue, Arg> = {}
 ): [invoke: InvokeFn<Arg>, result: InvokeMeta<ReturnValue>] => {
   const variablesDep = variables && objToKey(variables);
@@ -85,6 +87,12 @@ export const useIpcInvoke = <
           setRecoil(ipcResult);
         }
 
+        if (onComplete) {
+          onComplete(ipcResult);
+        }
+
+        console.log(`Invocation ${name} result:`, ipcResult);
+
         return ipcResult;
       } catch (e) {
         setError(e);
@@ -94,7 +102,7 @@ export const useIpcInvoke = <
 
       return null;
     },
-    [ipc, name, recoilAtom, setRecoil, watchVariables]
+    [ipc, name, onComplete, recoilAtom, setRecoil, watchVariables]
   );
 
   useMount(() => {
@@ -102,6 +110,10 @@ export const useIpcInvoke = <
       mounted.set(name, true);
       invoke();
     }
+  });
+
+  useUnmount(() => {
+    mounted.delete(name);
   });
 
   useEffect(() => {

@@ -1,0 +1,129 @@
+import React, { forwardRef, useCallback, useMemo, useState } from 'react';
+import { FormInputProps } from '../../types/form';
+import {
+  InputGroup,
+  InputGroupProps,
+  InputRightElement,
+  NumberDecrementStepper,
+  NumberIncrementStepper,
+  NumberInput,
+  NumberInputField,
+  NumberInputProps,
+  NumberInputStepper,
+  Select,
+} from '@chakra-ui/core';
+import { TimeUnits } from '../../../shared/types/units';
+import { timeUnitsDictionaryShort } from '../../../shared/dictionary/units';
+
+export interface DurationFieldProps
+  extends FormInputProps<number>,
+    Partial<Omit<InputGroupProps, 'onChange' | 'children'>> {
+  inputProps?: Omit<NumberInputProps, 'value' | 'onChange'>;
+}
+
+const units = Object.values(TimeUnits);
+const max = 9999;
+
+export const DurationField = forwardRef<HTMLInputElement, DurationFieldProps>(
+  (props, ref) => {
+    const { name, value, onChange, inputProps, ...rest } = props;
+    const [unit, setUnit] = useState<TimeUnits>(TimeUnits.Minutes);
+
+    const parsedValue = useMemo(() => {
+      if (value === null || value === undefined) {
+        return null;
+      }
+
+      let formattedValue: number;
+
+      switch (unit) {
+        case TimeUnits.Hours:
+          formattedValue = value / 60 / 60;
+
+          break;
+
+        case TimeUnits.Minutes:
+          formattedValue = value / 60;
+          break;
+
+        case TimeUnits.Seconds:
+        default:
+          formattedValue = value;
+      }
+
+      return parseFloat(formattedValue.toPrecision(2));
+    }, [unit, value]);
+
+    const handleChange = useCallback(
+      (value: string) => {
+        const parsed = parseFloat(value);
+
+        if (Number.isNaN(parsed)) {
+          if (onChange) {
+            onChange(0);
+          }
+
+          return;
+        }
+
+        if (parsed > max) {
+          if (onChange) {
+            onChange(max);
+          }
+
+          return;
+        }
+
+        let converted: number;
+
+        switch (unit) {
+          case TimeUnits.Hours:
+            converted = parsed * 60 * 60;
+            break;
+
+          case TimeUnits.Minutes:
+          default:
+            converted = parsed * 60;
+        }
+
+        if (onChange) {
+          onChange(converted);
+        }
+      },
+      [onChange, unit]
+    );
+
+    return (
+      <InputGroup minWidth="100px" maxWidth="200px" {...rest}>
+        <NumberInput
+          {...inputProps}
+          value={parsedValue ?? ''}
+          onChange={handleChange}
+          precision={2}
+          max={9999}
+        >
+          <NumberInputField name={name} ref={ref} />
+          <NumberInputStepper>
+            <NumberIncrementStepper />
+            <NumberDecrementStepper />
+          </NumberInputStepper>
+        </NumberInput>
+        <InputRightElement padding={0} right="12%" width="90px">
+          <Select
+            onChange={(event) => setUnit(event.target.value as TimeUnits)}
+            borderRadius={0}
+            variant="filled"
+            color="brand.textPrimary"
+            value={unit}
+          >
+            {units.map((unit) => (
+              <option key={unit} value={unit}>
+                {timeUnitsDictionaryShort[unit]}
+              </option>
+            ))}
+          </Select>
+        </InputRightElement>
+      </InputGroup>
+    );
+  }
+);

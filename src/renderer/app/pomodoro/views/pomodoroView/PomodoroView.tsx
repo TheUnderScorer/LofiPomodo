@@ -2,7 +2,7 @@ import React, { FC } from 'react';
 import { Box, Container, useColorMode } from '@chakra-ui/core';
 import { usePomodoro } from '../../hooks/usePomodoro';
 import { TitleBar } from '../../../../ui/molecules/titleBar/TitleBar';
-import { PomodoroMenu } from '../../components/pomodoroMenu/PomodoroMenu';
+import { PomodoroMenuBtn } from '../../components/pomodoroMenu/PomodoroMenuBtn';
 import { TimerBox } from '../../components/timerBox/TimerBox';
 import { TabbedTasksList } from '../../../tasks/components/tabbedTasksList/TabbedTasksList';
 import { usePlatform } from '../../../system/hooks/usePlatform';
@@ -23,7 +23,7 @@ export const PomodoroView: FC<PomodoroViewProps> = () => {
   return (
     <>
       <TitleBar pt={2} pr={2}>
-        {platform !== 'win32' && <PomodoroMenu />}
+        {platform !== 'win32' && <PomodoroMenuBtn />}
       </TitleBar>
       <Container
         className={`pomodoro-view-${colorMode}`}
