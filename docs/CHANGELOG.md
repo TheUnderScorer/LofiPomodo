@@ -1,3 +1,15 @@
+# [1.5.0](https://github.com/TheUnderScorer/pixel-pomodo/compare/v1.4.0...v1.5.0) (2020-12-20)
+
+
+### Bug Fixes
+
+* Update active task on task update ([07756e8](https://github.com/TheUnderScorer/pixel-pomodo/commit/07756e812aadb5b413afa91b7511e483c20706d5))
+
+
+### Features
+
+* Add settings page ([be27f5e](https://github.com/TheUnderScorer/pixel-pomodo/commit/be27f5e2e09cfe9e6656f398d311c11f96ae377f))
+
 # [1.4.0](https://github.com/TheUnderScorer/pixel-pomodo/compare/v1.3.0...v1.4.0) (2020-12-17)
 
 
