@@ -4,7 +4,7 @@ import { Task } from '../../../../../shared/types/tasks';
 import { Text } from '../../../../ui/atoms/text/Text';
 import { useTasksRemoval } from '../../hooks/useTasksRemoval';
 import { useInlineConfirm } from '../../../../shared/hooks/useInlineConfirm';
-import { useTasksList } from '../../hooks/useTasksList';
+import { useUpdateTask } from '../../hooks/useUpdateTask';
 
 export interface TaskContextMenuProps {
   task: Task;
@@ -12,7 +12,7 @@ export interface TaskContextMenuProps {
 
 export const TaskContextMenu: FC<TaskContextMenuProps> = ({ task }) => {
   const { removeTasks, loading } = useTasksRemoval();
-  const { updateTask } = useTasksList();
+  const { updateTask } = useUpdateTask();
 
   const handleTaskRemoval = useCallback(() => removeTasks([task]), [
     removeTasks,
@@ -28,23 +28,21 @@ export const TaskContextMenu: FC<TaskContextMenuProps> = ({ task }) => {
 
   const changePomodoro = useCallback(
     (action: 'increment' | 'decrement') => async () => {
-      await updateTask(task.id, (foundTask) => {
-        const currentDuration = task.estimatedPomodoroDuration ?? 0;
+      const currentDuration = task.estimatedPomodoroDuration ?? 0;
 
-        const newTask: Task = {
-          ...foundTask,
-          estimatedPomodoroDuration:
-            action === 'increment' ? currentDuration + 1 : currentDuration - 1,
-        };
+      let newDuration =
+        action === 'increment' ? currentDuration + 1 : currentDuration - 1;
 
-        if (newTask.estimatedPomodoroDuration! < 0) {
-          newTask.estimatedPomodoroDuration = 0;
-        }
+      if (newDuration < 0) {
+        newDuration = 0;
+      }
 
-        return newTask;
+      await updateTask({
+        ...task,
+        estimatedPomodoroDuration: newDuration,
       });
     },
-    [task.estimatedPomodoroDuration, task.id, updateTask]
+    [task, updateTask]
   );
 
   return (

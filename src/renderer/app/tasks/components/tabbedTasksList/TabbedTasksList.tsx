@@ -29,6 +29,7 @@ import { Heading } from '../../../../ui/atoms/heading/Heading';
 import { useActiveTask } from '../../hooks/useActiveTask';
 import { TaskContextMenu } from '../taskContextMenu/TaskContextMenu';
 import { TasksMenu } from '../tasksMenu/TasksMenu';
+import { useUpdateTask } from '../../hooks/useUpdateTask';
 
 export interface TabbedTasksListProps {
   listProps?: Omit<TasksListProps, 'tasks'>;
@@ -40,15 +41,9 @@ export const TabbedTasksList: FC<TabbedTasksListProps> = (props) => {
   const isDragRef = useRef(false);
 
   const { count: tasksCount } = useGroupedTasksCount();
-  const {
-    tasks,
-    loading,
-    setTaskState,
-    didFetch,
-    getTasks,
-    updateTask,
-  } = useTasksList();
+  const { tasks, loading, setTaskState, didFetch, getTasks } = useTasksList();
   const { fetchActiveTask } = useActiveTask();
+  const { updateTask } = useUpdateTask();
 
   const [activeIndex, setActiveIndex] = useState(0);
   const [tasksState, setStoredTasks] = useState<Task[]>(tasks);
@@ -75,7 +70,7 @@ export const TabbedTasksList: FC<TabbedTasksListProps> = (props) => {
 
       setStoredTasks(newTasks);
 
-      await updateTask(task.id, () => task);
+      await updateTask(task);
     },
     [tasksState, updateTask]
   );
