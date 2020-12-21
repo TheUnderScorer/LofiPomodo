@@ -72,7 +72,6 @@ export class WindowFactory {
       fullscreenable: true,
       fullscreen: true,
       center: true,
-      alwaysOnTop: true,
       minimizable: false,
       maximizable: false,
       title: windowTitles[WindowTypes.Break],

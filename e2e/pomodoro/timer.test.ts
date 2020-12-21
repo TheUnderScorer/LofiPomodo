@@ -24,6 +24,43 @@ describe('Timer - as an user', () => {
     );
   });
 
+  it('I should not see full screen break window during manual skip', async () => {
+    const app = await bootstrapTestApp({
+      WORK_DURATION_SECONDS: 1,
+      SHORT_BREAK_DURATION_SECONDS: 1,
+      OPEN_FULL_WINDOW_ON_BREAK: 'true',
+    });
+
+    const nextStateBtn = await app.client.$('.move-to-next-state');
+
+    await nextStateBtn.click();
+
+    await wait(1000);
+
+    expect(await app.client.getWindowCount()).toEqual(1);
+  });
+
+  it('I should see full screen break window if it is enabled', async () => {
+    const app = await bootstrapTestApp({
+      WORK_DURATION_SECONDS: 1,
+      SHORT_BREAK_DURATION_SECONDS: 1,
+      OPEN_FULL_WINDOW_ON_BREAK: 'true',
+      AUTO_RUN_BREAK: 'true',
+    });
+
+    let controlBtn = await app.client.$('#control');
+
+    await controlBtn.click();
+
+    await wait(2000);
+
+    expect(await app.client.getWindowCount()).toEqual(2);
+
+    await wait(2000);
+
+    expect(await app.client.getWindowCount()).toEqual(1);
+  });
+
   it('I should be able to pause/run pomodoro', async () => {
     const app = await bootstrapTestApp({
       WORK_DURATION_SECONDS: 10,
