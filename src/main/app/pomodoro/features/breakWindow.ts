@@ -1,27 +1,29 @@
 import { AppContext } from '../../../context';
-import { BrowserWindow } from 'electron';
 import {
   PomodoroService,
   PomodoroServiceEvents,
+  Trigger,
 } from '../services/PomodoroService';
 
 export const breakWindow = ({ pomodoro, windowFactory }: AppContext) => {
-  let breakWindow: BrowserWindow | null = null;
-
-  pomodoro.events.onAny(async (eventName) => {
+  pomodoro.events.onAny(async (eventName, payload) => {
     if (!pomodoro.openFullWindowOnBreak) {
       return;
     }
 
     if (!PomodoroService.breakEventsMap.includes(eventName)) {
-      if (eventName === PomodoroServiceEvents.WorkStarted && breakWindow) {
-        breakWindow.close();
-        breakWindow = null;
+      if (
+        eventName === PomodoroServiceEvents.WorkStarted &&
+        windowFactory.breakWindow
+      ) {
+        await windowFactory.breakWindow.close();
       }
 
       return;
     }
 
-    breakWindow = await windowFactory.createBreakWindow();
+    if (payload?.trigger === Trigger.Scheduled) {
+      await windowFactory.createBreakWindow();
+    }
   });
 };

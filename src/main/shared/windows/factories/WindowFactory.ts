@@ -130,6 +130,8 @@ export class WindowFactory {
     this[key] = window;
 
     window.once('close', () => {
+      console.log(`Window ${window.id} closed.`);
+
       this[key] = null;
     });
   }

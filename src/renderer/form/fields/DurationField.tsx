@@ -56,20 +56,20 @@ export const DurationField = forwardRef<HTMLInputElement, DurationFieldProps>(
 
     const handleChange = useCallback(
       (value: string) => {
+        if (!onChange) {
+          return;
+        }
+
         const parsed = parseFloat(value);
 
         if (Number.isNaN(parsed)) {
-          if (onChange) {
-            onChange(0);
-          }
+          onChange(0);
 
           return;
         }
 
         if (parsed > max) {
-          if (onChange) {
-            onChange(max);
-          }
+          onChange(max);
 
           return;
         }
@@ -82,8 +82,11 @@ export const DurationField = forwardRef<HTMLInputElement, DurationFieldProps>(
             break;
 
           case TimeUnits.Minutes:
-          default:
             converted = parsed * 60;
+            break;
+
+          default:
+            converted = parsed;
         }
 
         if (onChange) {

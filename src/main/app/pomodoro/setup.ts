@@ -6,6 +6,7 @@ import { sendUpdatesToWindows } from './features/rendererUpdates';
 import { handleTimerMenu } from './features/timerMenu';
 import { BrowserWindow } from 'electron';
 import { showTrayProgress } from './features/showTrayProgress';
+import { Trigger } from './services/PomodoroService';
 
 export const setupPomodoro = (context: AppContext) => {
   sendUpdatesToWindows(context);
@@ -26,7 +27,8 @@ export const setupPomodoro = (context: AppContext) => {
     [PomodoroEvents.ToggleTimerMenu]: handleTimerMenu(context),
     [PomodoroEvents.RestartCurrentState]: () =>
       context.pomodoro.resetCurrentState(),
-    [PomodoroEvents.MoveToNextState]: () => context.pomodoro.moveToNextState(),
+    [PomodoroEvents.MoveToNextState]: () =>
+      context.pomodoro.moveToNextState(Trigger.Manual),
   });
 };
 
