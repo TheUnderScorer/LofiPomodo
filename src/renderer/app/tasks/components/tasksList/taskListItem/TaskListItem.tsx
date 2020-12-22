@@ -10,7 +10,7 @@ import {
   NumberInputField,
   Stack,
 } from '@chakra-ui/core';
-import React, { FC, ReactNode, useCallback, useState } from 'react';
+import React, { FC, ReactNode, useCallback, useEffect, useState } from 'react';
 import { Task, TaskState } from '../../../../../../shared/types/tasks';
 import { Draggable } from 'react-beautiful-dnd';
 import { FaIcon } from '../../../../../ui/atoms/faIcon/FaIcon';
@@ -97,6 +97,15 @@ export const TaskListItem: FC<TaskListItemProps> = ({
     500,
     [onTaskChange, duration]
   );
+
+  useEffect(() => {
+    if (
+      task.estimatedPomodoroDuration &&
+      duration !== task.estimatedPomodoroDuration
+    ) {
+      setDuration(task.estimatedPomodoroDuration);
+    }
+  }, [duration, task.estimatedPomodoroDuration]);
 
   return (
     <Draggable

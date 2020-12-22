@@ -16,16 +16,26 @@ import { Typed as TypedEmittery } from 'emittery';
 import { shouldRun } from '../logic/autorun';
 import { stateDurationMap } from '../maps';
 
+export enum Trigger {
+  Manual = 'Manual',
+  Scheduled = 'Scheduled',
+}
+
 export enum PomodoroServiceEvents {
   BreakStarted = 'PomodoroBreakStarted',
   WorkStarted = 'PomodoroWorkStarted',
   LongBreakStarted = 'PomodoroLongBreakStarted',
 }
 
+export interface PomodoroStateChangedPayload {
+  pomodoro: PomodoroService;
+  trigger: Trigger;
+}
+
 export interface PomodoroServiceEventsMap {
-  [PomodoroServiceEvents.BreakStarted]: PomodoroService;
-  [PomodoroServiceEvents.LongBreakStarted]: PomodoroService;
-  [PomodoroServiceEvents.WorkStarted]: PomodoroService;
+  [PomodoroServiceEvents.BreakStarted]: PomodoroStateChangedPayload;
+  [PomodoroServiceEvents.LongBreakStarted]: PomodoroStateChangedPayload;
+  [PomodoroServiceEvents.WorkStarted]: PomodoroStateChangedPayload;
 }
 
 @Reactive()
@@ -130,7 +140,7 @@ export class PomodoroService
     }, 1000);
   }
 
-  async moveToNextState() {
+  async moveToNextState(trigger: Trigger = Trigger.Scheduled) {
     const newStart = new Date();
     const newPomodoroState = getNextState(this);
     const newRemainingSeconds = getDurationByState(this, newPomodoroState);
@@ -158,7 +168,10 @@ export class PomodoroService
 
     const eventToEmit = PomodoroService.newStateEventMap[newPomodoroState];
 
-    await this.events.emit(eventToEmit, this);
+    await this.events.emit(eventToEmit, {
+      pomodoro: this,
+      trigger,
+    });
   }
 
   setDuration(

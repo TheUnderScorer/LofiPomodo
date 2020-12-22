@@ -22,5 +22,5 @@ export const getInitialPomodoro = (): Pomodoro => ({
   autoRunBreak: getBoolEnv('AUTO_RUN_BREAK', false),
   remainingTime: '',
   remainingPercentage: 0,
-  openFullWindowOnBreak: false,
+  openFullWindowOnBreak: getBoolEnv('OPEN_FULL_WINDOW_ON_BREAK', false),
 });

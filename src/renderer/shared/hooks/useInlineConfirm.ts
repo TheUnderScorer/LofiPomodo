@@ -1,4 +1,5 @@
 import { MouseEventHandler, useCallback, useMemo, useState } from 'react';
+import { useScheduler } from './useScheduler';
 
 interface InlineConfirmHookProps {
   onClick: MouseEventHandler;
@@ -19,10 +20,18 @@ export const useInlineConfirm = ({
     isConfirm,
   ]);
 
+  const cancelConfirmation = useCallback(() => {
+    setIsConfirm(false);
+  }, []);
+
+  const { schedule: scheduleCancel } = useScheduler(cancelConfirmation);
+
   const handleClick: MouseEventHandler = useCallback(
     async (event) => {
       if (!isConfirm) {
         setIsConfirm(true);
+
+        scheduleCancel(4000);
 
         return;
       }
@@ -30,12 +39,13 @@ export const useInlineConfirm = ({
       await onClick(event);
       setIsConfirm(false);
     },
-    [isConfirm, onClick]
+    [isConfirm, onClick, scheduleCancel]
   );
 
   return {
     isConfirm,
     text,
     handleClick,
+    cancelConfirmation,
   };
 };

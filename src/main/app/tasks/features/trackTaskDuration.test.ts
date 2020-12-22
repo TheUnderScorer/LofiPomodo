@@ -6,6 +6,7 @@ import { createMockTask } from '../../../../tests/mocks/tasks';
 import {
   PomodoroService,
   PomodoroServiceEvents,
+  Trigger,
 } from '../../pomodoro/services/PomodoroService';
 import { TaskRepository } from '../repositories/TaskRepository';
 import { trackTaskDuration } from './trackTaskDuration';
@@ -27,7 +28,7 @@ describe('Track task duration', () => {
 
     jest.spyOn(Date.prototype, 'toISOString').mockImplementation(() => iso);
 
-    return new Promise(async (resolve) => {
+    return new Promise<void>(async (resolve) => {
       const task: Task = {
         ...createMockTask(),
         active: true,
@@ -60,10 +61,10 @@ describe('Track task duration', () => {
         taskRepository,
       });
 
-      await pomodoroService.events.emit(
-        PomodoroServiceEvents.BreakStarted,
-        pomodoroService
-      );
+      await pomodoroService.events.emit(PomodoroServiceEvents.BreakStarted, {
+        pomodoro: pomodoroService,
+        trigger: Trigger.Scheduled,
+      });
     });
   });
 });
