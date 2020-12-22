@@ -1,3 +1,16 @@
+# [1.6.0](https://github.com/TheUnderScorer/pixel-pomodo/compare/v1.5.1...v1.6.0) (2020-12-22)
+
+
+### Bug Fixes
+
+* Update active task on list change ([269f0c4](https://github.com/TheUnderScorer/pixel-pomodo/commit/269f0c46f57be715f7c7e9d6c4b781fc61359dac))
+* Update task duration in input when using increment/decrement ([b7b04c1](https://github.com/TheUnderScorer/pixel-pomodo/commit/b7b04c1560c49923122c775f373925129939b393))
+
+
+### Features
+
+* Don't open full screen break window on manual state change ([4c4c390](https://github.com/TheUnderScorer/pixel-pomodo/commit/4c4c390561e7f9f463a691cc79356d74abdebaf3))
+
 ## [1.5.1](https://github.com/TheUnderScorer/pixel-pomodo/compare/v1.5.0...v1.5.1) (2020-12-20)
 
 
