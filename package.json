@@ -1,33 +1,34 @@
 {
-  "name": "pixel-pomodo",
-  "productName": "Pixel Pomodo",
-  "description": "Pomodoro app made with pixel-art like ui.",
-  "homepage": "./",
   "author": {
     "email": "przemyslawzydek@gmail.com",
     "name": "Przemysław Żydek"
   },
-  "version": "1.6.0",
-  "private": true,
-  "main": "build/electron.js",
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
+  },
+  "config": {
+    "forge": "./forge.config.js"
+  },
   "dependencies": {
     "@chakra-ui/core": "1.0.0-rc.8",
     "@chakra-ui/icons": "1.0.0-next.7",
     "@fortawesome/fontawesome-svg-core": "^1.2.32",
     "@fortawesome/free-solid-svg-icons": "^5.15.1",
     "@fortawesome/react-fontawesome": "^0.1.11",
-    "@testing-library/jest-dom": "^4.2.4",
-    "@testing-library/react": "^9.3.2",
-    "@testing-library/user-event": "^7.1.2",
-    "@types/jest": "^24.0.0",
-    "@types/lodash.debounce": "^4.0.6",
-    "@types/node": "^12.0.0",
-    "@types/react": "^17.0.0",
-    "@types/react-dom": "^17.0.0",
     "auto-launch": "^5.0.5",
     "electron-debug": "^3.1.0",
     "electron-is-dev": "^1.2.0",
     "electron-log": "^4.3.0",
+    "electron-squirrel-startup": "^1.0.0",
     "electron-store": "^6.0.0",
     "electron-util": "^0.14.2",
     "emittery": "^0.7.1",
@@ -36,7 +37,6 @@
     "lodash.debounce": "^4.0.8",
     "lodash.isplainobject": "^4.0.6",
     "node-fetch": "^2.6.1",
-    "node-gyp": "^7.1.2",
     "ramda": "^0.27.1",
     "react": "^17.0.0",
     "react-beautiful-dnd": "^13.0.0",
@@ -52,26 +52,41 @@
     "typescript": "^4.1.3",
     "uuid": "^8.3.1"
   },
+  "description": "Pomodoro app made with pixel-art like ui.",
   "devDependencies": {
     "@craco/craco": "5.7.0",
+    "@electron-forge/cli": "^6.0.0-beta.54",
+    "@electron-forge/maker-deb": "^6.0.0-beta.54",
+    "@electron-forge/maker-dmg": "^6.0.0-beta.54",
+    "@electron-forge/maker-rpm": "^6.0.0-beta.54",
+    "@electron-forge/maker-squirrel": "^6.0.0-beta.54",
+    "@electron-forge/maker-zip": "^6.0.0-beta.54",
     "@semantic-release/changelog": "^5.0.1",
     "@semantic-release/exec": "^5.0.0",
     "@semantic-release/git": "^9.0.0",
     "@semantic-release/github": "^7.0.7",
     "@semantic-release/npm": "^7.0.5",
+    "@testing-library/jest-dom": "^4.2.4",
+    "@testing-library/react": "^9.3.2",
+    "@testing-library/user-event": "^7.1.2",
     "@types/auto-launch": "^5.0.1",
+    "@types/jest": "^24.0.0",
+    "@types/lodash.debounce": "^4.0.6",
     "@types/lodash.isplainobject": "^4.0.6",
+    "@types/node": "^12.0.0",
     "@types/node-fetch": "^2.5.7",
     "@types/ramda": "^0.27.28",
+    "@types/react": "^17.0.0",
     "@types/react-beautiful-dnd": "^13.0.0",
+    "@types/react-dom": "^17.0.0",
     "@types/react-router-dom": "^5.1.6",
     "@types/recoil": "0.0.1",
     "@types/uuid": "^8.3.0",
     "@typescript-eslint/eslint-plugin": "4.4.0",
     "@typescript-eslint/parser": "4.4.0",
-    "electron": "^11.1.0",
-    "electron-builder": "22.9.1",
-    "electron-builder-squirrel-windows": "22.10.0",
+    "concurrently": "^5.3.0",
+    "cross-env": "^7.0.3",
+    "electron": "^11.1.1",
     "eslint": "7.11.0",
     "eslint-import-resolver-typescript": "^2.3.0",
     "eslint-plugin-prettier": "^3.1.3",
@@ -83,57 +98,6 @@
     "tsconfig-paths-webpack-plugin": "^3.3.0",
     "webpack-cli": "4.2.0",
     "webpack-node-externals": "^2.5.2"
-  },
-  "resolutions": {
-    "**/@typescript-eslint/eslint-plugin": "4.4.0",
-    "**/@typescript-eslint/parser": "4.4.0"
-  },
-  "scripts": {
-    "start-renderer": "EXTEND_ESLINT=true SKIP_PREFLIGHT_CHECK=true craco start",
-    "build-renderer": "EXTEND_ESLINT=true SKIP_PREFLIGHT_CHECK=true craco build",
-    "lint": "eslint . --ext .ts,tsx",
-    "lint:fix": "eslint . --ext .ts,tsx --fix",
-    "test": "SKIP_PREFLIGHT_CHECK=true craco test",
-    "test:e2e": "jest --config jest.config.e2e.js --runInBand --forceExit",
-    "test:e2e-docker": "docker-compose up --exit-code-from e2e e2e",
-    "build-electron": "NODE_ENV=\"production\" webpack --config webpack.electron.js",
-    "watch-electron": "webpack --config webpack.electron.js -w",
-    "start-electron": "electron ./build/electron.js --remote-debugging-port=9444",
-    "pack-windows-docker": "docker-compose up windows-packer",
-    "pack-windows": "electron-builder -w --x64 ",
-    "pack-macos": "electron-builder -m --x64",
-    "build-windows": "scripts/build_windows.sh",
-    "build-macos": "scripts/build_macos.sh",
-    "install-app-deps": "electron-builder install-app-deps",
-    "semantic-release": "semantic-release",
-    "create-migration": "knex migrate:make -x ts --"
-  },
-  "build": {
-    "productName": "Pixel Pomodo",
-    "appId": "com.pz.lofiPomodo",
-    "win": {
-      "target": [
-        "portable"
-      ]
-    },
-    "mac": {
-      "target": [
-        "dmg"
-      ]
-    },
-    "files": [
-      "build/**",
-      "!build/db/lofipomodo.db3",
-      "package.json"
-    ],
-    "artifactName": "PixelPomodo.${ext}",
-    "squirrelWindows": {
-      "iconUrl": "http://www.iconj.com/ico/e/7/e7x2lf2sk8.ico"
-    },
-    "directories": {
-      "output": "electron/output",
-      "buildResources": "buildResources"
-    }
   },
   "eslintConfig": {
     "extends": "react-app",
@@ -151,6 +115,11 @@
       "@typescript-eslint/no-use-before-define": "off"
     }
   },
+  "homepage": "./",
+  "main": "build/electron.js",
+  "name": "PixelPomodo",
+  "private": true,
+  "productName": "PixelPomodo",
   "release": {
     "branches": [
       "+([0-9])?(.{+([0-9]),x}).x",
@@ -176,12 +145,6 @@
       ],
       "@semantic-release/npm",
       [
-        "@semantic-release/exec",
-        {
-          "prepareCmd": "electron-builder -m -w --x64"
-        }
-      ],
-      [
         "@semantic-release/git",
         {
           "assets": [
@@ -192,36 +155,45 @@
         }
       ],
       [
-        "@semantic-release/github",
-        {
-          "assets": [
-            {
-              "path": "electron/output/PixelPomodo.exe",
-              "label": "PixelPomodo.exe"
-            },
-            {
-              "path": "electron/output/PixelPomodo.exe.blockmap",
-              "label": "PixelPomodo.exe.blockmap"
-            },
-            {
-              "path": "electron/output/PixelPomodo.dmg",
-              "label": "PixelPomodo.dmg"
-            }
-          ]
-        }
+        "@semantic-release/github"
       ]
     ]
   },
-  "browserslist": {
-    "production": [
-      ">0.2%",
-      "not dead",
-      "not op_mini all"
-    ],
-    "development": [
-      "last 1 chrome version",
-      "last 1 firefox version",
-      "last 1 safari version"
-    ]
-  }
+  "resolutions": {
+    "**/@typescript-eslint/eslint-plugin": "4.4.0",
+    "**/@typescript-eslint/parser": "4.4.0"
+  },
+  "scripts": {
+    "start:renderer": "cross-env EXTEND_ESLINT=true SKIP_PREFLIGHT_CHECK=true craco start",
+    "build:renderer": "cross-env EXTEND_ESLINT=true SKIP_PREFLIGHT_CHECK=true craco build",
+    "lint": "eslint . --ext .ts,tsx",
+    "lint:fix": "eslint . --ext .ts,tsx --fix",
+    "test": "SKIP_PREFLIGHT_CHECK=true craco test",
+    "test:e2e": "jest --config jest.config.e2e.js --runInBand --forceExit",
+    "test:e2e-docker": "docker-compose run e2e",
+    "build:electron": "cross-env NODE_ENV=\"production\" webpack --config webpack.electron.js",
+    "build:all": "npm run build:renderer && npm run build:electron",
+    "watch:electron": "webpack --config webpack.electron.js -w",
+    "start:electron": "electron ./build/electron.js --remote-debugging-port=9444",
+    "semantic-release": "semantic-release",
+    "create-migration": "knex migrate:make -x ts --",
+    "package": "electron-forge package",
+    "make": "electron-forge make",
+    "build-packager": "docker build . -t packager -f docker/packager/Dockerfile --platform linux/amd64",
+    "make:arm64-darwin": "electron-forge make --arch=arm64 --platform=darwin",
+    "make:arm64-windows": "electron-forge make --arch=arm64 --platform=win32",
+    "make:arm64-windows:docker": "docker-compose run packager-arm64-windows",
+    "make:arm64-linux": "electron-forge make --arch=arm64 --platform=linux",
+    "make:arm64-linux:docker": "docker-compose run packager-arm64-linux",
+    "make:x64-darwin": "electron-forge make --arch=x64 --platform=darwin",
+    "make:x64-windows": "electron-forge make --arch=x64 --platform=win32",
+    "make:x64-windows:docker": "docker-compose run packager-x64-windows",
+    "make:x64-linux": "electron-forge make --arch=x64 --platform=linux",
+    "make:x64-linux:docker": "docker-compose run packager-x64-linux",
+    "rebuild": "electron-rebuild -f -w sqlite3",
+    "rebuild:arm64": "electron-rebuild -f -w sqlite3 --arch arm64",
+    "rebuild:x64": "electron-rebuild -f -w sqlite3 --arch x64",
+    "start-m1-gh-runner": "arch -x86_64 ./actions-runner/run.sh"
+  },
+  "version": "1.6.0"
 }

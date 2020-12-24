@@ -33,7 +33,7 @@ jobs:
           AUTO_RUN_BREAK: false
 
       - name: Build
-        run: npm run build-renderer & npm run build-electron
+        run: npm run build:renderer && npm run build:electron
 
       - name: E2E
         run: npm run test:e2e-docker
@@ -44,4 +44,5 @@ jobs:
           LONG_BREAK_INTERVAL: 4
           AUTO_RUN_WORK: false
           AUTO_RUN_BREAK: false
+
 

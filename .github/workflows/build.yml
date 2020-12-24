@@ -1,0 +1,222 @@
+name: Build binaries
+on:
+  pull_request:
+    branches:
+      - '*'
+
+  push:
+    tags:
+      - '*'
+
+jobs:
+  build-x64-mac:
+    name: Build x64 mac
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Set Node.js 14.x
+        uses: actions/setup-node@v2-beta
+        with:
+          node-version: '14'
+
+      - name: Install npm dependencies
+        run: npm install && npm run rebuild:x64
+
+      - name: Build
+        run: npm run build:renderer && npm run build:electron
+
+      - name: Pack mac x64
+        run: npm run make:x64-darwin
+
+      - name: Upload Artifact
+        uses: actions/upload-artifact@v1
+        with:
+          name: PixelPomodo-x64-darwin.dmg
+          path: out/make/PixelPomodo-x64-darwin.dmg
+
+      - name: Upload file to release
+        if: startsWith(github.ref, 'refs/tags/v')
+        uses: svenstaro/upload-release-action@v2
+        with:
+          repo_token: ${{ secrets.GITHUB_TOKEN }}
+          file: out/make/PixelPomodo-x64-darwin.dmg
+          asset_name: PixelPomodo-x64-darwin.dmg
+          tag: ${{ github.ref }}
+          overwrite: false
+
+  build-x64-linux:
+    name: Build x64 linux
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Set Node.js 14.x
+        uses: actions/setup-node@v2-beta
+        with:
+          node-version: '14'
+
+      - name: Install npm dependencies
+        run: npm install && npm run rebuild:x64
+
+      - name: Build
+        run: npm run build:renderer && npm run build:electron && npm run build-packager
+
+      - name: Pack linux x64
+        run: npm run make:x64-linux:docker
+
+      - name: Upload Artifact
+        uses: actions/upload-artifact@v1
+        with:
+          name: PixelPomodo-x64-linux.deb
+          path: out/make/deb/x64/PixelPomodo-x64-linux.deb
+
+      - name: Upload file to release
+        if: startsWith(github.ref, 'refs/tags/v')
+        uses: svenstaro/upload-release-action@v2
+        with:
+          repo_token: ${{ secrets.GITHUB_TOKEN }}
+          file: out/make/deb/x64/PixelPomodo-x64-linux.deb
+          asset_name: PixelPomodo-x64-linux.deb
+          tag: ${{ github.ref }}
+          overwrite: false
+
+  build-x64-windows:
+    name: Build x64 windows
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Set Node.js 14.x
+        uses: actions/setup-node@v2-beta
+        with:
+          node-version: '14'
+
+      - name: Install npm dependencies
+        run: npm install
+
+      - name: Build
+        run: npm run build:renderer && npm run build:electron
+
+      - name: Pack windows x64
+        run: npm run make:x64-windows
+
+      - name: Upload Artifact
+        uses: actions/upload-artifact@v1
+        with:
+          name: PixelPomodo-x64-win32.exe
+          path: out/make/squirrel.windows/x64/PixelPomodo-x64-win32.exe
+
+      - name: Upload file to release
+        if: startsWith(github.ref, 'refs/tags/v')
+        uses: svenstaro/upload-release-action@v2
+        with:
+          repo_token: ${{ secrets.GITHUB_TOKEN }}
+          file: out/make/squirrel.windows/x64/PixelPomodo-x64-win32.exe
+          asset_name: PixelPomodo-x64-win32.exe
+          tag: ${{ github.ref }}
+          overwrite: false
+
+  build-arm64-linux:
+    name: Build arm64 linux
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Set Node.js 14.x
+        uses: actions/setup-node@v2-beta
+        with:
+          node-version: '14'
+
+      - name: Install npm dependencies
+        run: npm install
+
+      - name: Build
+        run: npm run build:renderer && npm run build:electron && npm run build-packager
+
+      - name: Pack linux arm64
+        run: npm run make:arm64-linux:docker
+
+      - name: Upload Artifact
+        uses: actions/upload-artifact@v1
+        with:
+          name: PixelPomodo-arm64-linux.deb
+          path: out/make/deb/arm64/PixelPomodo-arm64-linux.deb
+
+      - name: Upload file to release
+        if: startsWith(github.ref, 'refs/tags/v')
+        uses: svenstaro/upload-release-action@v2
+        with:
+          repo_token: ${{ secrets.GITHUB_TOKEN }}
+          file: out/make/deb/arm64/PixelPomodo-arm64-linux.deb
+          asset_name: PixelPomodo-arm64-linux.deb
+          tag: ${{ github.ref }}
+          overwrite: false
+
+  build-arm64-windows:
+    name: Build arm64 windows
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Set Node.js 14.x
+        uses: actions/setup-node@v2-beta
+        with:
+          node-version: '14'
+
+      - name: Install npm dependencies
+        run: npm install
+
+      - name: Build
+        run: npm run build:renderer && npm run build:electron && npm run rebuild:arm64
+
+      - name: Pack windows arm64
+        run: npm run make:arm64-windows
+
+      - name: Upload Artifact
+        uses: actions/upload-artifact@v1
+        with:
+          name: PixelPomodo-arm64-win32.exe
+          path: out/make/squirrel.windows/arm64/PixelPomodo-arm64-win32.exe
+
+      - name: Upload file to release
+        if: startsWith(github.ref, 'refs/tags/v')
+        uses: svenstaro/upload-release-action@v2
+        with:
+          repo_token: ${{ secrets.GITHUB_TOKEN }}
+          file: out/make/squirrel.windows/arm64/PixelPomodo-arm64-win32.exe
+          asset_name: PixelPomodo-arm64-win32.exe
+          tag: ${{ github.ref }}
+          overwrite: false
+
+  build-arm64-mac:
+    name: Build arm64 mac
+    runs-on: macbook-pro-m1
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Install npm dependencies
+        run: arch -arm64 npm install
+
+      - name: Build
+        run: npm run build:renderer && npm run build:electron && arch -arm64 npm run rebuild:arm64
+
+      - name: Pack mac
+        run: npm run make:arm64-darwin
+
+      - name: Upload Artifact
+        uses: actions/upload-artifact@v1
+        with:
+          name: PixelPomodo-arm64-darwin.dmg
+          path: out/make/PixelPomodo-arm64-darwin.dmg
+
+      - name: Upload file to release
+        if: startsWith(github.ref, 'refs/tags/v')
+        uses: svenstaro/upload-release-action@v2
+        with:
+          repo_token: ${{ secrets.GITHUB_TOKEN }}
+          file: out/make/PixelPomodo-arm64-darwin.dmg
+          asset_name: PixelPomodo-arm64-darwin.dmg
+          tag: ${{ github.ref }}
+          overwrite: false

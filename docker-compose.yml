@@ -1,13 +1,43 @@
 version: "3.8"
 
 services:
-  windows-packer:
-    image: electronuserland/builder:wine-mono
-    command: sh -c "npm run pack-windows"
+  packager-x64-windows:
+    image: packager
+    command: sh -c "npm run rebuild:x64 && npm run make:x64-windows"
     volumes:
-      - ./node_modules:/project/node_modules
       - ./package.json:/project/package.json
-      - ./electron:/project/electron
+      - ./forge.config.js:/project/forge.config.js
+      - ./out:/project/out
+      - ./.env:/project/.env
+      - ./build:/project/build
+
+  packager-arm64-windows:
+    image: packager
+    command: sh -c "npm run rebuild:arm64 && npm run make:arm64-windows"
+    volumes:
+      - ./package.json:/project/package.json
+      - ./forge.config.js:/project/forge.config.js
+      - ./out:/project/out
+      - ./.env:/project/.env
+      - ./build:/project/build
+
+  packager-x64-linux:
+    image: packager
+    command: sh -c "npm run rebuild:x64 && npm run make:x64-linux"
+    volumes:
+      - ./package.json:/project/package.json
+      - ./forge.config.js:/project/forge.config.js
+      - ./out:/project/out
+      - ./.env:/project/.env
+      - ./build:/project/build
+
+  packager-arm64-linux:
+    image: packager
+    command: sh -c "npm run rebuild:arm64 && npm run make:arm64-linux"
+    volumes:
+      - ./package.json:/project/package.json
+      - ./forge.config.js:/project/forge.config.js
+      - ./out:/project/out
       - ./.env:/project/.env
       - ./build:/project/build
 
