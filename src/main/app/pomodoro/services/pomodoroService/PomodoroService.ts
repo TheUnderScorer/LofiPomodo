@@ -4,17 +4,17 @@ import {
   Pomodoro,
   PomodoroState,
   Subscriber,
-} from '../../../../shared/types';
-import { getInitialPomodoro } from '../data';
+} from '../../../../../shared/types';
+import { getInitialPomodoro } from '../../data';
 import ElectronStore from 'electron-store';
-import { AppStore } from '../../../../shared/types/store';
-import { getDurationByState, getNextState } from '../logic/nextState';
-import { secondsToTime } from '../../../../shared/utils/time';
-import { Reactive } from '../../../../shared/reactive';
-import { percent } from '../../../../shared/utils/math';
+import { AppStore } from '../../../../../shared/types/store';
+import { getDurationByState, getNextState } from '../../logic/nextState';
+import { secondsToTime } from '../../../../../shared/utils/time';
+import { Reactive } from '../../../../../shared/reactive';
+import { percent } from '../../../../../shared/utils/math';
 import { Typed as TypedEmittery } from 'emittery';
-import { shouldRun } from '../logic/autorun';
-import { stateDurationMap } from '../maps';
+import { shouldRun } from '../../logic/autorun';
+import { stateDurationMap } from '../../maps';
 
 export enum Trigger {
   Manual = 'Manual',
@@ -140,9 +140,12 @@ export class PomodoroService
     }, 1000);
   }
 
-  async moveToNextState(trigger: Trigger = Trigger.Scheduled) {
+  async moveToNextState(
+    trigger: Trigger = Trigger.Scheduled,
+    nextState?: PomodoroState
+  ) {
     const newStart = new Date();
-    const newPomodoroState = getNextState(this);
+    const newPomodoroState = nextState ?? getNextState(this);
     const newRemainingSeconds = getDurationByState(this, newPomodoroState);
     const newIsRunning = shouldRun({
       ...this,
@@ -224,6 +227,13 @@ export class PomodoroService
       remainingPercentage: this.remainingPercentage,
       openFullWindowOnBreak: this.openFullWindowOnBreak,
     };
+  }
+
+  async restart() {
+    await this.moveToNextState(Trigger.Manual, PomodoroState.Work);
+
+    this.shortBreakCount = 0;
+    this.isRunning = false;
   }
 
   toggle() {

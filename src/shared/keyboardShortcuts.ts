@@ -58,6 +58,18 @@ export const keyboardShortcuts = {
       electronKey: 'CommandOrControl+N',
     },
   }),
+  restartPomodoro: registerShortcut({
+    win32: {
+      display: 'ctrl R',
+      rendererKey: 'ctrl+R',
+      electronKey: 'Control+R',
+    },
+    darwin: {
+      display: '⌘ R',
+      rendererKey: '⌘+R',
+      electronKey: 'CommandOrControl+R',
+    },
+  }),
 };
 
 export type KeyboardShortcuts = typeof keyboardShortcuts;

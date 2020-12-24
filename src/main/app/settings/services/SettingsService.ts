@@ -1,4 +1,4 @@
-import { PomodoroService } from '../../pomodoro/services/PomodoroService';
+import { PomodoroService } from '../../pomodoro/services/pomodoroService/PomodoroService';
 import { AppSettings } from '../../../../shared/types/settings';
 import AutoLaunch from 'auto-launch';
 import { PomodoroState } from '../../../../shared/types';

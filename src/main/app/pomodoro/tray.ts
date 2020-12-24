@@ -1,6 +1,6 @@
 import { AppContext } from '../../context';
 import { nativeImage, Tray } from 'electron';
-import { PomodoroService } from './services/PomodoroService';
+import { PomodoroService } from './services/pomodoroService/PomodoroService';
 import { pomodoroStateDictionary } from '../../../shared/dictionary/pomodoro';
 
 export const setupTray = (context: AppContext) => {

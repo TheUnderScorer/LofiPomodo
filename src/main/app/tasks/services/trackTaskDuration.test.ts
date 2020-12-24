@@ -7,7 +7,7 @@ import {
   PomodoroService,
   PomodoroServiceEvents,
   Trigger,
-} from '../../pomodoro/services/PomodoroService';
+} from '../../pomodoro/services/pomodoroService/PomodoroService';
 import { TaskRepository } from '../repositories/TaskRepository';
 import { trackTaskDuration } from './trackTaskDuration';
 import { Task } from '../../../../shared/types/tasks';

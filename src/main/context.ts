@@ -1,7 +1,7 @@
 import { IpcMainService } from './shared/ipc/IpcMainService';
 import ElectronStore from 'electron-store';
 import { AppStore } from '../shared/types/store';
-import { PomodoroService } from './app/pomodoro/services/PomodoroService';
+import { PomodoroService } from './app/pomodoro/services/pomodoroService/PomodoroService';
 import path from 'path';
 import { WindowFactory } from './shared/windows/factories/WindowFactory';
 import AutoLaunch from 'auto-launch';
