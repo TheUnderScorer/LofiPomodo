@@ -24,7 +24,7 @@ jobs:
         run: npm install && npm run rebuild:x64
 
       - name: Build
-        run: npm run build:renderer && npm run build:electron
+        run: npm run build:all
 
       - name: Pack mac x64
         run: npm run make:x64-darwin
@@ -60,7 +60,7 @@ jobs:
         run: npm install && npm run rebuild:x64
 
       - name: Build
-        run: npm run build:renderer && npm run build:electron && npm run build-packager
+        run: npm run build:all && npm run build-packager
 
       - name: Pack linux x64
         run: npm run make:x64-linux:docker
@@ -96,7 +96,7 @@ jobs:
         run: npm install
 
       - name: Build
-        run: npm run build:renderer && npm run build:electron
+        run: npm run build:all
 
       - name: Pack windows x64
         run: npm run make:x64-windows
@@ -132,7 +132,7 @@ jobs:
         run: npm install
 
       - name: Build
-        run: npm run build:renderer && npm run build:electron && npm run build-packager
+        run: npm run build:all && npm run build-packager
 
       - name: Pack linux arm64
         run: npm run make:arm64-linux:docker
@@ -168,7 +168,7 @@ jobs:
         run: npm install
 
       - name: Build
-        run: npm run build:renderer && npm run build:electron && npm run rebuild:arm64
+        run: npm run build:all && npm run rebuild:arm64
 
       - name: Pack windows arm64
         run: npm run make:arm64-windows
@@ -200,10 +200,10 @@ jobs:
         run: arch -arm64 npm install
 
       - name: Build
-        run: npm run build:renderer && npm run build:electron && arch -arm64 npm run rebuild:arm64
+        run: arch -arm64 npm run build:all && arch -arm64 npm run rebuild:arm64
 
       - name: Pack mac
-        run: npm run make:arm64-darwin
+        run: arch -arm64 npm run make
 
       - name: Upload Artifact
         uses: actions/upload-artifact@v1

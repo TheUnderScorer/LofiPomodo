@@ -47,6 +47,7 @@ const startWithPatterns = [
   '/node_modules/@typescript',
   '/node_modules/typescript',
   '/node_modules/.bin',
+  '/actions-runner',
 ];
 
 const endWithPatterns = ['.ts', '.tsx'];
