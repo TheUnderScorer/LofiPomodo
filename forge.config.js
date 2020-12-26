@@ -23,6 +23,7 @@ const ignorePatterns = [
   /README.md/,
   /webpack.electron.json/,
   /^.*node_modules\/(react|eslint|babel).*$/g,
+  /.git/,
 ];
 
 const startWithPatterns = [
@@ -48,6 +49,7 @@ const startWithPatterns = [
   '/node_modules/typescript',
   '/node_modules/.bin',
   '/actions-runner',
+  '/.git',
 ];
 
 const endWithPatterns = ['.ts', '.tsx'];
@@ -85,8 +87,6 @@ module.exports = {
   },
   packagerConfig: {
     ignore: (path) => {
-      console.log(`Processing ${path}`);
-
       return (
         ignorePatterns.some((regex) => regex.test(path)) ||
         startWithPatterns.some((start) => path.startsWith(start)) ||
