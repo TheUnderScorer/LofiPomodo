@@ -85,6 +85,8 @@ module.exports = {
   },
   packagerConfig: {
     ignore: (path) => {
+      console.log(`Processing ${path}`);
+
       return (
         ignorePatterns.some((regex) => regex.test(path)) ||
         startWithPatterns.some((start) => path.startsWith(start)) ||
