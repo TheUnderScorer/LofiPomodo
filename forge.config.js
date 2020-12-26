@@ -23,7 +23,6 @@ const ignorePatterns = [
   /README.md/,
   /webpack.electron.json/,
   /^.*node_modules\/(react|eslint|babel).*$/g,
-  /.git/,
 ];
 
 const startWithPatterns = [
