@@ -1,6 +1,6 @@
 import { AppContext } from '../../../context';
-import { BrowserWindow } from 'electron';
 import { PomodoroEvents } from '../../../../shared/types';
+import { BrowserWindow } from 'electron';
 
 export const sendUpdatesToWindows = ({ pomodoro }: AppContext) => {
   pomodoro.subscribe((data) => {

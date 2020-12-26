@@ -1,4 +1,4 @@
-import { PomodoroService } from '../../app/pomodoro/services/PomodoroService';
+import { PomodoroService } from '../../app/pomodoro/services/pomodoroService/PomodoroService';
 import { Menu, MenuItemConstructorOptions } from 'electron';
 import { appMenu, is } from 'electron-util';
 import { getNextState } from '../../app/pomodoro/logic/nextState';
@@ -32,6 +32,11 @@ export class MenuFactory {
             click: () => this.pomodoroService.moveToNextState(),
             accelerator: keyboardShortcuts.moveToNextPomodoroState()
               ?.electronKey,
+          },
+          {
+            label: 'Restart pomodoro',
+            click: () => this.pomodoroService.restart(),
+            accelerator: keyboardShortcuts.restartPomodoro()?.electronKey,
           },
         ],
       },

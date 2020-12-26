@@ -1,9 +1,9 @@
 import { PomodoroService } from './PomodoroService';
 import { createMockProxy } from 'jest-mock-proxy';
 import ElectronStore from 'electron-store';
-import { AppStore } from '../../../../shared/types/store';
-import { PomodoroState } from '../../../../shared/types';
-import { wait } from '../../../../shared/utils/timeout';
+import { AppStore } from '../../../../../shared/types/store';
+import { PomodoroState } from '../../../../../shared/types';
+import { wait } from '../../../../../shared/utils/timeout';
 
 describe('PomodoroService', () => {
   let service: PomodoroService;
@@ -102,5 +102,25 @@ describe('PomodoroService', () => {
 
     expect(service.isRunning).toEqual(true);
     expect(service.state).toEqual(PomodoroState.Work);
+  });
+
+  it('should handle restart', async () => {
+    service.fill({
+      isRunning: false,
+      autoRunBreak: true,
+      autoRunWork: true,
+      workDurationSeconds: 1,
+      remainingSeconds: 1,
+      shortBreakDurationSeconds: 1,
+      longBreakInterval: 2,
+      shortBreakCount: 1,
+      state: PomodoroState.Break,
+    });
+
+    await service.restart();
+
+    expect(service.state).toEqual(PomodoroState.Work);
+    expect(service.shortBreakCount).toEqual(0);
+    expect(service.isRunning).toEqual(false);
   });
 });

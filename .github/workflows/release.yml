@@ -3,6 +3,7 @@ on:
   push:
     branches:
       - master
+
 jobs:
   release:
     name: Build & Release
@@ -46,17 +47,3 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GH_ADMIN_TOKEN }}
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
-
-      - name: Upload Artifact
-        id: upload_artifact_windows
-        uses: actions/upload-artifact@v1
-        with:
-          name: PixelPomodo.exe
-          path: electron/output/PixelPomodo.exe
-
-      - name: Upload Artifact
-        id: upload_artifact_mac
-        uses: actions/upload-artifact@v1
-        with:
-          name: PixelPomodo.dmg
-          path: electron/output/PixelPomodo.dmg

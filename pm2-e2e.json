@@ -3,7 +3,7 @@
     {
       "name": "Renderer",
       "script": "npm",
-      "args": "run start-renderer"
+      "args": "run start:renderer"
     }
   ]
 }

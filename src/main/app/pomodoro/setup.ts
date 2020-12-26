@@ -1,12 +1,13 @@
 import { AppContext } from '../../context';
 import { Pomodoro, PomodoroEvents } from '../../../shared/types';
 import { setupTray } from './tray';
-import { breakWindow } from './features/breakWindow';
-import { sendUpdatesToWindows } from './features/rendererUpdates';
-import { handleTimerMenu } from './features/timerMenu';
+import { breakWindow } from './services/breakWindow';
+import { sendUpdatesToWindows } from './services/rendererUpdates';
+import { handleTimerMenu } from './services/timerMenu';
 import { BrowserWindow } from 'electron';
-import { showTrayProgress } from './features/showTrayProgress';
-import { Trigger } from './services/PomodoroService';
+import { showTrayProgress } from './services/showTrayProgress';
+import { Trigger } from './services/pomodoroService/PomodoroService';
+import { restartPomodoroOnNewDay } from './services/restartPomodoroOnNewDay';
 
 export const setupPomodoro = (context: AppContext) => {
   sendUpdatesToWindows(context);
@@ -14,6 +15,7 @@ export const setupPomodoro = (context: AppContext) => {
   setupTray(context);
   forwardPomodoroEventsToIpc(context);
   showTrayProgress(context);
+  restartPomodoroOnNewDay(context.pomodoro).catch(console.error);
 
   context.ipcService.registerAsMap({
     [PomodoroEvents.Update]: (_, payload: Pomodoro) => {

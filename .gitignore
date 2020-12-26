@@ -11,6 +11,7 @@
 # production
 /build
 /electron
+/out
 
 # misc
 .DS_Store
@@ -26,3 +27,4 @@ yarn-debug.log*
 yarn-error.log*
 
 .env
+actions-runner

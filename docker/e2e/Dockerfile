@@ -18,8 +18,8 @@ RUN npm install --global typescript pm2
 COPY . ./
 
 RUN npm ci
-RUN npm run build-renderer
-RUN npm run build-electron
+RUN npm run build:renderer
+RUN npm run build:electron
 
 ADD docker/e2e/docker-entrypoint.sh /docker-entrypoint.sh
 RUN chmod +x /docker-entrypoint.sh

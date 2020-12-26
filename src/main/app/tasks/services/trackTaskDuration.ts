@@ -1,5 +1,5 @@
 import { AppContext } from '../../../context';
-import { PomodoroService } from '../../pomodoro/services/PomodoroService';
+import { PomodoroService } from '../../pomodoro/services/pomodoroService/PomodoroService';
 
 export const trackTaskDuration = ({
   pomodoro,

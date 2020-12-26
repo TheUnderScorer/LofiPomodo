@@ -5,8 +5,8 @@ import {
   Task,
   TaskEvents,
 } from '../../../shared/types/tasks';
-import { trackTaskDuration } from './features/trackTaskDuration';
-import { forwardTaskUpdatesToWindows } from './features/forwardTaskUpdatesToWindows';
+import { trackTaskDuration } from './services/trackTaskDuration';
+import { forwardTaskUpdatesToWindows } from './services/forwardTaskUpdatesToWindows';
 
 export const setupTasks = (context: AppContext) => {
   const { taskRepository, ipcService } = context;
