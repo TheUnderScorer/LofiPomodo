@@ -1,3 +1,11 @@
+# [1.7.0](https://github.com/TheUnderScorer/pixel-pomodo/compare/v1.6.0...v1.7.0) (2020-12-26)
+
+
+### Features
+
+* Add experimental apple M1 build, linux builds and arm64 windows build ([304a102](https://github.com/TheUnderScorer/pixel-pomodo/commit/304a10268adc55b30d39b30d54f59485b153e78e))
+* Restart pomodoro on new day or manually ([5298b5b](https://github.com/TheUnderScorer/pixel-pomodo/commit/5298b5baf91bc38dbc48cef54d5acdc00dc068db))
+
 # [1.6.0](https://github.com/TheUnderScorer/pixel-pomodo/compare/v1.5.1...v1.6.0) (2020-12-22)
 
 
