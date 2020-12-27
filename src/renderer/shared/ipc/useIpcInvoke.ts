@@ -6,11 +6,11 @@ import { useMount, usePrevious, useUnmount } from 'react-use';
 import { compact } from '../../utils/compact';
 import { objToKey } from '../../utils/objToKey';
 
-type InvokeFn<Arg extends object, ReturnValue = any> = (
+export type InvokeFn<Arg extends object, ReturnValue = any> = (
   arg?: Arg
 ) => Promise<ReturnValue | null>;
 
-interface InvokeMeta<Result = any> {
+export interface InvokeMeta<Result = any> {
   error: Nullable<Error>;
   loading: boolean;
   result: Nullable<Result>;

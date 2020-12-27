@@ -1,4 +1,4 @@
-import React, { FC, useCallback, useState } from 'react';
+import React, { FC, useCallback, useMemo, useState } from 'react';
 import { TitleBar } from '../../../ui/molecules/titleBar/TitleBar';
 import {
   Alert,
@@ -23,18 +23,22 @@ import { AppSettings, SettingsEvents } from '../../../../shared/types/settings';
 import { useIpcInvoke } from '../../../shared/ipc/useIpcInvoke';
 import { PomodoroForm } from '../../pomodoro/components/pomodoroForm/PomodoroForm';
 import { useForm } from 'react-hook-form';
-import { PomodoroSettings } from '../../../../shared/types';
+import { IntegrationsForm } from '../../integrations/components/IntegrationsForm';
 
 type SettingTab = 'Pomodoro' | 'Integrations';
+
+const tabIndexArray: SettingTab[] = ['Pomodoro', 'Integrations'];
 
 export interface SettingsFormViewProps {}
 
 export const SettingsFormView: FC<SettingsFormViewProps> = () => {
   const history = useHistory();
 
-  const [tab] = useState<SettingTab>('Pomodoro');
+  const [activeTabIndex, setActiveTabIndex] = useState(0);
 
-  const form = useForm<PomodoroSettings>({
+  const tab = useMemo(() => tabIndexArray[activeTabIndex], [activeTabIndex]);
+
+  const form = useForm<AppSettings>({
     mode: 'all',
   });
 
@@ -89,12 +93,12 @@ export const SettingsFormView: FC<SettingsFormViewProps> = () => {
             <ArrowIcon height="20px" width="20px" iconDirection="right" />
           </IconButton>
           <Center flex="1">
-            <Tabs>
+            <Tabs index={activeTabIndex} onChange={setActiveTabIndex}>
               <TabList>
                 <Tab>
                   <Text>Pomodoro</Text>
                 </Tab>
-                <Tab isDisabled>
+                <Tab>
                   <Text>Integrations</Text>
                 </Tab>
               </TabList>
@@ -133,6 +137,7 @@ export const SettingsFormView: FC<SettingsFormViewProps> = () => {
               overflow="auto"
               height="85%"
               width="100%"
+              pt={2}
             >
               {error && (
                 <Alert backgroundColor="brand.danger" status="error" mb={6}>
@@ -143,6 +148,7 @@ export const SettingsFormView: FC<SettingsFormViewProps> = () => {
                 </Alert>
               )}
               {tab === 'Pomodoro' && <PomodoroForm form={form} />}
+              {tab === 'Integrations' && <IntegrationsForm form={form} />}
             </Flex>
             <Button
               id="submit_settings"

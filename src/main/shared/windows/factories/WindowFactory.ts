@@ -37,6 +37,7 @@ export class WindowFactory {
       fullscreenable: false,
       maximizable: false,
       simpleFullscreen: false,
+
       center: true,
       fullscreen: false,
       minimizable: false,
@@ -46,6 +47,7 @@ export class WindowFactory {
       webPreferences: {
         preload: this.preloadPath,
         nodeIntegration: false,
+        nativeWindowOpen: true,
       },
     });
 

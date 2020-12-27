@@ -6,6 +6,12 @@ import { setupTasks } from './app/tasks/setup';
 import log from 'electron-log';
 import { setupSystem } from './app/system/setup';
 import { setupSettings } from './app/settings/setup';
+import { config } from 'dotenv';
+import { setupIntegrations } from './app/integrations/setup';
+import { setupProtocol } from './protocol';
+import { createErrorDialog } from './shared/dialog/factories/errorDialog';
+
+config();
 
 if (!isDev) {
   Object.assign(console, log.functions);
@@ -26,19 +32,28 @@ const setupAppMenu = (context: AppContext) => {
 };
 
 app.whenReady().then(async () => {
-  const context = await createContext();
+  try {
+    const context = await createContext();
 
-  setupAppMenu(context);
-  setupPomodoro(context);
-  setupTasks(context);
-  setupSystem(context);
-  setupSettings(context);
+    setupProtocol();
 
-  await context.windowFactory.createTimerWindow();
+    setupAppMenu(context);
+    setupPomodoro(context);
+    setupTasks(context);
+    setupSystem(context);
+    setupSettings(context);
+    setupIntegrations(context);
 
-  app.on('activate', async () => {
     await context.windowFactory.createTimerWindow();
-  });
+
+    app.on('activate', async () => {
+      await context.windowFactory.createTimerWindow();
+    });
+  } catch (e) {
+    await createErrorDialog(e);
+
+    app.quit();
+  }
 });
 
 app.on('window-all-closed', () => {

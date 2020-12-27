@@ -49,6 +49,7 @@ const startWithPatterns = [
   '/node_modules/.bin',
   '/actions-runner',
   '/.git',
+  '/redirectServer',
 ];
 
 const endWithPatterns = ['.ts', '.tsx'];
