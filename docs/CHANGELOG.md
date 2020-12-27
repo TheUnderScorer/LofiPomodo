@@ -1,3 +1,10 @@
+## [1.7.1](https://github.com/TheUnderScorer/pixel-pomodo/compare/v1.7.0...v1.7.1) (2020-12-27)
+
+
+### Bug Fixes
+
+* Attempt to fix M1 build by adding "lfs" to checkout ([45c382c](https://github.com/TheUnderScorer/pixel-pomodo/commit/45c382ce81ae0751c0a2044985e7cffd21412cf0))
+
 # [1.7.0](https://github.com/TheUnderScorer/pixel-pomodo/compare/v1.6.0...v1.7.0) (2020-12-26)
 
 
