@@ -20,16 +20,6 @@ jobs:
     name: Build x64 mac
     runs-on: macos-latest
     steps:
-      - name: Get tag
-        id: get_tag
-        uses: ./.github/actions/tagProvider
-
-      - name: Output vars
-        run: |
-          echo "Tag: ${{ steps.get_tag.outputs.tag }}"
-          echo "Ref: ${{ github.ref }}"
-          echo "Input tag: ${{ github.event.inputs.tag }}"
-
       - uses: actions/checkout@v2
 
       - name: Set Node.js 14.x
@@ -39,6 +29,16 @@ jobs:
 
       - name: Install npm dependencies
         run: npm install && npm run rebuild:x64
+
+      - name: Get tag
+        id: get_tag
+        uses: ./.github/actions/tagProvider
+
+      - name: Output vars
+        run: |
+          echo "Tag: ${{ steps.get_tag.outputs.tag }}"
+          echo "Ref: ${{ github.ref }}"
+          echo "Input tag: ${{ github.event.inputs.tag }}"
 
       - name: Build
         run: npm run build:all
@@ -66,16 +66,6 @@ jobs:
     name: Build x64 linux
     runs-on: ubuntu-latest
     steps:
-      - name: Get tag
-        id: get_tag
-        uses: ./.github/actions/tagProvider
-
-      - name: Output vars
-        run: |
-          echo "Tag: ${{ steps.get_tag.outputs.tag }}"
-          echo "Ref: ${{ github.ref }}"
-          echo "Input tag: ${{ github.event.inputs.tag }}"
-
       - uses: actions/checkout@v2
 
       - name: Set Node.js 14.x
@@ -85,6 +75,16 @@ jobs:
 
       - name: Install npm dependencies
         run: npm install && npm run rebuild:x64
+
+      - name: Get tag
+        id: get_tag
+        uses: ./.github/actions/tagProvider
+
+      - name: Output vars
+        run: |
+          echo "Tag: ${{ steps.get_tag.outputs.tag }}"
+          echo "Ref: ${{ github.ref }}"
+          echo "Input tag: ${{ github.event.inputs.tag }}"
 
       - name: Build
         run: npm run build:all && npm run build-packager
@@ -112,6 +112,16 @@ jobs:
     name: Build x64 windows
     runs-on: windows-latest
     steps:
+      - uses: actions/checkout@v2
+
+      - name: Set Node.js 14.x
+        uses: actions/setup-node@v2-beta
+        with:
+          node-version: '14'
+
+      - name: Install npm dependencies
+        run: npm install && npm run rebuild:x64
+
       - name: Get tag
         id: get_tag
         uses: ./.github/actions/tagProvider
@@ -121,16 +131,6 @@ jobs:
           echo "Tag: ${{ steps.get_tag.outputs.tag }}"
           echo "Ref: ${{ github.ref }}"
           echo "Input tag: ${{ github.event.inputs.tag }}"
-
-      - uses: actions/checkout@v2
-
-      - name: Set Node.js 14.x
-        uses: actions/setup-node@v2-beta
-        with:
-          node-version: '14'
-
-      - name: Install npm dependencies
-        run: npm install
 
       - name: Build
         run: npm run build:all
@@ -158,6 +158,16 @@ jobs:
     name: Build arm64 linux
     runs-on: ubuntu-latest
     steps:
+      - uses: actions/checkout@v2
+
+      - name: Set Node.js 14.x
+        uses: actions/setup-node@v2-beta
+        with:
+          node-version: '14'
+
+      - name: Install npm dependencies
+        run: npm install && npm run rebuild:x64
+
       - name: Get tag
         id: get_tag
         uses: ./.github/actions/tagProvider
@@ -167,16 +177,6 @@ jobs:
           echo "Tag: ${{ steps.get_tag.outputs.tag }}"
           echo "Ref: ${{ github.ref }}"
           echo "Input tag: ${{ github.event.inputs.tag }}"
-
-      - uses: actions/checkout@v2
-
-      - name: Set Node.js 14.x
-        uses: actions/setup-node@v2-beta
-        with:
-          node-version: '14'
-
-      - name: Install npm dependencies
-        run: npm install
 
       - name: Build
         run: npm run build:all && npm run build-packager
@@ -204,6 +204,16 @@ jobs:
     name: Build arm64 windows
     runs-on: windows-latest
     steps:
+      - uses: actions/checkout@v2
+
+      - name: Set Node.js 14.x
+        uses: actions/setup-node@v2-beta
+        with:
+          node-version: '14'
+
+      - name: Install npm dependencies
+        run: npm install && npm run rebuild:x64
+
       - name: Get tag
         id: get_tag
         uses: ./.github/actions/tagProvider
@@ -213,16 +223,6 @@ jobs:
           echo "Tag: ${{ steps.get_tag.outputs.tag }}"
           echo "Ref: ${{ github.ref }}"
           echo "Input tag: ${{ github.event.inputs.tag }}"
-
-      - uses: actions/checkout@v2
-
-      - name: Set Node.js 14.x
-        uses: actions/setup-node@v2-beta
-        with:
-          node-version: '14'
-
-      - name: Install npm dependencies
-        run: npm install
 
       - name: Build
         run: npm run build:all && npm run rebuild:arm64
@@ -251,6 +251,16 @@ jobs:
     runs-on: macbook-pro-m1
     timeout-minutes: 10
     steps:
+      - uses: actions/checkout@v2
+
+      - name: Set Node.js 14.x
+        uses: actions/setup-node@v2-beta
+        with:
+          node-version: '14'
+
+      - name: Install npm dependencies
+        run: npm install && npm run rebuild:x64
+
       - name: Get tag
         id: get_tag
         uses: ./.github/actions/tagProvider
@@ -260,11 +270,6 @@ jobs:
           echo "Tag: ${{ steps.get_tag.outputs.tag }}"
           echo "Ref: ${{ github.ref }}"
           echo "Input tag: ${{ github.event.inputs.tag }}"
-
-      - uses: actions/checkout@v2
-
-      - name: Install npm dependencies
-        run: arch -arm64 npm install
 
       - name: Build
         run: arch -arm64 npm run build:all && arch -arm64 npm run rebuild:arm64
