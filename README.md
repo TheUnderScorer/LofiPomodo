@@ -2,7 +2,7 @@
 
 Pixel Pomodo is an app built using React & Electron.
 
-## Features:
+## Overview:
 
 * Pixel-art like ui.
 * Tasks list with drag and drop support and pomodoro tracking.
@@ -28,14 +28,14 @@ The app is still in early stage, and I have plans for more features in the futur
 
 <hr>
 
-### Development
+## Development
 
 In order to develop the app run:
 
-* `npm run install && npm run install-app-edps` - Installs dependencies for app and for electron-builder
-* `npm run watch-electron` - Watches changes made on electron side
-* `npm run start-renderer` - To start the renderer on `http://localhost:3000` (via `create-react-app`)
-* `npm run start-electron` - Starts the electron app in development mode.
+* `npm run install` - Installs dependencies
+* `npm run watch:electron` - Watches changes made on electron side
+* `npm run start:renderer` - To start the renderer on `http://localhost:3000` (via `create-react-app`)
+* `npm run start:electron` - Starts the electron app in development mode.
 
 ### Testing
 
@@ -56,15 +56,14 @@ To lint the project run `npm run lint`
 
 ### Packing
 
-To build and pack the app run:
+To build and pack the app for your platform:
 
-* For macos build run `npm run build-macos`
-* For windows build run `npm run build-windows`
-
-Note: Linux support is planned in the future, feel free to submit PRs!
+* `npm run rebuild` - Rebuilds native dependencies for your platform
+* `npm run build:all` - Builds renderer and main
+* `npm run make` - Creates distributable for your platform
 
 ### Releases
 
 Releases are handled via `semantic-release` and are triggered automatically via commits on `master` branch. In order to run release manually run `npm run semantic-release`
 
-
+> Note: Builds for Apple M1 are being done on my Macbook Pro via a custom github runner, so they are available only when I start the release.
