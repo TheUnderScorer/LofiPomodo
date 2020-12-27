@@ -1,12 +1,12 @@
 import fetchFn from 'node-fetch';
 import { productName } from '../../../../package.json';
-import { getAppProtocol } from '../protocol/getAppProtocol';
 
 export class TrelloClient {
   private static readonly baseUrl = 'https://api.trello.com/1';
 
   constructor(
     private readonly apiKey: string,
+    private readonly redirectUrl: string,
     private readonly fetch: typeof fetchFn
   ) {
     if (!this.apiKey) {
@@ -22,7 +22,8 @@ export class TrelloClient {
     url.searchParams.append('key', this.apiKey);
     url.searchParams.append('response_type', 'token');
     url.searchParams.append('expiration', 'never');
-    url.searchParams.append('return_url', getAppProtocol('auth/trello'));
+    url.searchParams.append('callback_method', 'fragment');
+    url.searchParams.append('return_url', this.redirectUrl);
 
     return url.toString();
   }

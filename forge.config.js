@@ -95,6 +95,13 @@ module.exports = {
     },
     executableName: pkg.productName,
     asar: true,
+    protocols: [
+      {
+        name: pkg.name,
+        schemes: [pkg.name],
+        role: 'Viewer'
+      }
+    ]
   },
   makers: [
     {

@@ -1,5 +1,6 @@
 const express = require('express');
 const app = express();
+const path = require('path');
 
 require('dotenv').config();
 
@@ -8,7 +9,9 @@ if (!process.env.APP_NAME) {
 }
 
 app.get('/redirect/trello', (req, res) => {
-  res.redirect(`${process.env.APP_NAME}://trello?code${req.query.code}`);
+  // res.redirect(`${process.env.APP_NAME}://trello?code${req.query.code}`);
+
+  res.sendFile(path.resolve(__dirname, '..', 'trelloAuth.html'));
 });
 
 const port = process.env.PORT ?? 3001;

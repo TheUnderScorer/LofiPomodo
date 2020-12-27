@@ -10,8 +10,18 @@ import { config } from 'dotenv';
 import { setupIntegrations } from './app/integrations/setup';
 import { setupProtocol } from './protocol';
 import { createErrorDialog } from './shared/dialog/factories/errorDialog';
+import path from 'path';
+import { setupSingleInstance } from './singleInstance';
 
-config();
+if (require('electron-squirrel-startup')) {
+  app.quit();
+}
+
+const envPath = path.resolve(__dirname, `../.env`);
+
+config({
+  path: envPath,
+});
 
 if (!isDev) {
   Object.assign(console, log.functions);
@@ -33,9 +43,11 @@ const setupAppMenu = (context: AppContext) => {
 
 app.whenReady().then(async () => {
   try {
+    setupSingleInstance();
+
     const context = await createContext();
 
-    setupProtocol();
+    setupProtocol([({ url }) => context.trelloService.handleAuthProtocol(url)]);
 
     setupAppMenu(context);
     setupPomodoro(context);

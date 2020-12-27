@@ -15,6 +15,7 @@ import { MenuFactory } from './shared/menu/MenuFactory';
 import { SettingsService } from './app/settings/services/SettingsService';
 import { TrelloClient } from './shared/trello/TrelloClient';
 import fetch from 'node-fetch';
+import { TrelloService } from './shared/trello/TrelloService';
 
 export interface AppContext {
   ipcService: IpcMainService;
@@ -28,6 +29,7 @@ export interface AppContext {
   taskRepository: TaskRepository;
   settingsService: SettingsService;
   trelloClient: TrelloClient;
+  trelloService: TrelloService;
 }
 
 export const createContext = async (): Promise<AppContext> => {
@@ -74,6 +76,11 @@ export const createContext = async (): Promise<AppContext> => {
     tasksService,
     autoLaunch,
     settingsService: new SettingsService(pomodoro, autoLaunch, store),
-    trelloClient: new TrelloClient(process.env.TRELLO_API_KEY!, fetch),
+    trelloClient: new TrelloClient(
+      process.env.TRELLO_API_KEY!,
+      process.env.TRELLO_REDIRECT_URL!,
+      fetch
+    ),
+    trelloService: new TrelloService(store),
   };
 };
