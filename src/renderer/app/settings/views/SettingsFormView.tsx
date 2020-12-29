@@ -135,7 +135,7 @@ export const SettingsFormView: FC<SettingsFormViewProps> = () => {
               direction="column"
               alignItems="center"
               overflow="auto"
-              height="85%"
+              flex={1}
               width="100%"
               pt={2}
             >
@@ -150,15 +150,17 @@ export const SettingsFormView: FC<SettingsFormViewProps> = () => {
               {tab === 'Pomodoro' && <PomodoroForm form={form} />}
               {tab === 'Integrations' && <IntegrationsForm form={form} />}
             </Flex>
-            <Button
-              id="submit_settings"
-              type="submit"
-              minWidth="150px"
-              isLoading={loading}
-              backgroundColor="brand.primary"
-            >
-              <Text>Save</Text>
-            </Button>
+            {tab === 'Pomodoro' && (
+              <Button
+                id="submit_settings"
+                type="submit"
+                minWidth="150px"
+                isLoading={loading}
+                backgroundColor="brand.primary"
+              >
+                <Text>Save</Text>
+              </Button>
+            )}
           </Flex>
         )}
       </Container>

@@ -1,12 +1,17 @@
 import { AppContext } from '../../context';
-import { IntegrationEvents } from '../../../shared/types/integrations';
-import { makeAuthorizeTrello } from '../../shared/trello/authorizeTrello';
+import {
+  IntegrationEvents,
+  ProviderInfo,
+} from '../../../shared/types/integrations';
+import { forwardIntegrationEventsToWindows } from './services/forwardIntegrationEvents';
 
 export const setupIntegrations = (context: AppContext) => {
   context.ipcService.registerAsMap({
-    [IntegrationEvents.GetTrelloAuthUrl]: () =>
-      context.trelloClient.getAuthorizationUrl(),
-    [IntegrationEvents.AuthorizeTrello]: () =>
-      makeAuthorizeTrello(context.trelloClient, context.store)(),
+    [IntegrationEvents.AuthorizeApi]: (_, { provider }: ProviderInfo) =>
+      context.apiAuthService.startAuth(provider),
+    [IntegrationEvents.GetAuthState]: (_, { provider }: ProviderInfo) =>
+      context.apiAuthState.getStateForProvider(provider),
   });
+
+  forwardIntegrationEventsToWindows(context);
 };

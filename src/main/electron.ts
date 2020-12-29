@@ -47,7 +47,9 @@ app.whenReady().then(async () => {
 
     const context = await createContext();
 
-    setupProtocol([({ url }) => context.trelloService.handleAuthProtocol(url)]);
+    setupProtocol([
+      ({ url }) => context.apiAuthService.handleAuthProtocol(url),
+    ]);
 
     setupAppMenu(context);
     setupPomodoro(context);

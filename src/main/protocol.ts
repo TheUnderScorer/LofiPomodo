@@ -1,4 +1,4 @@
-import { app, dialog, protocol } from 'electron';
+import { app, protocol } from 'electron';
 import { name } from '../../package.json';
 
 interface HttpProtocolArgs {
@@ -15,11 +15,6 @@ export const setupProtocol = (handlers: HttpProtocolHandler[] = []) => {
   app.setAsDefaultProtocolClient(name);
 
   app.on('open-url', async (event, url) => {
-    dialog.showMessageBoxSync({
-      title: 'Received request!',
-      message: `Url: ${url}`,
-    });
-
     await callHandlers({ url });
   });
 

@@ -182,7 +182,7 @@
     "create-migration": "knex migrate:make -x ts --",
     "package": "electron-forge package",
     "make": "electron-forge make",
-    "build-packager": "docker build . -t packager -f docker/packager/Dockerfile --platform linux/amd64",
+    "build-packager": "docker build . -t packager -f docker/packager/Dockerfile",
     "make:arm64-darwin": "electron-forge make --arch=arm64 --platform=darwin",
     "make:arm64-windows": "electron-forge make --arch=arm64 --platform=win32",
     "make:arm64-windows:docker": "docker-compose run packager-arm64-windows",
