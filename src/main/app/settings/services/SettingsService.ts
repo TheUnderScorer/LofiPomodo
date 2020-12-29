@@ -1,7 +1,7 @@
 import { PomodoroService } from '../../pomodoro/services/pomodoroService/PomodoroService';
 import { AppSettings } from '../../../../shared/types/settings';
 import AutoLaunch from 'auto-launch';
-import { PomodoroState } from '../../../../shared/types';
+import { PomodoroSettings, PomodoroState } from '../../../../shared/types';
 import { AppStore } from '../../../../shared/types/store';
 import ElectronStore from 'electron-store';
 
@@ -13,21 +13,25 @@ export class SettingsService {
   ) {}
 
   async setSettings(settings: AppSettings) {
-    const { autoStart, trello, ...pomodoroPayload } = settings;
+    try {
+      const { autoStart, pomodoro } = settings;
 
-    const isAutoStart = await this.autoLaunch.isEnabled();
+      const isAutoStart = await this.autoLaunch.isEnabled();
 
-    if (autoStart && !isAutoStart) {
-      await this.autoLaunch.enable();
-    } else if (isAutoStart) {
-      await this.autoLaunch.disable();
+      if (autoStart && !isAutoStart) {
+        await this.autoLaunch.enable();
+      } else if (isAutoStart) {
+        await this.autoLaunch.disable();
+      }
+
+      this.updatePomodoroSettings(pomodoro);
+
+      return true;
+    } catch (e) {
+      console.error(`Set settings error: ${e}`);
+
+      throw e;
     }
-
-    this.updatePomodoroSettings(pomodoroPayload);
-
-    this.store.set('trello', trello);
-
-    return true;
   }
 
   private updatePomodoroSettings({
@@ -35,16 +39,7 @@ export class SettingsService {
     shortBreakDurationSeconds,
     longBreakDurationSeconds,
     ...pomodoroPayload
-  }: Pick<
-    AppSettings,
-    | 'longBreakInterval'
-    | 'autoRunBreak'
-    | 'autoRunWork'
-    | 'openFullWindowOnBreak'
-    | 'workDurationSeconds'
-    | 'shortBreakDurationSeconds'
-    | 'longBreakDurationSeconds'
-  >) {
+  }: PomodoroSettings) {
     this.pomodoro.fill(pomodoroPayload);
 
     this.pomodoro.setDuration(workDurationSeconds, PomodoroState.Work);
@@ -58,13 +53,7 @@ export class SettingsService {
   async getSettings(): Promise<AppSettings> {
     return {
       autoStart: await this.autoLaunch.isEnabled(),
-      shortBreakDurationSeconds: this.pomodoro.shortBreakDurationSeconds,
-      longBreakDurationSeconds: this.pomodoro.longBreakDurationSeconds,
-      workDurationSeconds: this.pomodoro.workDurationSeconds,
-      autoRunBreak: this.pomodoro.autoRunBreak,
-      openFullWindowOnBreak: this.pomodoro.openFullWindowOnBreak,
-      longBreakInterval: this.pomodoro.longBreakInterval,
-      autoRunWork: this.pomodoro.autoRunWork,
+      pomodoro: this.pomodoro.toJSON(),
       trello: this.store.get('trello'),
     };
   }

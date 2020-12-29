@@ -1,16 +1,15 @@
 import React, { FC } from 'react';
 import { Controller, UseFormMethods } from 'react-hook-form';
-import { PomodoroSettings } from '../../../../../shared/types';
 import {
   FormControl,
   FormControlProps,
 } from '../../../../ui/atoms/formControl/FormControl';
 import { DurationField } from '../../../../form/fields/DurationField';
 import { Divider, Stack, Switch } from '@chakra-ui/core';
-import { AutostartSettings } from '../../../../../shared/types/settings';
+import { AppSettings } from '../../../../../shared/types/settings';
 
 export interface PomodoroFormProps {
-  form: UseFormMethods<PomodoroSettings & AutostartSettings>;
+  form: UseFormMethods<AppSettings>;
 }
 
 const formControlProps: Partial<FormControlProps> = {
@@ -27,11 +26,11 @@ export const PomodoroForm: FC<PomodoroFormProps> = ({ form }) => {
     <Stack spacing={6}>
       <FormControl
         {...formControlProps}
-        error={errors.workDurationSeconds?.message}
+        error={errors.pomodoro?.workDurationSeconds?.message}
         label="Work duration"
       >
         <Controller
-          name="workDurationSeconds"
+          name="pomodoro.workDurationSeconds"
           control={control}
           rules={{
             max: 9999,
@@ -41,11 +40,11 @@ export const PomodoroForm: FC<PomodoroFormProps> = ({ form }) => {
       </FormControl>
       <FormControl
         {...formControlProps}
-        error={errors.shortBreakDurationSeconds?.message}
+        error={errors.pomodoro?.shortBreakDurationSeconds?.message}
         label="Break duration"
       >
         <Controller
-          name="shortBreakDurationSeconds"
+          name="pomodoro.shortBreakDurationSeconds"
           control={control}
           rules={{
             max: 9999,
@@ -55,11 +54,11 @@ export const PomodoroForm: FC<PomodoroFormProps> = ({ form }) => {
       </FormControl>
       <FormControl
         {...formControlProps}
-        error={errors.longBreakDurationSeconds?.message}
+        error={errors.pomodoro?.longBreakDurationSeconds?.message}
         label="Long break duration"
       >
         <Controller
-          name="longBreakDurationSeconds"
+          name="pomodoro.longBreakDurationSeconds"
           control={control}
           rules={{
             max: 9999,
@@ -69,12 +68,12 @@ export const PomodoroForm: FC<PomodoroFormProps> = ({ form }) => {
       </FormControl>
       <FormControl
         {...formControlProps}
-        error={errors.openFullWindowOnBreak?.message}
-        name="openFullWindowOnBreak"
+        error={errors.pomodoro?.openFullWindowOnBreak?.message}
+        name="pomodoro.openFullWindowOnBreak"
         label="Open separate window on break"
       >
         <Controller
-          name="openFullWindowOnBreak"
+          name="pomodoro.openFullWindowOnBreak"
           control={control}
           render={(props) => (
             <Switch
@@ -88,12 +87,12 @@ export const PomodoroForm: FC<PomodoroFormProps> = ({ form }) => {
       </FormControl>
       <FormControl
         {...formControlProps}
-        error={errors.autoRunBreak?.message}
-        name="autoRunBreak"
+        error={errors.pomodoro?.autoRunBreak?.message}
+        name="pomodoro.autoRunBreak"
         label="Start break automatically"
       >
         <Controller
-          name="autoRunBreak"
+          name="pomodoro.autoRunBreak"
           control={control}
           render={(props) => (
             <Switch
@@ -107,12 +106,12 @@ export const PomodoroForm: FC<PomodoroFormProps> = ({ form }) => {
       </FormControl>
       <FormControl
         {...formControlProps}
-        error={errors.autoRunWork?.message}
-        name="autoRunWork"
+        error={errors.pomodoro?.autoRunWork?.message}
+        name="pomodoro.autoRunWork"
         label="Start work automatically"
       >
         <Controller
-          name="autoRunWork"
+          name="pomodoro.autoRunWork"
           control={control}
           render={(props) => (
             <Switch
