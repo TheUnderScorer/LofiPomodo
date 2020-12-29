@@ -2,7 +2,6 @@ import ElectronStore from 'electron-store';
 import { AppStore } from '../../../../shared/types/store';
 import { TrelloClient } from './TrelloClient';
 import { ApiProvider } from '../../../../shared/types/integrations';
-import { WindowFactory } from '../../../shared/windows/factories/WindowFactory';
 import { ApiService } from '../types';
 import { Nullable } from '../../../../shared/types';
 
