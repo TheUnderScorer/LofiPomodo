@@ -9,9 +9,10 @@ inputs:
     description: 'Current arch'
     required: true
 outputs:
-  tag:
-    path: 'Asset path'
-    name: 'Asset name'
+  name:
+    description: 'Name of asset file'
+  path:
+    description: 'Path to generated asset'
 runs:
   using: 'node12'
   main: 'assetsProvider.js'
