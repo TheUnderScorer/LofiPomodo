@@ -13,7 +13,6 @@ export class TrelloService implements ApiService {
 
   constructor(
     private readonly store: ElectronStore<AppStore>,
-    private readonly windowFactory: WindowFactory,
     private readonly trelloClient: TrelloClient
   ) {}
 

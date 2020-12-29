@@ -1,0 +1,17 @@
+name: 'Get release assets'
+description: 'Returns release assets dependning on os and arch'
+author: 'Przemysław Żydek'
+inputs:
+  os:
+    description: 'Current OS'
+    required: true
+  arch:
+    description: 'Current arch'
+    required: true
+outputs:
+  tag:
+    path: 'Asset path'
+    name: 'Asset name'
+runs:
+  using: 'node12'
+  main: 'assetsProvider.js'

@@ -2,7 +2,7 @@ import fetchFn from 'node-fetch';
 import { productName } from '../../../../../package.json';
 
 export class TrelloClient {
-  private static readonly baseUrl = 'https://api.trello.com/1';
+  private static readonly baseUrl = 'https://api.trello.com';
 
   constructor(
     private readonly apiKey: string,

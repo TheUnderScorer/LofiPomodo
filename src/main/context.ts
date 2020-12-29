@@ -42,7 +42,7 @@ const handleIntegrations = (
   windowFactory: WindowFactory,
   trelloClient: TrelloClient
 ) => {
-  const trelloService = new TrelloService(store, windowFactory, trelloClient);
+  const trelloService = new TrelloService(store, trelloClient);
   const apiServices: ApiService[] = [trelloService];
   const apiAuthState = new ApiAuthState(windowFactory, apiServices);
   const apiAuthService = new ApiAuthService(apiServices, apiAuthState);
