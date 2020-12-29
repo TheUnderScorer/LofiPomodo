@@ -11,17 +11,17 @@ export class ApiAuthState {
   // Map of timeouts related to certain api authorization
   readonly apisAuthTimeouts = new Map<ApiProvider, any>();
 
-  constructor(
-    private readonly windowFactory: WindowFactory,
-    private readonly services: ApiService[]
-  ) {}
-
   private static timeoutDialogProviderProps = {
     [ApiProvider.Trello]: {
       type: 'warning',
       message: 'Trello authorization failed, please try again.',
     },
   };
+
+  constructor(
+    private readonly windowFactory: WindowFactory,
+    private readonly services: ApiService[]
+  ) {}
 
   startApiAuth(provider: ApiProvider) {
     if (this.isBeingAuthorized(provider)) {

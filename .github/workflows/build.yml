@@ -13,7 +13,7 @@ on:
     inputs:
       tag:
         description: Tag for which release assets will be generated (optional)
-        required: true
+        required: false
 
 jobs:
   build:
@@ -95,6 +95,9 @@ jobs:
       - name: Get asset
         id: get_asset
         uses: ./.github/actions/assetsProvider
+        with:
+          os: ${{ matrix.os }}
+          arch: ${{ matrix.arch }}
 
       - name: Upload Artifact
         uses: actions/upload-artifact@v1
