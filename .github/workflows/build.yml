@@ -30,6 +30,7 @@ jobs:
 
       - name: Set Node.js 14.x
         uses: actions/setup-node@v2-beta
+        if: ${{ matrix.arch != 'arm64' && matrix.os != 'macbook-pro-m1' }}
         with:
           node-version: '14'
 
