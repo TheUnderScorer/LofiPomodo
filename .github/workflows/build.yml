@@ -28,8 +28,7 @@ jobs:
     steps:
       - name: Check actor
         if: ${{ matrix.os == 'macbook-pro-m1' && env.GITHUB_ACTOR == 'TheUnderScorer' }}
-        run: |
-          node -p throw new Error('Invalid actor.')
+        run: exit 1
 
       - uses: actions/checkout@v2
 
