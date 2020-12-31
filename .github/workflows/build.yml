@@ -27,7 +27,7 @@ jobs:
     runs-on: ${{ matrix.os }}
     steps:
       - name: Check actor
-        # if: ${{ matrix.os == 'macbook-pro-m1' && env.GITHUB_ACTOR == 'TheUnderScorer' }}
+        if: ${{ matrix.os == 'macbook-pro-m1' && env.GITHUB_ACTOR == 'TheUnderScorer' }}
         run: exit 1
 
       - uses: actions/checkout@v2
