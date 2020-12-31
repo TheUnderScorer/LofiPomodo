@@ -8,6 +8,7 @@ RUN export DISPLAY=:0
 COPY ./package.json /project/package.json
 COPY ./package-lock.json /project/package-lock.json
 COPY ./forge.config.js /project/forge.config.js
+COPY ./tools /project/tools
 
 RUN npm install --verbose
 RUN npm run rebuild
