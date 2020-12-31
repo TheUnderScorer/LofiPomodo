@@ -26,9 +26,10 @@ jobs:
           - { os: macbook-pro-m1, arch: x64 }
     runs-on: ${{ matrix.os }}
     steps:
-      - name: Output actor
+      - name: Check actor
+        if: ${{ matrix.os == 'macbook-pro-m1' && env.GITHUB_ACTOR == 'TheUnderScorer' }}
         run: |
-          echo $GITHUB_ACTOR
+          node -p throw new Error('Invalid actor.')
 
       - uses: actions/checkout@v2
 
