@@ -26,6 +26,10 @@ jobs:
           - { os: macbook-pro-m1, arch: x64 }
     runs-on: ${{ matrix.os }}
     steps:
+      - name: Output actor
+        run: |
+          echo $GITHUB_ACTOR
+
       - uses: actions/checkout@v2
 
       - name: Set Node.js 14.x
