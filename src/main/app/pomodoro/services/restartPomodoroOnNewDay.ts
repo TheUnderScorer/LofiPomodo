@@ -7,7 +7,7 @@ export const restartPomodoroOnNewDay = async (pomodoro: PomodoroService) => {
 
   const now = new Date();
 
-  if (now.getDate() > pomodoro.start.getDate()) {
+  if (now.getDate() !== pomodoro.start.getDate()) {
     await pomodoro.restart();
   }
 };
