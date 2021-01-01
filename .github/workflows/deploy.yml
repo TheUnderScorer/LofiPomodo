@@ -1,0 +1,26 @@
+name: Deploy
+on:
+
+  push:
+    branches:
+      - master
+
+jobs:
+  deploy-redirect-server:
+    runs-on: ubuntu-latest
+    name: Deploy redirect server
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Build
+        run: cd redirectServer && npm install
+
+      - uses: akhileshns/heroku-deploy@v3.8.8
+        with:
+          heroku_api_key: ${{ secrets.HEROKU_API_KEY }}
+          heroku_app_name: "pixel-pomodo-redirect"
+          heroku_email: "przemyslawzydek@gmail.com"
+          appdir: ./redirectServer
+          procfile: "web: npm run start"
+
