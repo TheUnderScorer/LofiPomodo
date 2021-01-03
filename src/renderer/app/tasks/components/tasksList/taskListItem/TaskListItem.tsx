@@ -112,7 +112,7 @@ export const TaskListItem: FC<TaskListItemProps> = ({
 
   useEffect(() => {
     if (
-      task.estimatedPomodoroDuration &&
+      typeof task.estimatedPomodoroDuration === 'number' &&
       duration !== task.estimatedPomodoroDuration
     ) {
       setDuration(task.estimatedPomodoroDuration);
