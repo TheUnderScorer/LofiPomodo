@@ -19,6 +19,7 @@ import { TrelloService } from './app/integrations/trello/TrelloService';
 import { ApiAuthService } from './app/integrations/services/ApiAuthService';
 import { ApiAuthState } from './app/integrations/services/ApiAuthState';
 import { ApiService } from './app/integrations/types';
+import { ContextMenuFactory } from './shared/menu/ContextMenuFactory';
 
 export interface AppContext {
   ipcService: IpcMainService;
@@ -27,6 +28,7 @@ export interface AppContext {
   preloadPath: string;
   windowFactory: WindowFactory;
   menuFactory: MenuFactory;
+  contextMenuFactory: ContextMenuFactory;
   autoLaunch: AutoLaunch;
   tasksService: TasksService;
   taskRepository: TaskRepository;
@@ -110,5 +112,6 @@ export const createContext = async (): Promise<AppContext> => {
     trelloService,
     apiAuthService,
     apiAuthState,
+    contextMenuFactory: new ContextMenuFactory(pomodoro),
   };
 };
