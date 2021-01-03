@@ -112,7 +112,9 @@ export const SettingsFormView: FC<SettingsFormViewProps> = () => {
         pt={12}
         pb={3}
         id="settings"
-        height={platform === 'win32' ? '100vh' : 'calc(100vh - 60px)'}
+        height={
+          platform === 'win32' ? 'calc(100vh - 40px)' : 'calc(100vh - 60px)'
+        }
         centerContent
         width="100%"
         maxW="100%"

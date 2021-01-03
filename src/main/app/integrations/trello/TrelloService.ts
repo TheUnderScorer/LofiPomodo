@@ -16,7 +16,10 @@ export class TrelloService implements ApiService {
   ) {}
 
   async setUserToken(token: string) {
+    const member = await this.trelloClient.getTokenOwner(token);
+
     this.store.set('trello.userToken', token);
+    this.store.set('trello.memberId', member?.id);
   }
 
   async getUserToken() {
