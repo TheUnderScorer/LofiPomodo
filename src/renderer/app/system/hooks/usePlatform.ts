@@ -24,5 +24,5 @@ export const usePlatform = () => {
     }
   }, [didFetch, getPlatform]);
 
-  return 'win32';
+  return platform;
 };

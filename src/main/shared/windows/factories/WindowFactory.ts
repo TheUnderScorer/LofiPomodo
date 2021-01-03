@@ -92,6 +92,8 @@ export class WindowFactory {
 
     this.registerWindow(window, 'breakWindow', WindowTypes.Break);
 
+    window.focus();
+
     return window;
   }
 
