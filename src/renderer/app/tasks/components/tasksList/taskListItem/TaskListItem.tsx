@@ -81,6 +81,18 @@ export const TaskListItem: FC<TaskListItemProps> = ({
     [onTaskChange, task]
   );
 
+  const handleDurationChange = useCallback((val: any) => {
+    const parsed = parseInt(val);
+
+    if (Number.isNaN(parsed)) {
+      setDuration(0);
+
+      return;
+    }
+
+    setDuration(parsed > maxDuration ? maxDuration : parsed);
+  }, []);
+
   useDebounce(
     () => {
       if (
@@ -100,7 +112,7 @@ export const TaskListItem: FC<TaskListItemProps> = ({
 
   useEffect(() => {
     if (
-      task.estimatedPomodoroDuration &&
+      typeof task.estimatedPomodoroDuration === 'number' &&
       duration !== task.estimatedPomodoroDuration
     ) {
       setDuration(task.estimatedPomodoroDuration);
@@ -167,17 +179,7 @@ export const TaskListItem: FC<TaskListItemProps> = ({
                 alignItems="center"
               >
                 <NumberInput
-                  onChange={(val) => {
-                    const parsed = parseInt(val);
-
-                    if (Number.isNaN(parsed)) {
-                      setDuration(0);
-
-                      return;
-                    }
-
-                    setDuration(parsed > maxDuration ? maxDuration : parsed);
-                  }}
+                  onChange={handleDurationChange}
                   value={Number.isNaN(duration) ? 0 : duration}
                 >
                   <NumberInputField

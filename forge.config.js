@@ -49,9 +49,12 @@ const startWithPatterns = [
   '/node_modules/.bin',
   '/actions-runner',
   '/.git',
+  '/redirectServer',
 ];
 
 const endWithPatterns = ['.ts', '.tsx'];
+
+const signMacos = require('./tools/signMacos');
 
 const parseArtifact = (artifact, platform, arch) => {
   const dirname = path.dirname(artifact);
@@ -83,6 +86,16 @@ module.exports = {
         };
       });
     },
+    postPackage: async (forgeConfig, options) => {
+      if (options.platform === 'darwin' && options.arch === 'arm64') {
+        const appPath = path.join(
+          options.outputPaths[0],
+          `${pkg.productName}.app`
+        );
+
+        await signMacos(appPath);
+      }
+    },
   },
   packagerConfig: {
     ignore: (path) => {
@@ -94,6 +107,13 @@ module.exports = {
     },
     executableName: pkg.productName,
     asar: true,
+    protocols: [
+      {
+        name: pkg.name,
+        schemes: [pkg.name],
+        role: 'Viewer',
+      },
+    ],
   },
   makers: [
     {

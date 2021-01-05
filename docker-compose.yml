@@ -49,6 +49,8 @@ services:
       LONG_BREAK_INTERVAL: ${LONG_BREAK_INTERVAL}
       AUTO_RUN_WORK: ${AUTO_RUN_WORK}
       AUTO_RUN_BREAK: ${AUTO_RUN_BREAK}
+      TRELLO_API_KEY: ${TRELLO_API_KEY}
+      TRELLO_REDIRECT_URL: ${TRELLO_REDIRECT_URL}
     build:
       dockerfile: ./docker/e2e/Dockerfile
       context: .

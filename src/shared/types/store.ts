@@ -1,5 +1,6 @@
 import { Pomodoro } from "./pomodoro";
 import { WindowProps, WindowTypes } from "./system";
+import { TrelloSettings } from './taskProviders';
 
 type WindowProperties = `${WindowTypes}Props`;
 
@@ -9,4 +10,5 @@ type WindowPropsStore = {
 
 export interface AppStore extends WindowPropsStore {
   pomodoroState?: Pomodoro;
+  trello?: TrelloSettings;
 }

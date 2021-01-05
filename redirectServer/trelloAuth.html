@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang='en'>
+<head>
+  <meta charset='UTF-8'>
+  <title>Trello auth</title>
+</head>
+<body>
+Loading...
+</body>
+<script lang="javascript">
+  function handleToken() {
+    if(!location.hash.includes('token')) {
+      alert('Trello token is missing.');
+
+      return;
+    }
+
+    const token = location.hash.replace('#token=', '');
+
+    location = `PixelPomodo://auth/trello?token=${token}`
+  }
+
+  handleToken();
+</script>
+</html>

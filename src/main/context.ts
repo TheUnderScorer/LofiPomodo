@@ -13,6 +13,13 @@ import { TasksService } from './app/tasks/services/TasksService';
 import fs from 'fs';
 import { MenuFactory } from './shared/menu/MenuFactory';
 import { SettingsService } from './app/settings/services/SettingsService';
+import { TrelloClient } from './app/integrations/trello/TrelloClient';
+import fetch from 'node-fetch';
+import { TrelloService } from './app/integrations/trello/TrelloService';
+import { ApiAuthService } from './app/integrations/services/ApiAuthService';
+import { ApiAuthState } from './app/integrations/services/ApiAuthState';
+import { ApiService } from './app/integrations/types';
+import { ContextMenuFactory } from './shared/menu/ContextMenuFactory';
 
 export interface AppContext {
   ipcService: IpcMainService;
@@ -21,11 +28,29 @@ export interface AppContext {
   preloadPath: string;
   windowFactory: WindowFactory;
   menuFactory: MenuFactory;
+  contextMenuFactory: ContextMenuFactory;
   autoLaunch: AutoLaunch;
   tasksService: TasksService;
   taskRepository: TaskRepository;
   settingsService: SettingsService;
+  trelloClient: TrelloClient;
+  trelloService: TrelloService;
+  apiAuthService: ApiAuthService;
+  apiAuthState: ApiAuthState;
 }
+
+const handleIntegrations = (
+  store: ElectronStore<AppStore>,
+  windowFactory: WindowFactory,
+  trelloClient: TrelloClient
+) => {
+  const trelloService = new TrelloService(store, trelloClient);
+  const apiServices: ApiService[] = [trelloService];
+  const apiAuthState = new ApiAuthState(windowFactory, apiServices);
+  const apiAuthService = new ApiAuthService(apiServices, apiAuthState);
+
+  return { trelloService, apiAuthState, apiAuthService };
+};
 
 export const createContext = async (): Promise<AppContext> => {
   if (process.env.CLEAR_DB_ON_RUN === 'true') {
@@ -60,6 +85,18 @@ export const createContext = async (): Promise<AppContext> => {
     name: app.getName(),
   });
 
+  const trelloClient = new TrelloClient(
+    process.env.TRELLO_API_KEY!,
+    process.env.TRELLO_REDIRECT_URL!,
+    fetch
+  );
+
+  const { trelloService, apiAuthState, apiAuthService } = handleIntegrations(
+    store,
+    windowFactory,
+    trelloClient
+  );
+
   return {
     ipcService: new IpcMainService(),
     taskRepository,
@@ -70,6 +107,11 @@ export const createContext = async (): Promise<AppContext> => {
     menuFactory,
     tasksService,
     autoLaunch,
-    settingsService: new SettingsService(pomodoro, autoLaunch),
+    settingsService: new SettingsService(pomodoro, autoLaunch, store),
+    trelloClient,
+    trelloService,
+    apiAuthService,
+    apiAuthState,
+    contextMenuFactory: new ContextMenuFactory(pomodoro),
   };
 };

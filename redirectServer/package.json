@@ -1,0 +1,16 @@
+{
+  "name": "redirect-server",
+  "main": "src/app.js",
+  "description": "Simple redirect server that handles passing oauth code into Pixel Pomodo app",
+  "version": "1.0.0",
+  "scripts": {
+    "start": "node src/app.js"
+  },
+  "engines": {
+    "node": "14.x"
+  },
+  "dependencies": {
+    "dotenv": "^8.2.0",
+    "express": "^4.17.1"
+  }
+}

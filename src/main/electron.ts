@@ -6,6 +6,22 @@ import { setupTasks } from './app/tasks/setup';
 import log from 'electron-log';
 import { setupSystem } from './app/system/setup';
 import { setupSettings } from './app/settings/setup';
+import { config } from 'dotenv';
+import { setupIntegrations } from './app/integrations/setup';
+import { setupProtocol } from './protocol';
+import { createErrorDialog } from './shared/dialog/factories/errorDialog';
+import path from 'path';
+import { setupSingleInstance } from './singleInstance';
+
+if (require('electron-squirrel-startup')) {
+  app.quit();
+}
+
+const envPath = path.resolve(__dirname, `../.env`);
+
+config({
+  path: envPath,
+});
 
 if (!isDev) {
   Object.assign(console, log.functions);
@@ -26,19 +42,32 @@ const setupAppMenu = (context: AppContext) => {
 };
 
 app.whenReady().then(async () => {
-  const context = await createContext();
+  try {
+    setupSingleInstance();
 
-  setupAppMenu(context);
-  setupPomodoro(context);
-  setupTasks(context);
-  setupSystem(context);
-  setupSettings(context);
+    const context = await createContext();
 
-  await context.windowFactory.createTimerWindow();
+    setupProtocol([
+      ({ url }) => context.apiAuthService.handleAuthProtocol(url),
+    ]);
 
-  app.on('activate', async () => {
+    setupAppMenu(context);
+    setupPomodoro(context);
+    setupTasks(context);
+    setupSystem(context);
+    setupSettings(context);
+    setupIntegrations(context);
+
     await context.windowFactory.createTimerWindow();
-  });
+
+    app.on('activate', async () => {
+      await context.windowFactory.createTimerWindow();
+    });
+  } catch (e) {
+    await createErrorDialog(e);
+
+    app.quit();
+  }
 });
 
 app.on('window-all-closed', () => {

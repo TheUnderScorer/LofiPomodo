@@ -81,7 +81,7 @@ describe('Settings - as a user', () => {
     await settingsBtn.click();
 
     for (const [name, handler] of Object.entries(payloadNameMap)) {
-      const field = await app.client.$(`[name="${name}"]`);
+      const field = await app.client.$(`[name="pomodoro.${name}"]`);
 
       await handler(field);
     }
@@ -98,7 +98,7 @@ describe('Settings - as a user', () => {
     await settingsBtn.click();
 
     for (const [name, checker] of Object.entries(fieldChecksMap)) {
-      const field = await app.client.$(`[name="${name}"]`);
+      const field = await app.client.$(`[name="pomodoro.${name}"]`);
 
       await checker(field);
     }

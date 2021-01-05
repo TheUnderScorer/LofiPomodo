@@ -1,4 +1,5 @@
 name: Build binaries
+
 on:
   pull_request:
     branches:
@@ -8,215 +9,112 @@ on:
     tags:
       - '*'
 
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: Tag for which release assets will be generated (optional)
+        required: false
+
 jobs:
-  build-x64-mac:
-    name: Build x64 mac
-    runs-on: macos-latest
+  build:
+    strategy:
+      matrix:
+        os: [macos-latest, ubuntu-latest, windows-latest, macbook-pro-m1]
+        arch: [x64, arm64]
+        exclude:
+          - { os: macos-latest, arch: arm64 }
+          - { os: macbook-pro-m1, arch: x64 }
+    runs-on: ${{ matrix.os }}
     steps:
+      - name: Check actor
+        if: ${{ matrix.os == 'macbook-pro-m1' && env.GITHUB_ACTOR == 'TheUnderScorer' }}
+        run: exit 1
+
       - uses: actions/checkout@v2
 
       - name: Set Node.js 14.x
         uses: actions/setup-node@v2-beta
+        if: ${{ matrix.arch != 'arm64' && matrix.os != 'macbook-pro-m1' }}
         with:
           node-version: '14'
 
       - name: Install npm dependencies
-        run: npm install && npm run rebuild:x64
+        run: npm install
+
+      - name: Rebuild deps in x64
+        if: ${{ matrix.arch == 'x64' }}
+        run: npm run rebuild:x64
+
+      - name: Rebuild deps in arm64
+        if: ${{ matrix.arch == 'arm64' && matrix.os != 'macbook-pro-m1' }}
+        run: npm run rebuild:arm64
+
+      - name: Get tag
+        id: get_tag
+        uses: ./.github/actions/tagProvider
+
+      - name: Create .env file
+        run: |
+          echo "TRELLO_API_KEY=${{ secrets.TRELLO_API_KEY }}" >> .env
+          echo "TRELLO_REDIRECT_URL=${{ secrets.TRELLO_REDIRECT_URL }}" >> .env
 
       - name: Build
+        if: ${{ matrix.arch != 'arm64' && matrix.os != 'macbook-pro-m1' }}
         run: npm run build:all
 
-      - name: Pack mac x64
-        run: npm run make:x64-darwin
-
-      - name: Upload Artifact
-        uses: actions/upload-artifact@v1
-        with:
-          name: PixelPomodo-x64-darwin.dmg
-          path: out/make/PixelPomodo-x64-darwin.dmg
-
-      - name: Upload file to release
-        if: startsWith(github.ref, 'refs/tags/v')
-        uses: svenstaro/upload-release-action@v2
-        with:
-          repo_token: ${{ secrets.GITHUB_TOKEN }}
-          file: out/make/PixelPomodo-x64-darwin.dmg
-          asset_name: PixelPomodo-x64-darwin.dmg
-          tag: ${{ github.ref }}
-          overwrite: false
-
-  build-x64-linux:
-    name: Build x64 linux
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v2
-
-      - name: Set Node.js 14.x
-        uses: actions/setup-node@v2-beta
-        with:
-          node-version: '14'
-
-      - name: Install npm dependencies
-        run: npm install && npm run rebuild:x64
-
-      - name: Build
-        run: npm run build:all && npm run build-packager
-
-      - name: Pack linux x64
-        run: npm run make:x64-linux:docker
-
-      - name: Upload Artifact
-        uses: actions/upload-artifact@v1
-        with:
-          name: PixelPomodo-x64-linux.deb
-          path: out/make/deb/x64/PixelPomodo-x64-linux.deb
-
-      - name: Upload file to release
-        if: startsWith(github.ref, 'refs/tags/v')
-        uses: svenstaro/upload-release-action@v2
-        with:
-          repo_token: ${{ secrets.GITHUB_TOKEN }}
-          file: out/make/deb/x64/PixelPomodo-x64-linux.deb
-          asset_name: PixelPomodo-x64-linux.deb
-          tag: ${{ github.ref }}
-          overwrite: false
-
-  build-x64-windows:
-    name: Build x64 windows
-    runs-on: windows-latest
-    steps:
-      - uses: actions/checkout@v2
-
-      - name: Set Node.js 14.x
-        uses: actions/setup-node@v2-beta
-        with:
-          node-version: '14'
-
-      - name: Install npm dependencies
-        run: npm install
-
-      - name: Build
-        run: npm run build:all
-
-      - name: Pack windows x64
-        run: npm run make:x64-windows
-
-      - name: Upload Artifact
-        uses: actions/upload-artifact@v1
-        with:
-          name: PixelPomodo-x64-win32.exe
-          path: out/make/squirrel.windows/x64/PixelPomodo-x64-win32.exe
-
-      - name: Upload file to release
-        if: startsWith(github.ref, 'refs/tags/v')
-        uses: svenstaro/upload-release-action@v2
-        with:
-          repo_token: ${{ secrets.GITHUB_TOKEN }}
-          file: out/make/squirrel.windows/x64/PixelPomodo-x64-win32.exe
-          asset_name: PixelPomodo-x64-win32.exe
-          tag: ${{ github.ref }}
-          overwrite: false
-
-  build-arm64-linux:
-    name: Build arm64 linux
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v2
-
-      - name: Set Node.js 14.x
-        uses: actions/setup-node@v2-beta
-        with:
-          node-version: '14'
-
-      - name: Install npm dependencies
-        run: npm install
-
-      - name: Build
-        run: npm run build:all && npm run build-packager
-
-      - name: Pack linux arm64
-        run: npm run make:arm64-linux:docker
-
-      - name: Upload Artifact
-        uses: actions/upload-artifact@v1
-        with:
-          name: PixelPomodo-arm64-linux.deb
-          path: out/make/deb/arm64/PixelPomodo-arm64-linux.deb
-
-      - name: Upload file to release
-        if: startsWith(github.ref, 'refs/tags/v')
-        uses: svenstaro/upload-release-action@v2
-        with:
-          repo_token: ${{ secrets.GITHUB_TOKEN }}
-          file: out/make/deb/arm64/PixelPomodo-arm64-linux.deb
-          asset_name: PixelPomodo-arm64-linux.deb
-          tag: ${{ github.ref }}
-          overwrite: false
-
-  build-arm64-windows:
-    name: Build arm64 windows
-    runs-on: windows-latest
-    steps:
-      - uses: actions/checkout@v2
-
-      - name: Set Node.js 14.x
-        uses: actions/setup-node@v2-beta
-        with:
-          node-version: '14'
-
-      - name: Install npm dependencies
-        run: npm install
-
-      - name: Build
-        run: npm run build:all && npm run rebuild:arm64
-
-      - name: Pack windows arm64
-        run: npm run make:arm64-windows
-
-      - name: Upload Artifact
-        uses: actions/upload-artifact@v1
-        with:
-          name: PixelPomodo-arm64-win32.exe
-          path: out/make/squirrel.windows/arm64/PixelPomodo-arm64-win32.exe
-
-      - name: Upload file to release
-        if: startsWith(github.ref, 'refs/tags/v')
-        uses: svenstaro/upload-release-action@v2
-        with:
-          repo_token: ${{ secrets.GITHUB_TOKEN }}
-          file: out/make/squirrel.windows/arm64/PixelPomodo-arm64-win32.exe
-          asset_name: PixelPomodo-arm64-win32.exe
-          tag: ${{ github.ref }}
-          overwrite: false
-
-  build-arm64-mac:
-    name: Build arm64 mac
-    runs-on: macbook-pro-m1
-    timeout-minutes: 10
-    steps:
-      - uses: actions/checkout@v2
-
-      - name: Install npm dependencies
-        run: arch -arm64 npm install
-
-      - name: Build
+        # Special build with arch -arm64 prefix on m1 macbook pro
+      - name: Build (arm64 macos)
+        if: ${{ matrix.arch == 'arm64' && matrix.os == 'macbook-pro-m1' }}
         run: arch -arm64 npm run build:all && arch -arm64 npm run rebuild:arm64
 
-      - name: Pack mac
+      # Packager is used only on ubuntu
+      - name: Build packager
+        if: ${{ matrix.os == 'ubuntu-latest' }}
+        run: npm run build-packager
+
+      - name: Pack mac x64
+        if: ${{ matrix.arch == 'x64' && matrix.os == 'macos-latest' }}
+        run: npm run make:x64-darwin
+
+      - name: Pack mac arm64
+        if: ${{ matrix.arch == 'arm64' && matrix.os == 'macbook-pro-m1' }}
         run: arch -arm64 npm run make
+
+      - name: Pack linux x64
+        if: ${{ matrix.arch == 'x64' && matrix.os == 'ubuntu-latest' }}
+        run: npm run make:x64-linux:docker
+
+      - name: Pack linux arm64
+        if: ${{ matrix.arch == 'arm64' && matrix.os == 'ubuntu-latest' }}
+        run: npm run make:arm64-linux:docker
+
+      - name: Pack windows x64
+        if: ${{ matrix.arch == 'x64' && matrix.os == 'windows-latest' }}
+        run: npm run make:x64-windows
+
+      - name: Pack windows arm64
+        if: ${{ matrix.arch == 'arm64' && matrix.os == 'windows-latest' }}
+        run: npm run make:arm64-windows
+
+      - name: Get asset
+        id: get_asset
+        uses: ./.github/actions/assetsProvider
+        with:
+          os: ${{ matrix.os }}
+          arch: ${{ matrix.arch }}
 
       - name: Upload Artifact
         uses: actions/upload-artifact@v1
         with:
-          name: PixelPomodo-arm64-darwin.dmg
-          path: out/make/PixelPomodo-arm64-darwin.dmg
+          name: ${{ steps.get_asset.outputs.name }}
+          path: ${{ steps.get_asset.outputs.path }}
 
       - name: Upload file to release
-        if: startsWith(github.ref, 'refs/tags/v')
+        if: ${{ steps.get_tag.outputs.tag }}
         uses: svenstaro/upload-release-action@v2
         with:
           repo_token: ${{ secrets.GITHUB_TOKEN }}
-          file: out/make/PixelPomodo-arm64-darwin.dmg
-          asset_name: PixelPomodo-arm64-darwin.dmg
-          tag: ${{ github.ref }}
+          file: ${{ steps.get_asset.outputs.path }}
+          asset_name: ${{ steps.get_asset.outputs.name }}
+          tag: ${{ steps.get_tag.outputs.tag }}
           overwrite: false
