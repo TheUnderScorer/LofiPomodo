@@ -52,6 +52,15 @@ jobs:
       - name: Get tag
         id: get_tag
         uses: ./.github/actions/tagProvider
+        with:
+          ghRef: ${{ github.ref }}
+          tagFromInput: ${{ github.event.inputs.tag }}
+
+      - name: Output vars
+        run: |
+          echo "Tag: ${{ steps.get_tag.outputs.tag }}"
+          echo "Ref: ${{ github.ref }}"
+          echo "Input tag: ${{ github.event.inputs.tag }}"
 
       - name: Create .env file
         run: |
