@@ -1,3 +1,14 @@
+## [1.7.2](https://github.com/TheUnderScorer/pixel-pomodo/compare/v1.7.1...v1.7.2) (2021-01-05)
+
+
+### Bug Fixes
+
+* **windows:** Add missing context menu to tray icon ([1f14ec2](https://github.com/TheUnderScorer/pixel-pomodo/commit/1f14ec2f2c69a45f8828a511bf7a29c53a177709))
+* **windows:** Focus break window when it appears ([68420e6](https://github.com/TheUnderScorer/pixel-pomodo/commit/68420e6b5dcfbe12bc21ef6e7c176c60ab855679))
+* Pomodoro duration not being displayed correctly if it was changed via context menu ([c78ba92](https://github.com/TheUnderScorer/pixel-pomodo/commit/c78ba925c2a50d413ec9c8c9128a4a1d01e33cd5))
+* **windows:** Settings "Submit" button invalid display ([807f81e](https://github.com/TheUnderScorer/pixel-pomodo/commit/807f81ea608695d2c41b3c92e1975c1e99a01cef))
+* Pomodoro not being restarted at start of the month ([c0bb15a](https://github.com/TheUnderScorer/pixel-pomodo/commit/c0bb15a390055364a49403733b34ea88df3ed43d))
+
 ## [1.7.1](https://github.com/TheUnderScorer/pixel-pomodo/compare/v1.7.0...v1.7.1) (2020-12-27)
 
 
