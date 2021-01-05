@@ -72,21 +72,21 @@ export const SettingsFormView: FC<SettingsFormViewProps> = () => {
     [setSettings, history]
   );
 
-  const platform = usePlatform();
+  const { is } = usePlatform();
 
   return (
     <>
       <TitleBar
         position="relative"
         justifyContent="flex-start"
-        pt={platform !== 'win32' ? '60px' : 2}
+        pt={!is.windows ? '60px' : 2}
         pl={2}
       >
         <Flex w="100%" position="relative">
           <IconButton
             className="go-back-btn"
             left="0"
-            top={platform === 'win32' ? 1 : 0}
+            top={is.windows ? 1 : 0}
             onClick={() => history.goBack()}
             aria-label="Go back"
           >
@@ -112,9 +112,7 @@ export const SettingsFormView: FC<SettingsFormViewProps> = () => {
         pt={12}
         pb={3}
         id="settings"
-        height={
-          platform === 'win32' ? 'calc(100vh - 40px)' : 'calc(100vh - 60px)'
-        }
+        height={is.windows ? 'calc(100vh - 40px)' : 'calc(100vh - 60px)'}
         centerContent
         width="100%"
         maxW="100%"

@@ -3,6 +3,7 @@ export enum AppSystemEvents {
   ToggleWindowSize = 'ToggleWindowSize',
   MinimizeWindow = 'MinimizeWindow',
   GetPlatform = 'GetPlatform',
+  GetIs = 'GetIs',
   ResizeWindow = 'ResizeWindow',
 }
 

@@ -9,7 +9,7 @@ import { usePlatform } from '../../../app/system/hooks/usePlatform';
 export interface TitleBarProps extends FlexProps {}
 
 export const TitleBar: FC<TitleBarProps> = ({ children, ...props }) => {
-  const platform = usePlatform();
+  const { is } = usePlatform();
 
   const [closeWindow] = useIpcInvoke(AppSystemEvents.CloseWindow);
   const [minimizeWindow] = useIpcInvoke(AppSystemEvents.MinimizeWindow);
@@ -25,7 +25,7 @@ export const TitleBar: FC<TitleBarProps> = ({ children, ...props }) => {
       {...props}
     >
       {children}
-      {platform === 'win32' && (
+      {is.windows && (
         <Flex position="absolute" right={1}>
           <IconButton
             className="minimize"

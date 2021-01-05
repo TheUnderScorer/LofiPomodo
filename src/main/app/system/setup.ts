@@ -4,6 +4,7 @@ import {
   ResizeWindowPayload,
 } from '../../../shared/types/system';
 import { AppContext } from '../../context';
+import { is } from 'electron-util';
 
 export const setupSystem = (context: AppContext) => {
   const { ipcService } = context;
@@ -29,6 +30,9 @@ export const setupSystem = (context: AppContext) => {
     },
     [AppSystemEvents.GetPlatform]: () => {
       return process.platform;
+    },
+    [AppSystemEvents.GetIs]: () => {
+      return is;
     },
     [AppSystemEvents.ResizeWindow]: (
       _,

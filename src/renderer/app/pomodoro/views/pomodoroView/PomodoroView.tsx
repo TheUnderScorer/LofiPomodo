@@ -12,7 +12,7 @@ export interface PomodoroViewProps {}
 export const PomodoroView: FC<PomodoroViewProps> = () => {
   const { pomodoro } = usePomodoro();
 
-  const platform = usePlatform();
+  const { is } = usePlatform();
 
   const colorMode = useColorMode();
 
@@ -23,7 +23,7 @@ export const PomodoroView: FC<PomodoroViewProps> = () => {
   return (
     <>
       <TitleBar pt={2} pr={2}>
-        {platform !== 'win32' && <PomodoroMenuBtn />}
+        {!is.windows && <PomodoroMenuBtn />}
       </TitleBar>
       <Container
         className={`pomodoro-view-${colorMode}`}
@@ -40,7 +40,7 @@ export const PomodoroView: FC<PomodoroViewProps> = () => {
             <>
               <TimerBox
                 containerProps={{
-                  pt: platform === 'win32' ? 3 : 10,
+                  pt: is.windows ? 3 : 10,
                   pb: 5,
                 }}
               />
