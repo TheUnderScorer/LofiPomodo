@@ -1,5 +1,5 @@
 import { ApiService } from '../types';
-import { ApiProvider } from '../../../../shared/types/integrations';
+import { ApiProvider } from '../../../../shared/types/integrations/integrations';
 
 export const getServiceByProvider = (
   services: ApiService[],

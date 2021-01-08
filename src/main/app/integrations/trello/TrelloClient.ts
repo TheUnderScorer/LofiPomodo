@@ -1,7 +1,17 @@
 import fetchFn, { Response } from 'node-fetch';
 import { productName } from '../../../../../package.json';
 import { InvalidTrelloResponse } from './errors/InvalidTrelloResponse';
-import { TrelloBoard, TrelloList, TrelloMember } from './types';
+import {
+  TrelloBoard,
+  TrelloList,
+  TrelloMember,
+} from '../../../../shared/types/integrations/trello';
+
+export interface SearchParams {
+  idBoards?: string[];
+}
+
+export type SearchResponse = Array<TrelloBoard | TrelloMember>;
 
 export class TrelloClient {
   private static readonly baseUrl = 'https://api.trello.com';
@@ -61,6 +71,22 @@ export class TrelloClient {
     if (!allowedStatuses.includes(res.status)) {
       throw new InvalidTrelloResponse(res.status);
     }
+  }
+
+  async search(token: string, params: SearchParams): Promise<SearchResponse> {
+    const url = this.getUrl(token);
+
+    url.pathname = '/1/search';
+
+    Object.entries(params).forEach(([key, value]) => {
+      url.searchParams.append(key, value);
+    });
+
+    const result = await this.fetch(url);
+
+    TrelloClient.checkResponse(result);
+
+    return result.json();
   }
 
   async getBoardsForMember(

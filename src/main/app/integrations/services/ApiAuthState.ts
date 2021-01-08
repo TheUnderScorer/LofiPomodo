@@ -1,4 +1,7 @@
-import { ApiProvider, AuthState } from '../../../../shared/types/integrations';
+import {
+  ApiProvider,
+  AuthState,
+} from '../../../../shared/types/integrations/integrations';
 import { WindowFactory } from '../../../shared/windows/factories/WindowFactory';
 import { dialog } from 'electron';
 import { ApiService } from '../types';

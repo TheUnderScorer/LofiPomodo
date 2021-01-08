@@ -1,9 +1,10 @@
 import ElectronStore from 'electron-store';
 import { AppStore } from '../../../../shared/types/store';
 import { TrelloClient } from './TrelloClient';
-import { ApiProvider } from '../../../../shared/types/integrations';
+import { ApiProvider } from '../../../../shared/types/integrations/integrations';
 import { ApiService } from '../types';
 import { Nullable } from '../../../../shared/types';
+import { TrelloBoard } from '../../../../shared/types/integrations/trello';
 
 export class TrelloService implements ApiService {
   readonly provider = ApiProvider.Trello;
@@ -19,7 +20,13 @@ export class TrelloService implements ApiService {
     const member = await this.trelloClient.getTokenOwner(token);
 
     this.store.set('trello.userToken', token);
-    this.store.set('trello.memberId', member?.id);
+    this.store.set('trello.member', member);
+  }
+
+  async isAuthorized(): Promise<boolean> {
+    const trello = this.store.get('trello');
+
+    return Boolean(trello?.userToken && trello?.member);
   }
 
   async getUserToken() {
@@ -28,6 +35,19 @@ export class TrelloService implements ApiService {
 
   async getAuthorizationUrl() {
     return this.trelloClient.getAuthorizationUrl();
+  }
+
+  async getUserBoards(): Promise<TrelloBoard[]> {
+    if (!(await this.isAuthorized())) {
+      return [];
+    }
+
+    const trello = this.store.get('trello');
+
+    return this.trelloClient.getBoardsForMember(
+      trello!.member!.id,
+      trello!.userToken!
+    );
   }
 
   /**

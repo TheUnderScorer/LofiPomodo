@@ -1,4 +1,5 @@
 import { Task } from './tasks';
+import { TrelloMember } from './integrations/trello';
 
 export enum TaskProviderType {
   Trello = 'Trello',
@@ -13,5 +14,5 @@ export interface TrelloSettings {
   // Dictionary with boardId as a key, and array of related list ids from which tasks should be synced
   listIds?: Record<string, string[]>;
   userToken?: string;
-  memberId?: string;
+  member?: TrelloMember;
 }

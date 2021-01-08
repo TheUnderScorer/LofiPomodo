@@ -3,7 +3,7 @@ import {
   AuthState,
   IntegrationEvents,
   ProviderInfo,
-} from '../../../../shared/types/integrations';
+} from '../../../../shared/types/integrations/integrations';
 import { useIpcQuery } from '../../../shared/ipc/useIpcQuery';
 import { useCallback, useState } from 'react';
 import { useIpcReceiver } from '../../../shared/ipc/useIpcReceiver';

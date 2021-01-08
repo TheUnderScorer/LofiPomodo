@@ -4,7 +4,7 @@ import {
   ApiProvider,
   IntegrationEvents,
   ProviderInfo,
-} from '../../../../shared/types/integrations';
+} from '../../../../shared/types/integrations/integrations';
 import { Typed } from 'emittery';
 import { ApiAuthState } from './ApiAuthState';
 import { getServiceByProvider } from './getServiceByProvider';

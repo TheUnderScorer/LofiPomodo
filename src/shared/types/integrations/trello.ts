@@ -11,6 +11,7 @@ export interface TrelloBoard {
   id: TrelloId;
   closed: boolean;
   url: string;
+  name: string;
 }
 
 export interface TrelloMember {
@@ -20,6 +21,7 @@ export interface TrelloMember {
   idMemberReferrer: string;
   url: string;
   email: string;
+  idBoards: string[];
 }
 
 export interface TrelloList {

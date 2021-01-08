@@ -39,7 +39,7 @@ export interface AppContext {
   apiAuthState: ApiAuthState;
 }
 
-const handleIntegrations = (
+const handleIntegrations = async (
   store: ElectronStore<AppStore>,
   windowFactory: WindowFactory,
   trelloClient: TrelloClient
@@ -48,6 +48,10 @@ const handleIntegrations = (
   const apiServices: ApiService[] = [trelloService];
   const apiAuthState = new ApiAuthState(windowFactory, apiServices);
   const apiAuthService = new ApiAuthService(apiServices, apiAuthState);
+
+  if (process.env.TRELLO_TOKEN) {
+    await trelloService.setUserToken(process.env.TRELLO_TOKEN);
+  }
 
   return { trelloService, apiAuthState, apiAuthService };
 };
@@ -91,11 +95,11 @@ export const createContext = async (): Promise<AppContext> => {
     fetch
   );
 
-  const { trelloService, apiAuthState, apiAuthService } = handleIntegrations(
-    store,
-    windowFactory,
-    trelloClient
-  );
+  const {
+    trelloService,
+    apiAuthState,
+    apiAuthService,
+  } = await handleIntegrations(store, windowFactory, trelloClient);
 
   return {
     ipcService: new IpcMainService(),

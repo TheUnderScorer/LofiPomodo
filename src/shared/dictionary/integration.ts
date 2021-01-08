@@ -1,4 +1,4 @@
-import { ApiProvider } from '../types/integrations';
+import { ApiProvider } from '../types/integrations/integrations';
 
 export const apiProviderLabelDictionary = {
   [ApiProvider.Trello]: 'Trello',

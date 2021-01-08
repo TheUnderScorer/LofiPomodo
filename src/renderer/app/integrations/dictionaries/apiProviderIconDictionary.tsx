@@ -1,4 +1,4 @@
-import { ApiProvider } from '../../../../shared/types/integrations';
+import { ApiProvider } from '../../../../shared/types/integrations/integrations';
 import { faTrello } from '@fortawesome/free-brands-svg-icons';
 import { FaIcon } from '../../../ui/atoms/faIcon/FaIcon';
 import React from 'react';

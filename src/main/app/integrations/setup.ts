@@ -2,7 +2,7 @@ import { AppContext } from '../../context';
 import {
   IntegrationEvents,
   ProviderInfo,
-} from '../../../shared/types/integrations';
+} from '../../../shared/types/integrations/integrations';
 import { forwardIntegrationEventsToWindows } from './services/forwardIntegrationEvents';
 
 export const setupIntegrations = (context: AppContext) => {
@@ -11,6 +11,8 @@ export const setupIntegrations = (context: AppContext) => {
       context.apiAuthService.startAuth(provider),
     [IntegrationEvents.GetAuthState]: (_, { provider }: ProviderInfo) =>
       context.apiAuthState.getStateForProvider(provider),
+    [IntegrationEvents.GetTrelloBoards]: () =>
+      context.trelloService.getUserBoards(),
   });
 
   forwardIntegrationEventsToWindows(context);

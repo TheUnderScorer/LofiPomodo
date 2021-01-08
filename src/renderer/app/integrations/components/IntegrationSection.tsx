@@ -3,7 +3,7 @@ import {
   ApiProvider,
   IntegrationEvents,
   ProviderInfo,
-} from '../../../../shared/types/integrations';
+} from '../../../../shared/types/integrations/integrations';
 import { useProviderAuthState } from '../hooks/useProviderAuthState';
 import { Text } from '../../../ui/atoms/text/Text';
 import { Button, Flex, Stack } from '@chakra-ui/core';
@@ -14,11 +14,13 @@ import { useIpcInvoke } from '../../../shared/ipc/useIpcInvoke';
 export interface IntegrationSectionProps {
   provider: ApiProvider;
   onStart?: () => any;
+  onManage?: (token: string) => any;
 }
 
 export const IntegrationSection: FC<IntegrationSectionProps> = ({
   provider,
   onStart,
+  onManage,
 }) => {
   const { loading: authStateLoading, token } = useProviderAuthState(provider);
 
@@ -38,8 +40,14 @@ export const IntegrationSection: FC<IntegrationSectionProps> = ({
       if (onStart) {
         onStart();
       }
+
+      return;
     }
-  }, [authorize, onStart, token]);
+
+    if (onManage) {
+      onManage(token);
+    }
+  }, [authorize, onStart, token, onManage]);
 
   return (
     <Stack spacing={2} direction="row" alignItems="center" width="100%">

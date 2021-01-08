@@ -5,6 +5,7 @@ export enum AppSystemEvents {
   GetPlatform = 'GetPlatform',
   GetIs = 'GetIs',
   ResizeWindow = 'ResizeWindow',
+  OpenWindow = 'OpenWindow',
 }
 
 export interface ResizeWindowPayload {
@@ -21,4 +22,9 @@ export interface WindowProps extends ResizeWindowPayload {
 export enum WindowTypes {
   Timer = 'PixelPomodoro',
   Break = 'Break',
+  ManageTrello = 'ManageTrello',
+}
+
+export interface OpenWindowPayload {
+  windowType: WindowTypes;
 }

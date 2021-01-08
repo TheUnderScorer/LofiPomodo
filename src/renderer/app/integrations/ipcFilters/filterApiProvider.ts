@@ -1,7 +1,7 @@
 import {
   ApiProvider,
   ProviderInfo,
-} from '../../../../shared/types/integrations';
+} from '../../../../shared/types/integrations/integrations';
 import { IpcReceiverCallback } from '../../../shared/ipc/useIpcReceiver';
 
 // Filters Ipc receiver events to make sure that callback is only triggered for event related to given provider
