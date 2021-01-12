@@ -1,10 +1,6 @@
 import React, { FC, useCallback, useMemo, useState } from 'react';
 import { TitleBar } from '../../../ui/molecules/titleBar/TitleBar';
 import {
-  Alert,
-  AlertDescription,
-  AlertIcon,
-  Button,
   Center,
   Container,
   Flex,
@@ -24,6 +20,8 @@ import { useIpcInvoke } from '../../../shared/ipc/useIpcInvoke';
 import { PomodoroForm } from '../../pomodoro/components/pomodoroForm/PomodoroForm';
 import { useForm } from 'react-hook-form';
 import { IntegrationsForm } from '../../integrations/components/IntegrationsForm';
+import { SubmitButton } from '../../../ui/atoms/submitButton/SubmitButton';
+import { Alert } from '../../../ui/molecules/alert/Alert';
 
 type SettingTab = 'Pomodoro' | 'Integrations';
 
@@ -140,26 +138,15 @@ export const SettingsFormView: FC<SettingsFormViewProps> = () => {
               pt={2}
             >
               {error && (
-                <Alert backgroundColor="brand.danger" status="error" mb={6}>
-                  <AlertIcon />
-                  <AlertDescription>
-                    <Text>{error.message}</Text>
-                  </AlertDescription>
+                <Alert type="error" mb={6}>
+                  <Text>{error.message}</Text>
                 </Alert>
               )}
               {tab === 'Pomodoro' && <PomodoroForm form={form} />}
               {tab === 'Integrations' && <IntegrationsForm form={form} />}
             </Flex>
             {tab === 'Pomodoro' && (
-              <Button
-                id="submit_settings"
-                type="submit"
-                minWidth="150px"
-                isLoading={loading}
-                backgroundColor="brand.primary"
-              >
-                <Text>Save</Text>
-              </Button>
+              <SubmitButton id="submit_settings" isLoading={loading} />
             )}
           </Flex>
         )}

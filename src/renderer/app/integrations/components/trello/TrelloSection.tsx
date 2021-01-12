@@ -4,7 +4,6 @@ import {
   IntegrationSection,
   IntegrationSectionProps,
 } from '../IntegrationSection';
-import { ManageTrelloModal } from './ManageTrelloModal';
 import { useOpenWindow } from '../../../system/hooks/useOpenWindow';
 import { WindowTypes } from '../../../../../shared/types/system';
 
@@ -21,7 +20,6 @@ export const TrelloSection: FC<TrelloSectionProps> = (props) => {
         provider={ApiProvider.Trello}
         {...props}
       />
-      <ManageTrelloModal />
     </>
   );
 };

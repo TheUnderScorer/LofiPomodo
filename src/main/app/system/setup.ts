@@ -47,7 +47,9 @@ export const setupSystem = (context: AppContext) => {
       _,
       { windowType }: OpenWindowPayload
     ) => {
-      await windowFactory.createWindowByType(windowType);
+      await windowFactory.createWindowByType(windowType, {
+        parent: BrowserWindow.getFocusedWindow() ?? undefined,
+      });
     },
   });
 };

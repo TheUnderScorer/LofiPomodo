@@ -11,6 +11,10 @@ import { windowTitles } from '../../../../shared/dictionary/system';
 
 type WindowKeys = 'timerWindow' | 'breakWindow' | 'manageTrelloWindow';
 
+export interface CreateWindowArgs {
+  parent?: BrowserWindow;
+}
+
 export class WindowFactory {
   // Timer window is a main window with a pomodoro timer and tasks list
   public timerWindow: Nullable<BrowserWindow> = null;
@@ -22,7 +26,7 @@ export class WindowFactory {
 
   private windowKeyMethodMap: Record<
     WindowTypes,
-    () => Promise<BrowserWindow>
+    (args?: CreateWindowArgs) => Promise<BrowserWindow>
   > = {
     [WindowTypes.Break]: this.createBreakWindow.bind(this),
     [WindowTypes.Timer]: this.createTimerWindow.bind(this),
@@ -35,17 +39,19 @@ export class WindowFactory {
     private readonly store: ElectronStore<AppStore>
   ) {}
 
-  async createWindowByType(type: WindowTypes) {
+  async createWindowByType(type: WindowTypes, args?: CreateWindowArgs) {
     const method = this.windowKeyMethodMap[type];
 
     if (!method) {
       throw new TypeError(`No method defined for window ${type}`);
     }
 
-    return method();
+    return method(args);
   }
 
-  async createManageTrelloWindow(): Promise<BrowserWindow> {
+  async createManageTrelloWindow({ parent }: CreateWindowArgs = {}): Promise<
+    BrowserWindow
+  > {
     if (this.manageTrelloWindow) {
       this.manageTrelloWindow.focus();
 
@@ -55,6 +61,7 @@ export class WindowFactory {
     const window = new BrowserWindow({
       ...this.getWindowProps(WindowTypes.ManageTrello),
       title: windowTitles[WindowTypes.ManageTrello],
+      parent,
       webPreferences: {
         preload: this.preloadPath,
         nodeIntegration: false,
@@ -68,7 +75,9 @@ export class WindowFactory {
     return window;
   }
 
-  async createTimerWindow(): Promise<BrowserWindow> {
+  async createTimerWindow({ parent }: CreateWindowArgs = {}): Promise<
+    BrowserWindow
+  > {
     if (this.timerWindow) {
       this.timerWindow.focus();
 
@@ -78,6 +87,7 @@ export class WindowFactory {
     const window = new BrowserWindow({
       ...this.getWindowProps(WindowTypes.Timer),
       title: windowTitles[WindowTypes.Timer],
+      parent,
       webPreferences: {
         preload: this.preloadPath,
         nodeIntegration: false,
@@ -94,7 +104,9 @@ export class WindowFactory {
     return window;
   }
 
-  async createBreakWindow(): Promise<BrowserWindow> {
+  async createBreakWindow({ parent }: CreateWindowArgs = {}): Promise<
+    BrowserWindow
+  > {
     if (this.breakWindow) {
       this.breakWindow.focus();
 
@@ -112,6 +124,7 @@ export class WindowFactory {
       title: windowTitles[WindowTypes.Break],
       titleBarStyle: 'hidden',
       resizable: false,
+      parent,
       webPreferences: {
         preload: this.preloadPath,
         nodeIntegration: false,

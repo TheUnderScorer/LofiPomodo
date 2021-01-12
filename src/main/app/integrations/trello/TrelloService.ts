@@ -4,7 +4,10 @@ import { TrelloClient } from './TrelloClient';
 import { ApiProvider } from '../../../../shared/types/integrations/integrations';
 import { ApiService } from '../types';
 import { Nullable } from '../../../../shared/types';
-import { TrelloBoard } from '../../../../shared/types/integrations/trello';
+import {
+  TrelloBoard,
+  TrelloBoardSettings,
+} from '../../../../shared/types/integrations/trello';
 
 export class TrelloService implements ApiService {
   readonly provider = ApiProvider.Trello;
@@ -48,6 +51,20 @@ export class TrelloService implements ApiService {
       trello!.member!.id,
       trello!.userToken!
     );
+  }
+
+  async getBoardLists(boardId: string) {
+    if (!(await this.isAuthorized())) {
+      return [];
+    }
+
+    const token = await this.getUserToken();
+
+    return this.trelloClient.getListsForBoard(boardId, token!);
+  }
+
+  async saveBoards(boards: TrelloBoardSettings[]) {
+    this.store.set('trello.boards', boards);
   }
 
   /**

@@ -1,6 +1,6 @@
 import { Pomodoro } from "./pomodoro";
 import { WindowProps, WindowTypes } from "./system";
-import { TrelloSettings } from './taskProviders';
+import { TrelloSettings } from './integrations/trello';
 
 type WindowProperties = `${WindowTypes}Props`;
 

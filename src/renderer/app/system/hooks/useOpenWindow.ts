@@ -15,7 +15,7 @@ export const useOpenWindow = (type: WindowTypes) => {
   return {
     openWindow: useCallback(async () => {
       await openWindow({ windowType: type });
-    }, [type]),
+    }, [openWindow, type]),
     loading,
     error,
   };

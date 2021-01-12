@@ -31,5 +31,7 @@ export const windowProps: Readonly<Record<WindowTypes, WindowProps>> = {
   },
   [WindowTypes.ManageTrello]: {
     ...baseWindowProps,
+    height: baseWindowProps.height + 200,
+    width: baseWindowProps.height + 200,
   },
 };

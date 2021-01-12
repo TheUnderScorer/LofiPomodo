@@ -26,4 +26,19 @@ export interface TrelloMember {
 
 export interface TrelloList {
   id: TrelloId;
+  name: string;
+  closed: boolean;
+}
+
+export interface TrelloBoardSettings {
+  id?: string;
+  boardId?: string;
+  listIds?: string[];
+  doneListId?: string;
+}
+
+export interface TrelloSettings {
+  boards?: TrelloBoardSettings[];
+  userToken?: string;
+  member?: TrelloMember;
 }

@@ -124,6 +124,10 @@ export const useIpcInvoke = <
 
   useEffect(() => {
     if (prevVariables && variablesDep !== prevVariables) {
+      console.log({
+        prevVariables,
+        variablesDep,
+      });
       invoke();
     }
   }, [variablesDep, invoke, prevVariables]);
