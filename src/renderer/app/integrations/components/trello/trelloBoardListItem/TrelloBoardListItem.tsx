@@ -91,7 +91,7 @@ export const TrelloBoardListItem: FC<TrelloBoardListItemProps> = ({
 
       form.setValue(getName('listIds'), []);
     }
-  }, [board, fetchLists, prevBoard, index]);
+  }, [board, fetchLists, prevBoard, index, form, getName]);
 
   useMount(() => {
     if (board) {

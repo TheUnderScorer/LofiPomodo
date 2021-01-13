@@ -1,5 +1,4 @@
 import React, { FC, ReactNode } from 'react';
-import { useModalState } from '../../../providers/modalProvider/ModalProvider';
 import {
   Button,
   Center,
@@ -14,6 +13,7 @@ import {
   Spinner,
 } from '@chakra-ui/core';
 import { Text } from '../../atoms/text/Text';
+import { useModalState } from '../../../providers/modalProvider/hooks/useModalState';
 
 export interface ModalProps extends Omit<BaseModalProps, 'isOpen' | 'onClose'> {
   id: string;

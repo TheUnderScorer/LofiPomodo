@@ -9,6 +9,7 @@ import { Alert } from '../../../../ui/molecules/alert/Alert';
 import { Text } from '../../../../ui/atoms/text/Text';
 import { useGetSetting } from '../../../settings/hooks/useGetSetting';
 import { ManageTrelloForm } from '../../components/trello/ManageTrelloForm';
+import { CloseWindowButton } from '../../../system/components/CloseWindowButton';
 
 export interface ManageTrelloViewProps {}
 
@@ -38,7 +39,13 @@ export const ManageTrelloView: FC<ManageTrelloViewProps> = () => {
           </Alert>
         )}
         {Boolean(result?.length) && !loading && (
-          <ManageTrelloForm boards={result!} trelloSettings={trelloSettings!} />
+          <ManageTrelloForm
+            additionalButtons={(form) => (
+              <CloseWindowButton isDirty={form.formState.isDirty} />
+            )}
+            boards={result!}
+            trelloSettings={trelloSettings!}
+          />
         )}
       </CenterContainer>
     </>

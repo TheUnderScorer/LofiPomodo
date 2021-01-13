@@ -1,30 +1,29 @@
-import React, { FC, useCallback, useState } from 'react';
+import React, { FC, ReactNode, useCallback, useState } from 'react';
 import {
   TrelloBoard,
   TrelloSettings,
 } from '../../../../../shared/types/integrations/trello';
-import { FormProvider, useForm } from 'react-hook-form';
+import { FormProvider, useForm, UseFormMethods } from 'react-hook-form';
 import { IntegrationEvents } from '../../../../../shared/types/integrations/integrations';
 import { useIpcInvoke } from '../../../../shared/ipc/useIpcInvoke';
-import { Box, Button, Fade, Flex, HStack } from '@chakra-ui/core';
+import { Box, Flex, HStack } from '@chakra-ui/core';
 import { Alert } from '../../../../ui/molecules/alert/Alert';
 import { Text } from '../../../../ui/atoms/text/Text';
 import { ManageTrelloBoards } from './ManageTrelloBoards';
 import { SubmitButton } from '../../../../ui/atoms/submitButton/SubmitButton';
 import { useDebounce } from 'react-use';
-import { AppSystemEvents } from '../../../../../shared/types/system';
 
 export interface ManageTrelloFormProps {
   boards: TrelloBoard[];
   trelloSettings?: TrelloSettings;
+  additionalButtons?: (form: UseFormMethods<TrelloSettings>) => ReactNode;
 }
 
 export const ManageTrelloForm: FC<ManageTrelloFormProps> = ({
   boards,
   trelloSettings,
+  additionalButtons,
 }) => {
-  const [close] = useIpcInvoke<never>(AppSystemEvents.CloseWindow);
-
   const [didSubmit, setDidSubmit] = useState(false);
 
   const form = useForm<TrelloSettings>({
@@ -54,8 +53,14 @@ export const ManageTrelloForm: FC<ManageTrelloFormProps> = ({
       await save({
         boards: values?.boards ?? [],
       });
+
+      form.reset(values, {
+        dirtyFields: false,
+        isDirty: false,
+        isSubmitted: true,
+      });
     },
-    [save]
+    [form, save]
   );
 
   useDebounce(
@@ -101,9 +106,7 @@ export const ManageTrelloForm: FC<ManageTrelloFormProps> = ({
             isLoading={submitting}
             id="submit_trello"
           />
-          <Button onClick={() => close()}>
-            <Text>Close</Text>
-          </Button>
+          {additionalButtons ? additionalButtons(form) : undefined}
         </HStack>
       </FormProvider>
     </Flex>

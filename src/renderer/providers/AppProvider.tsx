@@ -15,6 +15,7 @@ import { PomodoroState } from '../../shared/types';
 import { Theme } from '../types/theme';
 import { usePrefersColorScheme } from '../shared/hooks/usePrefersColorScheme';
 import { ModalProvider } from './modalProvider/ModalProvider';
+import { DialogProvider } from './dialogProvider/DialogProvider';
 
 export interface AppProviderProps {}
 
@@ -97,9 +98,11 @@ export const AppProvider: FC<AppProviderProps> = ({ children }) => {
               value={colorMode}
             >
               <CSSReset />
-              <MemoryRouter initialEntries={initialEntries}>
-                {children}
-              </MemoryRouter>
+              <DialogProvider>
+                <MemoryRouter initialEntries={initialEntries}>
+                  {children}
+                </MemoryRouter>
+              </DialogProvider>
             </ColorModeProvider>
           </ModalProvider>
         </ThemeProvider>
