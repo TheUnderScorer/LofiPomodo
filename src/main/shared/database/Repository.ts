@@ -6,6 +6,9 @@ import {
 import Knex, { QueryBuilder } from 'knex';
 import { castAsArray } from '../../../shared/utils/array';
 import { Typed as EventEmitter } from 'emittery';
+import { EntityNotFound } from './errors/EntityNotFound';
+import { mapToId } from '../../../shared/mappers/mapToId';
+import { EntitiesNotFound } from './errors/EntitiesNotFound';
 
 export enum RepositoryEvents {
   EntityUpdated = 'EntityUpdated',
@@ -13,8 +16,13 @@ export enum RepositoryEvents {
   EntitiesDeleted = 'EntitiesDeleted',
 }
 
+export interface EntityUpdatedPayload<T> {
+  prevEntity: T;
+  entity: T;
+}
+
 export interface RepositoryEventsMap<T> {
-  [RepositoryEvents.EntityUpdated]: T;
+  [RepositoryEvents.EntityUpdated]: EntityUpdatedPayload<T>;
   [RepositoryEvents.EntitiesCreated]: T[];
   [RepositoryEvents.EntitiesDeleted]: T[];
 }
@@ -76,6 +84,20 @@ export abstract class Repository<
     return items.map((item) => this.fromDb(item));
   }
 
+  async getMany(ids: string[]): Promise<Model[]> {
+    const result = await this.findMany(ids);
+
+    if (result.length !== ids.length) {
+      const missingIds = ids.filter(
+        (id) => !result.find((entity) => entity.id === id)
+      );
+
+      throw new EntitiesNotFound(missingIds);
+    }
+
+    return result;
+  }
+
   async findOne(id: string): Promise<Model | null> {
     const item = (await this.getQueryBuilder()
       .where('id', id)
@@ -84,33 +106,48 @@ export abstract class Repository<
     return item ? this.fromDb(item) : null;
   }
 
+  async getOne(id: string): Promise<Model> {
+    const result = await this.findOne(id);
+
+    if (!result) {
+      throw new EntityNotFound(id);
+    }
+
+    return result;
+  }
+
   async insert(entity: Model | Model[]): Promise<boolean> {
-    const asArray = castAsArray(entity);
-    const entities = asArray.map((entity) => {
+    const entitiesArray = castAsArray(entity) as Model[];
+    const mappedEntities = entitiesArray.map((entity) => {
       (entity as Model).createdAt = new Date();
 
       return this.toDb(entity as Model);
     }) as DbModel[];
 
-    const result = await this.getQueryBuilder().insert(entities);
+    const result = await this.getQueryBuilder().insert(mappedEntities);
 
-    await this.events.emit(RepositoryEvents.EntityUpdated, asArray as any);
+    await this.events.emit(RepositoryEvents.EntitiesCreated, entitiesArray);
 
     return Boolean(result);
   }
 
-  async update(entity: Model): Promise<Model> {
+  async update(entity: Model, prevEntityProvided?: Model): Promise<Model> {
     const updatedEntity = {
       ...entity,
       updatedAt: new Date(),
     };
+
+    const prevEntity = prevEntityProvided ?? (await this.getOne(entity.id));
 
     const result = await this.getQueryBuilder()
       .where('id', entity.id)
       .update(this.toDb(entity));
 
     if (result) {
-      await this.events.emit(RepositoryEvents.EntityUpdated, updatedEntity);
+      await this.events.emit(RepositoryEvents.EntityUpdated, {
+        entity: updatedEntity,
+        prevEntity,
+      });
     }
 
     return updatedEntity;
@@ -121,6 +158,8 @@ export abstract class Repository<
       ...entity,
       updatedAt: new Date(),
     }));
+
+    const prevEntities = await this.getMany(mapToId(entities));
 
     await this.connection.transaction(async (t) => {
       const connection = t(this.table);
@@ -135,9 +174,14 @@ export abstract class Repository<
     });
 
     await Promise.all(
-      mappedEntities.map((entity) =>
-        this.events.emit(RepositoryEvents.EntityUpdated, entity)
-      )
+      mappedEntities.map((entity) => {
+        const prevEntity = prevEntities.find(({ id }) => entity.id === id);
+
+        return this.events.emit(RepositoryEvents.EntityUpdated, {
+          prevEntity: prevEntity!,
+          entity,
+        });
+      })
     );
 
     return mappedEntities;

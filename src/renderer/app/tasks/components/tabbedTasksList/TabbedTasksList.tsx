@@ -30,6 +30,7 @@ import { useActiveTask } from '../../hooks/useActiveTask';
 import { TaskContextMenu } from '../taskContextMenu/TaskContextMenu';
 import { TasksMenu } from '../tasksMenu/TasksMenu';
 import { useUpdateTask } from '../../hooks/useUpdateTask';
+import { SyncTasksBtn } from '../syncTasksBtn/SyncTasksBtn';
 
 export interface TabbedTasksListProps {
   listProps?: Omit<TasksListProps, 'tasks'>;
@@ -122,6 +123,8 @@ export const TabbedTasksList: FC<TabbedTasksListProps> = (props) => {
               );
             })}
           </TabList>
+
+          <SyncTasksBtn variant="ghost" />
 
           <TasksMenu
             loading={loading || isUpdating}

@@ -15,6 +15,7 @@ import { percent } from '../../../../../shared/utils/math';
 import { Typed as TypedEmittery } from 'emittery';
 import { shouldRun } from '../../logic/autorun';
 import { stateDurationMap } from '../../maps';
+import { Jsonable } from '../../../../../shared/types/json';
 
 export enum Trigger {
   Manual = 'Manual',
@@ -40,7 +41,7 @@ export interface PomodoroServiceEventsMap {
 
 @Reactive()
 export class PomodoroService
-  implements Changable, Pomodoro, CanSubscribe<PomodoroService> {
+  implements Changable, Pomodoro, CanSubscribe<PomodoroService>, Jsonable {
   isRunning!: boolean;
   longBreakDurationSeconds!: number;
   longBreakInterval!: number;

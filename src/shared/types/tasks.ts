@@ -1,4 +1,5 @@
 import { BaseModel, Order, Pagination } from './database';
+import { TaskSynchronizer } from '../../main/app/tasks/services/TaskSynchronizer';
 
 export interface Task extends BaseModel {
   title: string;
@@ -21,14 +22,10 @@ export interface TaskPomodoroSpent {
 export interface CreateTaskInput
   extends Omit<
     Task,
-    | 'id'
-    | 'createdAt'
-    | 'updatedAt'
-    | 'source'
-    | 'sourceId'
-    | 'state'
-    | 'pomodoroSpent'
-  > {}
+    'id' | 'createdAt' | 'updatedAt' | 'state' | 'pomodoroSpent' | 'source'
+  > {
+  source?: TaskSource;
+}
 
 export enum TaskEvents {
   GetTasks = 'GetTasks',
@@ -42,6 +39,8 @@ export enum TaskEvents {
   CountByState = 'CountByState',
   DeleteTasks = 'DeleteTasks',
   DeleteCompletedTasks = 'DeleteCompletedTasks',
+  SyncWithApis = 'SyncWithApis',
+  IsSyncingWithApis = 'IsSyncingWithApis',
 }
 
 export interface GetTasksPayload {
@@ -54,6 +53,7 @@ export interface GetTasksPayload {
 
 export enum TaskSource {
   Jira = 'Jira',
+  Trello = 'Trello',
   Local = 'Local',
 }
 
@@ -64,3 +64,31 @@ export enum TaskState {
 
 export type TasksByState = Record<TaskState, Task[]>;
 export type CountTasksByState = Record<TaskState, number>;
+
+export type IsSyncingWithApisResult = Pick<TaskSynchronizerJson, 'isSyncing'>;
+
+export interface TaskSynchronizerJson {
+  isSyncing: boolean;
+  lastSyncDate?: string;
+  lastError?: {
+    message: string;
+    name: string;
+  };
+}
+
+export enum TaskSynchronizerEvents {
+  SyncStarted = 'SyncStarted',
+  SyncEnded = 'SyncEnded',
+  SyncFailed = 'SyncFailed',
+}
+
+export interface TaskSynchronizerFailedPayload {
+  error: Error;
+  service: TaskSynchronizer;
+}
+
+export interface TaskSynchronizerEventsPayloadMap {
+  [TaskSynchronizerEvents.SyncStarted]: TaskSynchronizer;
+  [TaskSynchronizerEvents.SyncEnded]: TaskSynchronizer;
+  [TaskSynchronizerEvents.SyncFailed]: TaskSynchronizerFailedPayload;
+}

@@ -3,6 +3,7 @@ import {
   CountTasksByState,
   GetTasksPayload,
   Task,
+  TaskSource,
   TaskState,
 } from '../../../../shared/types/tasks';
 import { applyOrder } from '../../../shared/database/queryHelpers/applyOrder';
@@ -131,6 +132,23 @@ export class TaskRepository extends Repository<TaskDb, Task> {
     }));
 
     await this.updateMany(mappedTasks);
+  }
+
+  async getBySource(source: TaskSource) {
+    const result = await this.getQueryBuilder()
+      .select<TaskDb[]>()
+      .where('source', source);
+
+    return result.map((item) => this.fromDb(item));
+  }
+
+  async getBySourceIds(source: TaskSource, ids: string[]) {
+    const result = await this.getQueryBuilder()
+      .select<TaskDb[]>()
+      .where('source', source)
+      .andWhere('sourceId', 'IN', ids);
+
+    return result.map((item) => this.fromDb(item));
   }
 
   async deleteCompletedTasks() {

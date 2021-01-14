@@ -1,9 +1,7 @@
-import { Task } from './tasks';
+import { Task, TaskSource } from './tasks';
 
-export enum TaskProviderType {
-  Trello = 'Trello',
-}
+export interface TaskApiService {
+  readonly provider: TaskSource;
 
-export interface TaskProvider {
-  fetchTasks(): Promise<Task[]>;
+  syncTasks(): Promise<Task[]>;
 }

@@ -3,6 +3,7 @@ import { productName } from '../../../../../package.json';
 import { InvalidTrelloResponse } from './errors/InvalidTrelloResponse';
 import {
   TrelloBoard,
+  TrelloCard,
   TrelloList,
   TrelloMember,
 } from '../../../../shared/types/integrations/trello';
@@ -81,6 +82,18 @@ export class TrelloClient {
     Object.entries(params).forEach(([key, value]) => {
       url.searchParams.append(key, value);
     });
+
+    const result = await this.fetch(url);
+
+    TrelloClient.checkResponse(result);
+
+    return result.json();
+  }
+
+  async getCardsForList(listId: string, token: string): Promise<TrelloCard[]> {
+    const url = this.getUrl(token);
+
+    url.pathname = `/1/lists/${listId}/cards`;
 
     const result = await this.fetch(url);
 

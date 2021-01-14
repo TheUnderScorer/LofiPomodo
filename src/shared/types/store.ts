@@ -11,4 +11,5 @@ type WindowPropsStore = {
 export interface AppStore extends WindowPropsStore {
   pomodoroState?: Pomodoro;
   trello?: TrelloSettings;
+  lastTasksSyncDate?: string;
 }

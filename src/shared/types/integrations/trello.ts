@@ -24,6 +24,18 @@ export interface TrelloMember {
   idBoards: string[];
 }
 
+export interface TrelloCard {
+  id: TrelloId;
+  desc: string;
+  closed: boolean;
+  due?: string;
+  url: string;
+  shortUrl: string;
+  name: string;
+  email: string;
+  idList: string;
+}
+
 export interface TrelloList {
   id: TrelloId;
   name: string;

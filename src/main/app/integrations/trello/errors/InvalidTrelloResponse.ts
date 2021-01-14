@@ -1,4 +1,4 @@
-import { AppError } from '../../../../errors/AppError';
+import { AppError } from '../../../../../shared/errors/AppError';
 
 export class InvalidTrelloResponse extends AppError {
   constructor(statusCode: number) {
