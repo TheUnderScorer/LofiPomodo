@@ -6,6 +6,7 @@ import { PomodoroView } from './app/pomodoro/views/pomodoroView/PomodoroView';
 import { BreakView } from './app/pomodoro/views/breakView/BreakView';
 import { SettingsFormView } from './app/settings/views/SettingsFormView';
 import { ManageTrelloView } from './app/integrations/views/manageTrelloView/ManageTrelloView';
+import './styles/animations.css';
 
 const App = () => {
   const { colorMode } = useColorMode();

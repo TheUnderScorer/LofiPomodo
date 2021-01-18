@@ -10,6 +10,7 @@ import { applyOrder } from '../../../shared/database/queryHelpers/applyOrder';
 import { applyPagination } from '../../../shared/database/queryHelpers/applyPagination';
 import { OrderDirection } from '../../../../shared/types/database';
 import { groupTasksByState } from '../../../../shared/app/tasks/groupTasksByState';
+import { act } from 'react-dom/test-utils';
 
 export interface TaskDb extends Omit<Task, 'pomodoroSpent'> {
   pomodoroSpent?: string;
@@ -61,13 +62,35 @@ export class TaskRepository extends Repository<TaskDb, Task> {
   async getActiveTask(): Promise<Task | null> {
     const task = await this.getQueryBuilder()
       .select()
-      .where({
-        index: 0,
-        state: TaskState.Todo,
-      })
+      .orderBy('index', OrderDirection.Asc)
+      .where('state', TaskState.Todo)
       .first<TaskDb | null>();
 
     return task ? this.fromDb(task) : null;
+  }
+
+  async flagActiveTask() {
+    const activeTaskByOrder = await this.getActiveTask();
+    const flaggedTasks = await this.getQueryBuilder().where<TaskDb[]>(
+      'active',
+      true
+    );
+
+    if (activeTaskByOrder) {
+      if (flaggedTasks) {
+        await Promise.all(
+          flaggedTasks.map((task) => {
+            task.active = false;
+
+            return this.update(this.fromDb(task));
+          })
+        );
+      }
+
+      activeTaskByOrder.active = true;
+
+      await this.update(activeTaskByOrder);
+    }
   }
 
   async getAllGroupedByState() {

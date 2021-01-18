@@ -8,9 +8,13 @@ import { useCallback, useState } from 'react';
 import { useMount } from 'react-use';
 import { useIpcReceiver } from '../../../shared/ipc/useIpcReceiver';
 import { useTasksList } from './useTasksList';
+import { useGroupedTasksCount } from './useGroupedTasksCount';
+import { useActiveTask } from './useActiveTask';
 
 export const useTasksSync = () => {
   const { getTasks } = useTasksList();
+  const { getCount } = useGroupedTasksCount();
+  const { fetchActiveTask } = useActiveTask();
 
   const [
     sync,
@@ -38,8 +42,8 @@ export const useTasksSync = () => {
     isSyncing: isSyncing || isSyncingFromInvoke,
     sync: useCallback(async () => {
       await sync();
-      await getTasks();
-    }, [getTasks, sync]),
+      await Promise.all([getTasks(), getCount(), fetchActiveTask()]);
+    }, [fetchActiveTask, getCount, getTasks, sync]),
     error: syncErrorFromInvoke,
   };
 };

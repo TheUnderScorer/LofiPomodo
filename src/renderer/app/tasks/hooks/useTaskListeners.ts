@@ -1,21 +1,21 @@
 import { useCallback } from 'react';
-import { Task, TaskEvents, TaskState } from '../../../../shared/types/tasks';
+import { Task, TaskEvents } from '../../../../shared/types/tasks';
 import { isTaskActive } from '../../../../shared/app/tasks/isTaskActive';
 import { useIpcReceiver } from '../../../shared/ipc/useIpcReceiver';
 import { useTasksList } from './useTasksList';
 import { useActiveTask } from './useActiveTask';
 import { useGroupedTasksCount } from './useGroupedTasksCount';
 import { tasksListStore } from '../state/tasksList';
-import { useRecoilState, useSetRecoilState } from 'recoil';
-import { activeTask } from '../state/activeTask';
+import { useRecoilState } from 'recoil';
+import { activeTaskAtom } from '../state/activeTask';
 
 export const useTasksListeners = () => {
   const { getTasks } = useTasksList();
-  const { fetchActiveTask } = useActiveTask();
+  const { fetchActiveTask, loading } = useActiveTask();
   const { getCount } = useGroupedTasksCount();
 
   const [tasks, setTasks] = useRecoilState(tasksListStore);
-  const setActiveTask = useSetRecoilState(activeTask);
+  const [activeTask, setActiveTask] = useRecoilState(activeTaskAtom);
 
   const handleTaskRemoved = useCallback(
     async (_: unknown, tasks: Task[]) => {
@@ -47,16 +47,12 @@ export const useTasksListeners = () => {
     },
     [setTasks, tasks]
   );
-  useIpcReceiver(TaskEvents.TaskUpdated, handleTaskChange);
+  // useIpcReceiver(TaskEvents.TaskUpdated, handleTaskChange);
 
   const handleActiveTaskChange = useCallback(
-    (_: undefined, task: Task) => {
+    async (_: undefined, task: Task) => {
       if (isTaskActive(task)) {
-        if (task.state === TaskState.Todo) {
-          setActiveTask(task);
-        } else {
-          setActiveTask(null);
-        }
+        setActiveTask(task);
       }
     },
     [setActiveTask]

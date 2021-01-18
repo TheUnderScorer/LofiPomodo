@@ -154,11 +154,11 @@ export const TrelloBoardListItem: FC<TrelloBoardListItemProps> = ({
         )}
         {!loading && (
           <Flex width="100%">
-            {lists?.length && (
+            {Boolean(lists?.length) && (
               <>
                 <TrelloListsSelection
                   defaultValue={defaultValue.listIds ?? []}
-                  lists={lists}
+                  lists={lists!}
                   name={getName('listIds')}
                 />
                 <FormControl
@@ -199,7 +199,7 @@ export const TrelloBoardListItem: FC<TrelloBoardListItemProps> = ({
                 </FormControl>
               </>
             )}
-            {!lists?.length && (
+            {!Boolean(lists?.length) && (
               <Text color="brand.danger">
                 No lists found, please select different board.
               </Text>

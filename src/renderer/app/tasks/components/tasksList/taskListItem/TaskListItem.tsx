@@ -9,6 +9,7 @@ import {
   NumberInput,
   NumberInputField,
   Stack,
+  useCheckbox,
 } from '@chakra-ui/core';
 import React, { FC, ReactNode, useCallback, useEffect, useState } from 'react';
 import { Task, TaskState } from '../../../../../../shared/types/tasks';
@@ -16,7 +17,7 @@ import { Draggable } from 'react-beautiful-dnd';
 import { FaIcon } from '../../../../../ui/atoms/faIcon/FaIcon';
 import { faGripLines } from '@fortawesome/free-solid-svg-icons';
 import { ContextMenu } from '../../../../../ui/molecules/contextMenu/ContextMenu';
-import { useDebounce, usePrevious } from 'react-use';
+import { useDebounce, useMount, usePrevious } from 'react-use';
 
 export interface TaskListItemProps extends ListItemProps {
   task: Task;
@@ -38,6 +39,10 @@ export const TaskListItem: FC<TaskListItemProps> = ({
   isDisabled,
   ...props
 }) => {
+  useMount(() => {
+    console.log('Mount...');
+  });
+
   const [title, setTitle] = useState(task.title);
   const [duration, setDuration] = useState(task.estimatedPomodoroDuration ?? 0);
   const prevDuration = usePrevious(duration);
@@ -139,7 +144,6 @@ export const TaskListItem: FC<TaskListItemProps> = ({
               d="flex"
             >
               <Checkbox
-                transition="none"
                 isDisabled={isDisabled}
                 className="task-state-checkbox"
                 onChange={handleTaskChange(

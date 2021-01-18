@@ -1,10 +1,11 @@
 import React, { FC, useEffect } from 'react';
-import { IconButton, IconButtonProps } from '@chakra-ui/core';
+import { IconButton, IconButtonProps, Tooltip } from '@chakra-ui/core';
 import { useTasksSync } from '../../hooks/useTasksSync';
 import { useDialog } from '../../../../providers/dialogProvider/hooks/useDialog';
 import { errorDialog } from '../../../../providers/dialogProvider/factories/errorDialog';
 import { FaIcon } from '../../../../ui/atoms/faIcon/FaIcon';
 import { faSync } from '@fortawesome/free-solid-svg-icons';
+import classNames from 'classnames';
 
 export interface SyncTasksBtnProps
   extends Omit<IconButtonProps, 'aria-label' | 'onClick' | 'isLoading'> {}
@@ -21,13 +22,18 @@ export const SyncTasksBtn: FC<SyncTasksBtnProps> = (props) => {
   }, [error, showDialog]);
 
   return (
-    <IconButton
-      onClick={() => sync()}
-      isLoading={isSyncing}
-      aria-label="Sync tasks with external apis"
-      {...props}
-    >
-      <FaIcon icon={faSync} />
-    </IconButton>
+    <Tooltip label="Sync tasks">
+      <IconButton
+        onClick={() => sync()}
+        isDisabled={isSyncing}
+        aria-label="Sync tasks with external apis"
+        {...props}
+        className={classNames(props.className, {
+          'animation-rotate': isSyncing,
+        })}
+      >
+        <FaIcon icon={faSync} />
+      </IconButton>
+    </Tooltip>
   );
 };
