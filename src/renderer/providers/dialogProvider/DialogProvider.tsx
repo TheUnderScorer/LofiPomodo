@@ -8,14 +8,14 @@ import {
   HStack,
 } from '@chakra-ui/core';
 import React, { FC, MutableRefObject, useCallback, useRef } from 'react';
-import { useRecoilState } from 'recoil';
+import { useRecoilState, useRecoilValue } from 'recoil';
 import { currentDialogPropsAtom, dialogOpenAtom } from './state';
 
 export interface DialogProviderProps {}
 
 export const DialogProvider: FC<DialogProviderProps> = ({ children }) => {
   const [open, setOpen] = useRecoilState(dialogOpenAtom);
-  const [dialogProps, setDialogProps] = useRecoilState(currentDialogPropsAtom);
+  const dialogProps = useRecoilValue(currentDialogPropsAtom);
 
   const closeDialog = useCallback(() => {
     setOpen(false);

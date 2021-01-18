@@ -9,7 +9,6 @@ import {
   TabPanel,
   TabPanels,
   Tabs,
-  VStack,
 } from '@chakra-ui/core';
 import React, {
   FC,
@@ -33,7 +32,6 @@ import { TaskContextMenu } from '../taskContextMenu/TaskContextMenu';
 import { TasksMenu } from '../tasksMenu/TasksMenu';
 import { useUpdateTask } from '../../hooks/useUpdateTask';
 import { SyncTasksBtn } from '../syncTasksBtn/SyncTasksBtn';
-import { tasksListStore } from '../../state/tasksList';
 
 export interface TabbedTasksListProps {
   listProps?: Omit<TasksListProps, 'tasks'>;

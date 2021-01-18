@@ -5,17 +5,15 @@ import { useIpcReceiver } from '../../../shared/ipc/useIpcReceiver';
 import { useTasksList } from './useTasksList';
 import { useActiveTask } from './useActiveTask';
 import { useGroupedTasksCount } from './useGroupedTasksCount';
-import { tasksListStore } from '../state/tasksList';
-import { useRecoilState } from 'recoil';
+import { useSetRecoilState } from 'recoil';
 import { activeTaskAtom } from '../state/activeTask';
 
 export const useTasksListeners = () => {
   const { getTasks } = useTasksList();
-  const { fetchActiveTask, loading } = useActiveTask();
+  const { fetchActiveTask } = useActiveTask();
   const { getCount } = useGroupedTasksCount();
 
-  const [tasks, setTasks] = useRecoilState(tasksListStore);
-  const [activeTask, setActiveTask] = useRecoilState(activeTaskAtom);
+  const setActiveTask = useSetRecoilState(activeTaskAtom);
 
   const handleTaskRemoved = useCallback(
     async (_: unknown, tasks: Task[]) => {
@@ -32,22 +30,6 @@ export const useTasksListeners = () => {
     [fetchActiveTask, getCount, getTasks]
   );
   useIpcReceiver(TaskEvents.TasksDeleted, handleTaskRemoved);
-
-  // Sync task changes in bg with store
-  const handleTaskChange = useCallback(
-    (_: any, task: Task) => {
-      const index = tasks?.findIndex((storedTask) => storedTask.id === task.id);
-
-      if (index > -1) {
-        const newTasks = [...tasks];
-        newTasks[index] = task;
-
-        setTasks(newTasks);
-      }
-    },
-    [setTasks, tasks]
-  );
-  // useIpcReceiver(TaskEvents.TaskUpdated, handleTaskChange);
 
   const handleActiveTaskChange = useCallback(
     async (_: undefined, task: Task) => {
