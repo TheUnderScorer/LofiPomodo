@@ -10,10 +10,14 @@ import { applyOrder } from '../../../shared/database/queryHelpers/applyOrder';
 import { applyPagination } from '../../../shared/database/queryHelpers/applyPagination';
 import { OrderDirection } from '../../../../shared/types/database';
 import { groupTasksByState } from '../../../../shared/app/tasks/groupTasksByState';
-import { act } from 'react-dom/test-utils';
+import {
+  parseStringFields,
+  stringifyFields,
+} from '../../../../shared/utils/json';
 
-export interface TaskDb extends Omit<Task, 'pomodoroSpent'> {
+export interface TaskDb extends Omit<Task, 'pomodoroSpent' | 'providerMeta'> {
   pomodoroSpent?: string;
+  providerMeta?: string;
 }
 
 export class TaskRepository extends Repository<TaskDb, Task> {
@@ -179,20 +183,10 @@ export class TaskRepository extends Repository<TaskDb, Task> {
   }
 
   protected fromDb(entity: TaskDb): Task {
-    return {
-      ...entity,
-      pomodoroSpent: entity.pomodoroSpent
-        ? JSON.parse(entity.pomodoroSpent)
-        : undefined,
-    };
+    return parseStringFields(entity, ['pomodoroSpent', 'providerMeta']) as Task;
   }
 
   protected toDb(entity: Task): TaskDb {
-    return {
-      ...entity,
-      pomodoroSpent: entity.pomodoroSpent
-        ? JSON.stringify(entity.pomodoroSpent)
-        : undefined,
-    };
+    return stringifyFields(entity, ['pomodoroSpent', 'providerMeta']);
   }
 }

@@ -1,39 +1,50 @@
 import { TaskApiService } from '../../../../shared/types/taskProviders';
-import { Task, TaskSource } from '../../../../shared/types/tasks';
+import { Task, TaskSource, TaskState } from '../../../../shared/types/tasks';
 import { TrelloService } from '../../integrations/trello/TrelloService';
 import { TaskRepository } from '../repositories/TaskRepository';
-import { TrelloCard } from '../../../../shared/types/integrations/trello';
-import { TaskCrudService } from './TaskCrudService';
+import {
+  TrelloCard,
+  TrelloTaskMeta,
+} from '../../../../shared/types/integrations/trello';
+import { TaskCrudEvents, TaskCrudService } from './TaskCrudService';
 
 export class TrelloTasksService implements TaskApiService {
   readonly provider = TaskSource.Trello;
-
-  private static batchLimit = 10;
 
   constructor(
     private readonly trelloService: TrelloService,
     private readonly taskRepository: TaskRepository,
     private readonly taskCrudService: TaskCrudService
-  ) {}
+  ) {
+    taskCrudService.events.on(TaskCrudEvents.Completed, (task) =>
+      this.onTaskCompleted(task)
+    );
+
+    taskCrudService.events.on(TaskCrudEvents.UnCompleted, (task) =>
+      this.onTaskUncompleted(task)
+    );
+  }
 
   async syncTasks(): Promise<Task[]> {
     const cards = await this.trelloService.getCards();
     const cardIds = cards.map((list) => list.id);
 
-    const trelloTasks = await this.taskRepository.getBySource(
+    const trelloTasks = (await this.taskRepository.getBySource(
       TaskSource.Trello
-    );
+    )) as Task<TrelloTaskMeta>[];
 
     const tasksToDelete = trelloTasks.filter(
-      (task) => !cardIds.find((listId) => task.sourceId === listId)
+      (task) =>
+        !cardIds.find((cardId) => task.sourceId === cardId) &&
+        task.state !== TaskState.Completed
     );
 
-    const listsWithoutTasks = cards.filter(
-      (list) => !trelloTasks.find((task) => task.sourceId === list.id)
+    const cardsWithoutTasks = cards.filter(
+      (card) => !trelloTasks.find((task) => task.sourceId === card.id)
     );
 
     const createdTasks = await Promise.all([
-      ...listsWithoutTasks.map((list) => this.createTaskFromCard(list)),
+      ...cardsWithoutTasks.map((list) => this.createTaskFromCard(list)),
     ]);
 
     if (tasksToDelete.length) {
@@ -43,18 +54,66 @@ export class TrelloTasksService implements TaskApiService {
     console.log(`Trello sync finished:`, {
       tasksToDelete,
       createdTasks,
-      listsWithoutTasks,
+      listsWithoutTasks: cardsWithoutTasks,
     });
 
     return createdTasks;
   }
 
+  async onTaskCompleted(task: Task) {
+    const { boardSettings } = this.trelloService;
+
+    if (
+      task.source !== this.provider ||
+      !task.providerMeta?.boardId ||
+      !boardSettings
+    ) {
+      return;
+    }
+
+    const { boardId } = (task as Task<TrelloTaskMeta>).providerMeta!;
+
+    const boardSetting = boardSettings.find(
+      (setting) => setting.boardId === boardId
+    );
+
+    if (!boardSetting?.doneListId) {
+      return;
+    }
+
+    await this.trelloService.updateCard({
+      idList: boardSetting.doneListId,
+      id: task.sourceId!,
+    });
+  }
+
+  async onTaskUncompleted(task: Task) {
+    if (task.source !== this.provider || !task.providerMeta?.orgListId) {
+      return;
+    }
+
+    const { orgListId } = (task as Task<TrelloTaskMeta>).providerMeta!;
+
+    if (!orgListId) {
+      return;
+    }
+
+    await this.trelloService.updateCard({
+      idList: orgListId,
+      id: task.sourceId!,
+    });
+  }
+
   async createTaskFromCard(card: TrelloCard) {
-    return this.taskCrudService.createTask({
+    return this.taskCrudService.createTask<TrelloTaskMeta>({
       source: TaskSource.Trello,
       title: card.name,
       description: card.desc,
       sourceId: card.id,
+      providerMeta: {
+        orgListId: card.idList,
+        boardId: card.idBoard,
+      },
     });
   }
 }

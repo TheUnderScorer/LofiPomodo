@@ -9,7 +9,6 @@ import {
   NumberInput,
   NumberInputField,
   Stack,
-  useCheckbox,
 } from '@chakra-ui/core';
 import React, { FC, ReactNode, useCallback, useEffect, useState } from 'react';
 import { Task, TaskState } from '../../../../../../shared/types/tasks';
@@ -52,7 +51,8 @@ export const TaskListItem: FC<TaskListItemProps> = ({
       key: Key,
       value: ((event: any) => Task[Key]) | Task[Key]
     ) => (event: any) => {
-      const valueToUse = typeof value === 'function' ? value(event) : value;
+      const valueToUse =
+        typeof value === 'function' ? (value as Function)(event) : value;
 
       if (valueToUse === false) {
         return;

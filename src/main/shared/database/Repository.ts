@@ -153,13 +153,17 @@ export abstract class Repository<
     return updatedEntity;
   }
 
-  async updateMany(entities: Model[]): Promise<Model[]> {
+  async updateMany(
+    entities: Model[],
+    prevEntitiesProvided?: Model[]
+  ): Promise<Model[]> {
     const mappedEntities = entities.map((entity) => ({
       ...entity,
       updatedAt: new Date(),
     }));
 
-    const prevEntities = await this.getMany(mapToId(entities));
+    const prevEntities =
+      prevEntitiesProvided ?? (await this.getMany(mapToId(entities)));
 
     await this.connection.transaction(async (t) => {
       const connection = t(this.table);

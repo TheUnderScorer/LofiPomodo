@@ -8,8 +8,10 @@ import {
   TrelloBoard,
   TrelloBoardSettings,
   TrelloCard,
+  UpdateCardInput,
 } from '../../../../shared/types/integrations/trello';
 import pLimit from 'p-limit';
+import { MissingTrelloToken } from './errors/MissingTrelloToken';
 
 export class TrelloService implements ApiService {
   readonly provider = ApiProvider.Trello;
@@ -30,8 +32,16 @@ export class TrelloService implements ApiService {
     this.store.set('trello.member', member);
   }
 
+  get trelloSettings() {
+    return this.store.get('trello');
+  }
+
+  get boardSettings() {
+    return this.store.get('trello.boards') as TrelloBoardSettings[] | undefined;
+  }
+
   async isAuthorized(): Promise<boolean> {
-    const trello = this.store.get('trello');
+    const trello = this.trelloSettings;
 
     return Boolean(trello?.userToken && trello?.member);
   }
@@ -49,7 +59,7 @@ export class TrelloService implements ApiService {
       return [];
     }
 
-    const trello = this.store.get('trello');
+    const trello = this.trelloSettings;
 
     return this.trelloClient.getBoardsForMember(
       trello!.member!.id,
@@ -68,7 +78,7 @@ export class TrelloService implements ApiService {
   }
 
   async getCards(): Promise<TrelloCard[]> {
-    const trelloSettings = this.store.get('trello');
+    const trelloSettings = this.trelloSettings;
 
     if (!(await this.isAuthorized()) || !trelloSettings?.boards?.length) {
       return [];
@@ -126,5 +136,15 @@ export class TrelloService implements ApiService {
     return {
       token,
     };
+  }
+
+  async updateCard(card: UpdateCardInput) {
+    if (!(await this.isAuthorized())) {
+      throw new MissingTrelloToken();
+    }
+
+    const token = await this.getUserToken();
+
+    return this.trelloClient.updateCard(card, token!);
   }
 }

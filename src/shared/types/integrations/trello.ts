@@ -34,7 +34,12 @@ export interface TrelloCard {
   name: string;
   email: string;
   idList: string;
+  idBoard: string;
 }
+
+export interface UpdateCardInput
+  extends Pick<TrelloCard, 'id'>,
+    Omit<Partial<TrelloCard>, 'id'> {}
 
 export interface TrelloList {
   id: TrelloId;
@@ -53,4 +58,9 @@ export interface TrelloSettings {
   boards?: TrelloBoardSettings[];
   userToken?: string;
   member?: TrelloMember;
+}
+
+export interface TrelloTaskMeta {
+  orgListId: string;
+  boardId: string;
 }

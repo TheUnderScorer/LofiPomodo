@@ -1,7 +1,7 @@
 import { BaseModel, Order, Pagination } from './database';
 import { TaskSynchronizer } from '../../main/app/tasks/services/TaskSynchronizer';
 
-export interface Task extends BaseModel {
+export interface Task<ProviderMeta = any> extends BaseModel {
   title: string;
   description: string;
   source: TaskSource;
@@ -12,6 +12,7 @@ export interface Task extends BaseModel {
   completed?: boolean;
   active?: boolean;
   index?: number;
+  providerMeta?: ProviderMeta;
 }
 
 export interface TaskPomodoroSpent {
@@ -19,9 +20,9 @@ export interface TaskPomodoroSpent {
   finishedAt: string;
 }
 
-export interface CreateTaskInput
+export interface CreateTaskInput<ProviderMeta = any>
   extends Omit<
-    Task,
+    Task<ProviderMeta>,
     'id' | 'createdAt' | 'updatedAt' | 'state' | 'pomodoroSpent' | 'source'
   > {
   source?: TaskSource;
