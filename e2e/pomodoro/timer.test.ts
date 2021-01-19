@@ -45,7 +45,7 @@ describe('Timer - as an user', () => {
 
     const newTimerText = await timerTextEl.getText();
 
-    expect(newTimerText).toEqual('00:09');
+    expect(['00:08', '00:09']).toContain(newTimerText);
   });
 
   it('I should be able to see that it is break after finishing work', async () => {
