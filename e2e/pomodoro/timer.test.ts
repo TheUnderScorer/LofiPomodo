@@ -8,7 +8,9 @@ const initialPomodoro = getInitialPomodoro();
 
 describe('Timer - as an user', () => {
   it('I should see timer after starting up', async () => {
-    const app = await bootstrapTestApp();
+    const app = await bootstrapTestApp({
+      WORK_DURATION_SECONDS: initialPomodoro.workDurationSeconds,
+    });
 
     const timer = await app.client.$('#timer');
 
@@ -43,7 +45,7 @@ describe('Timer - as an user', () => {
 
     const newTimerText = await timerTextEl.getText();
 
-    expect(newTimerText).toEqual('00:08');
+    expect(newTimerText).toEqual('00:09');
   });
 
   it('I should be able to see that it is break after finishing work', async () => {

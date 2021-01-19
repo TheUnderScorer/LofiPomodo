@@ -1,8 +1,9 @@
 import { bootstrapTestApp } from '../setup';
 import { Element } from 'webdriverio';
 import { wait } from '../../src/shared/utils/timeout';
+import { SpectronClient } from 'spectron';
 
-type FieldCallback = (el: Element) => Promise<void>;
+type FieldCallback = (el: Element, client: SpectronClient) => Promise<void>;
 
 const durationFieldCallback = (value: number | string): FieldCallback => async (
   field
@@ -25,11 +26,9 @@ const durationFieldCallback = (value: number | string): FieldCallback => async (
   await field.setValue(value);
 };
 
-const switchFieldCallback = (): FieldCallback => async (field) => {
+const switchFieldCallback = (): FieldCallback => async (field, client) => {
   const name = await field.getAttribute('name');
-  const parent = await field.parentElement().then((el) => el.parentElement());
-
-  const label = await parent.$(`label[for="${name}"]`);
+  const label = await client.$(`label[for="${name}"]`);
 
   await label.click();
 };
@@ -83,7 +82,7 @@ describe('Settings - as a user', () => {
     for (const [name, handler] of Object.entries(payloadNameMap)) {
       const field = await app.client.$(`[name="pomodoro.${name}"]`);
 
-      await handler(field);
+      await handler(field, app.client);
     }
 
     const submitBtn = await app.client.$('#submit_settings');
@@ -100,7 +99,7 @@ describe('Settings - as a user', () => {
     for (const [name, checker] of Object.entries(fieldChecksMap)) {
       const field = await app.client.$(`[name="pomodoro.${name}"]`);
 
-      await checker(field);
+      await checker(field, app.client);
     }
   });
 });

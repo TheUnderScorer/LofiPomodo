@@ -6,8 +6,11 @@ import {
 } from '../../../shared/types/integrations/integrations';
 import { forwardIntegrationEventsToWindows } from './services/forwardIntegrationEvents';
 import { TrelloSettings } from '../../../shared/types/integrations/trello';
+import { setupAuthTimeoutDialog } from './services/apiAuthStateDialogs';
 
 export const setupIntegrations = (context: AppContext) => {
+  setupAuthTimeoutDialog(context.apiAuthState);
+
   context.ipcService.registerAsMap({
     [IntegrationEvents.AuthorizeApi]: (_, { provider }: ProviderInfo) =>
       context.apiAuthService.startAuth(provider),
@@ -25,5 +28,5 @@ export const setupIntegrations = (context: AppContext) => {
     ) => context.trelloService.saveBoards(boards ?? []),
   });
 
-  forwardIntegrationEventsToWindows(context);
+  forwardIntegrationEventsToWindows(context.apiAuthService);
 };

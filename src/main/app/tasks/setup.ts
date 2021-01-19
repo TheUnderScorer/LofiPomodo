@@ -6,7 +6,7 @@ import {
   Task,
   TaskEvents,
 } from '../../../shared/types/tasks';
-import { trackTaskDuration } from './services/trackTaskDuration';
+import { trackTaskDuration } from './services/trackTaskDuration/trackTaskDuration';
 import { forwardTaskUpdatesToWindows } from './services/eventForwarders/forwardTaskUpdatesToWindows';
 import { forwardTaskSynchronizerEventsToWindows } from './services/eventForwarders/forwardTaskSynchronizerEventsToWindows';
 

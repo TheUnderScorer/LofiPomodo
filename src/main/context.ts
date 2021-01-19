@@ -17,10 +17,10 @@ import { TrelloClient } from './app/integrations/trello/TrelloClient';
 import fetch from 'node-fetch';
 import { TrelloService } from './app/integrations/trello/TrelloService';
 import { ApiAuthService } from './app/integrations/services/ApiAuthService';
-import { ApiAuthState } from './app/integrations/services/ApiAuthState';
+import { ApiAuthStateService } from './app/integrations/services/ApiAuthStateService';
 import { ApiService } from './app/integrations/types';
 import { ContextMenuFactory } from './shared/menu/ContextMenuFactory';
-import { TrelloTasksService } from './app/tasks/services/TrelloTasksService';
+import { TrelloTasksService } from './app/tasks/services/trelloTaskService/TrelloTasksService';
 import { TaskSynchronizer } from './app/tasks/services/TaskSynchronizer';
 
 export interface AppContext {
@@ -38,7 +38,7 @@ export interface AppContext {
   trelloClient: TrelloClient;
   trelloService: TrelloService;
   apiAuthService: ApiAuthService;
-  apiAuthState: ApiAuthState;
+  apiAuthState: ApiAuthStateService;
   taskSynchronizer: TaskSynchronizer;
 }
 
@@ -49,7 +49,7 @@ const handleIntegrations = async (
 ) => {
   const trelloService = new TrelloService(store, trelloClient);
   const apiServices: ApiService[] = [trelloService];
-  const apiAuthState = new ApiAuthState(windowFactory, apiServices);
+  const apiAuthState = new ApiAuthStateService(apiServices);
   const apiAuthService = new ApiAuthService(apiServices, apiAuthState);
 
   if (process.env.TRELLO_TOKEN) {

@@ -1,8 +1,10 @@
-import { AppContext } from '../../../context';
 import { sendEventToAllWindows } from '../../../shared/windows/sendEventToAllWindows';
+import { ApiAuthService } from './ApiAuthService';
 
-export const forwardIntegrationEventsToWindows = (context: AppContext) => {
-  context.apiAuthService.events.onAny((eventName, payload) => {
+export const forwardIntegrationEventsToWindows = (
+  apiAuthService: ApiAuthService
+) => {
+  apiAuthService.events.onAny((eventName, payload) => {
     sendEventToAllWindows(eventName, payload);
   });
 };

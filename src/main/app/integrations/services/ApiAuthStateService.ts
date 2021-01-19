@@ -2,29 +2,31 @@ import {
   ApiProvider,
   AuthState,
 } from '../../../../shared/types/integrations/integrations';
-import { WindowFactory } from '../../../shared/windows/factories/WindowFactory';
-import { dialog } from 'electron';
 import { ApiService } from '../types';
 import { getServiceByProvider } from './getServiceByProvider';
+import { Typed } from 'emittery';
 
-export class ApiAuthState {
+export enum ApiAuthStateEvents {
+  AuthTimeout = 'AuthTimeout',
+}
+
+export interface ApiAuthStateEventsPayloadMap {
+  [ApiAuthStateEvents.AuthTimeout]: {
+    service: ApiAuthStateService;
+    provider: ApiProvider;
+  };
+}
+
+export class ApiAuthStateService {
+  readonly events = new Typed<ApiAuthStateEventsPayloadMap>();
+
   // Stores api providers that are being currently authorized
   readonly apisBeingAuthorized = new Set<ApiProvider>();
 
   // Map of timeouts related to certain api authorization
   readonly apisAuthTimeouts = new Map<ApiProvider, any>();
 
-  private static timeoutDialogProviderProps = {
-    [ApiProvider.Trello]: {
-      type: 'warning',
-      message: 'Trello authorization failed, please try again.',
-    },
-  };
-
-  constructor(
-    private readonly windowFactory: WindowFactory,
-    private readonly services: ApiService[]
-  ) {}
+  constructor(private readonly services: ApiService[]) {}
 
   startApiAuth(provider: ApiProvider) {
     if (this.isBeingAuthorized(provider)) {
@@ -62,12 +64,10 @@ export class ApiAuthState {
   private async handleAuthTimeout(provider: ApiProvider) {
     this.apisBeingAuthorized.delete(provider);
 
-    if (this.windowFactory.timerWindow) {
-      await dialog.showMessageBox(this.windowFactory.timerWindow, {
-        ...ApiAuthState.timeoutDialogProviderProps[provider],
-        type: 'warning',
-      });
-    }
+    await this.events.emit(ApiAuthStateEvents.AuthTimeout, {
+      service: this,
+      provider,
+    });
   }
 
   private clearAuthTimeout(provider: ApiProvider) {

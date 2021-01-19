@@ -161,6 +161,14 @@ export class TaskRepository extends Repository<TaskDb, Task> {
     await this.updateMany(mappedTasks);
   }
 
+  async findTasksWithoutSourceIdByState(sourceIds: string[], state: TaskState) {
+    const records = await this.getQueryBuilder()
+      .whereNotIn('sourceId', sourceIds)
+      .andWhereNot<TaskDb[]>('state', state);
+
+    return records.map((record) => this.fromDb(record));
+  }
+
   async getBySource(source: TaskSource) {
     const result = await this.getQueryBuilder()
       .select<TaskDb[]>()

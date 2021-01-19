@@ -24,20 +24,19 @@ export class TrelloService implements ApiService {
     private readonly store: ElectronStore<AppStore>,
     private readonly trelloClient: TrelloClient
   ) {}
-
-  async setUserToken(token: string) {
-    const member = await this.trelloClient.getTokenOwner(token);
-
-    this.store.set('trello.userToken', token);
-    this.store.set('trello.member', member);
-  }
-
   get trelloSettings() {
     return this.store.get('trello');
   }
 
   get boardSettings() {
     return this.store.get('trello.boards') as TrelloBoardSettings[] | undefined;
+  }
+
+  async setUserToken(token: string) {
+    const member = await this.trelloClient.getTokenOwner(token);
+
+    this.store.set('trello.userToken', token);
+    this.store.set('trello.member', member);
   }
 
   async isAuthorized(): Promise<boolean> {
