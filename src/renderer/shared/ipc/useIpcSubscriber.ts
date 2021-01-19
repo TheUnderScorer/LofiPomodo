@@ -13,8 +13,8 @@ const defaultAtom = atom<any>({
   default: null,
 });
 
-export const useIpcReceiver = <T>(
-  name: string,
+export const useIpcSubscriber = <T>(
+  subject: string,
   callback: IpcReceiverCallback<T>,
   { recoilAtom }: IpcReceiverHookProps<T> = {}
 ) => {
@@ -33,10 +33,10 @@ export const useIpcReceiver = <T>(
   );
 
   useEffect(() => {
-    const unsub = ipc.receive(name, handler);
+    const unsub = ipc.subscribe(subject, handler);
 
     return () => {
       unsub();
     };
-  }, [callback, handler, ipc, name]);
+  }, [callback, handler, ipc, subject]);
 };

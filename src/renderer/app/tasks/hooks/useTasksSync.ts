@@ -6,7 +6,7 @@ import {
 } from '../../../../shared/types/tasks';
 import { useCallback, useState } from 'react';
 import { useMount } from 'react-use';
-import { useIpcReceiver } from '../../../shared/ipc/useIpcReceiver';
+import { useIpcSubscriber } from '../../../shared/ipc/useIpcSubscriber';
 import { useTasksList } from './useTasksList';
 import { useGroupedTasksCount } from './useGroupedTasksCount';
 import { useActiveTask } from './useActiveTask';
@@ -31,7 +31,7 @@ export const useTasksSync = () => {
     getIsSyncing().then((result) => setIsSyncing(result.isSyncing));
   });
 
-  useIpcReceiver(
+  useIpcSubscriber(
     TaskSynchronizerEvents.SyncEnded,
     useCallback(() => {
       setIsSyncing(false);

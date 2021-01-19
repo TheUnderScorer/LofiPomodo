@@ -10,6 +10,7 @@ import {
 } from '../../../../../shared/types/integrations/trello';
 import { v4 as uuid } from 'uuid';
 import { Task, TaskSource, TaskState } from '../../../../../shared/types/tasks';
+import { Subject } from 'rxjs';
 
 describe('TrelloTasksService', () => {
   let trelloTaskService: TrelloTasksService;
@@ -20,8 +21,9 @@ describe('TrelloTasksService', () => {
     updateCard: jest.fn(),
   };
   const taskCrudService = {
-    events: createMockProxy<Typed<any>>(),
     createTask: jest.fn(),
+    tasksCompleted$: new Subject(),
+    tasksUncompleted$: new Subject(),
   };
   const taskRepository = createMockProxy<TaskRepository>();
 

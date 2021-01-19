@@ -6,22 +6,13 @@ import {
 } from '../../../../shared/types/tasks';
 import { v4 as uuid } from 'uuid';
 import { TaskRepository } from '../repositories/TaskRepository';
-import { Typed as EventEmitter } from 'emittery';
 import { mapToId } from '../../../../shared/mappers/mapToId';
 import { filterByChangedState } from '../arrayFilters/filterByChangedState';
-
-export enum TaskCrudEvents {
-  Completed = 'TaskCompleted',
-  UnCompleted = 'TaskUnCompleted',
-}
-
-export interface TaskCrudEventsMap {
-  [TaskCrudEvents.Completed]: Task;
-  [TaskCrudEvents.UnCompleted]: Task;
-}
+import { Subject } from 'rxjs';
 
 export class TaskCrudService {
-  public readonly events = new EventEmitter<TaskCrudEventsMap>();
+  readonly tasksCompleted$ = new Subject<Task[]>();
+  readonly tasksUncompleted$ = new Subject<Task[]>();
 
   constructor(private readonly taskRepository: TaskRepository) {}
 
@@ -60,7 +51,7 @@ export class TaskCrudService {
       TaskState.Completed
     );
 
-    const unCompletedTask = filterByChangedState(
+    const unCompletedTasks = filterByChangedState(
       mappedTasks,
       prevTasks,
       TaskState.Todo
@@ -76,17 +67,8 @@ export class TaskCrudService {
       }
     );
 
-    Promise.all(
-      completedTasks.map((task) =>
-        this.events.emit(TaskCrudEvents.Completed, task)
-      )
-    ).catch(console.error);
-
-    Promise.all([
-      unCompletedTask.map((task) =>
-        this.events.emit(TaskCrudEvents.UnCompleted, task)
-      ),
-    ]).catch(console.error);
+    this.tasksCompleted$.next(completedTasks);
+    this.tasksUncompleted$.next(unCompletedTasks);
 
     return updateResult;
   }

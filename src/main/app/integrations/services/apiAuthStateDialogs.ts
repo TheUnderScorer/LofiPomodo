@@ -1,5 +1,5 @@
 import { ApiProvider } from '../../../../shared/types/integrations/integrations';
-import { ApiAuthStateEvents, ApiAuthStateService } from './ApiAuthStateService';
+import { ApiAuthStateService } from './ApiAuthStateService';
 import { dialog } from 'electron';
 
 const timeoutDialogProps = {
@@ -12,13 +12,10 @@ const timeoutDialogProps = {
 export const setupAuthTimeoutDialog = (
   apiAuthStateService: ApiAuthStateService
 ) => {
-  apiAuthStateService.events.on(
-    ApiAuthStateEvents.AuthTimeout,
-    async ({ provider }) => {
-      await dialog.showMessageBox({
-        ...timeoutDialogProps[provider],
-        type: 'warning',
-      });
-    }
-  );
+  apiAuthStateService.authTimeout$.subscribe(async ({ provider }) => {
+    await dialog.showMessageBox({
+      ...timeoutDialogProps[provider],
+      type: 'warning',
+    });
+  });
 };

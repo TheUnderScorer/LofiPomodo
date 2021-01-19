@@ -1,29 +1,15 @@
 import { AppContext } from '../../../context';
-import {
-  PomodoroService,
-  PomodoroServiceEvents,
-  Trigger,
-} from './pomodoroService/PomodoroService';
+import { Trigger } from '../../../../shared/types';
+import { filter } from 'rxjs/operators';
 
 export const breakWindow = ({ pomodoro, windowFactory }: AppContext) => {
-  pomodoro.events.onAny(async (eventName, payload) => {
-    if (!pomodoro.openFullWindowOnBreak) {
-      return;
-    }
-
-    if (!PomodoroService.breakEventsMap.includes(eventName)) {
-      if (
-        eventName === PomodoroServiceEvents.WorkStarted &&
-        windowFactory.breakWindow
-      ) {
-        await windowFactory.breakWindow.close();
-      }
-
-      return;
-    }
-
-    if (payload?.trigger === Trigger.Scheduled) {
+  pomodoro.anyBreakStarted$
+    .pipe(filter((value) => value.trigger === Trigger.Scheduled))
+    .subscribe(async () => {
       await windowFactory.createBreakWindow();
-    }
+    });
+
+  pomodoro.workStarted$.subscribe(async () => {
+    await windowFactory.breakWindow?.close();
   });
 };

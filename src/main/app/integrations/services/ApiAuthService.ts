@@ -3,20 +3,25 @@ import {
   ApiAuthorizedResult,
   ApiProvider,
   IntegrationEvents,
+  IntegrationSubscriptionTopics,
   ProviderInfo,
 } from '../../../../shared/types/integrations/integrations';
 import { Typed } from 'emittery';
 import { ApiAuthStateService } from './ApiAuthStateService';
 import { getServiceByProvider } from './getServiceByProvider';
 import { shell } from 'electron';
+import { Subject } from 'rxjs';
 
 export interface ApiAuthServiceEventsMap {
-  [IntegrationEvents.ApiAuthorizationStarted]: ProviderInfo;
-  [IntegrationEvents.ApiAuthorized]: ApiAuthorizedResult;
+  [IntegrationSubscriptionTopics.ApiAuthorizationStarted]: ProviderInfo;
+  [IntegrationSubscriptionTopics.ApiAuthorized]: ApiAuthorizedResult;
 }
 
 export class ApiAuthService {
   readonly events = new Typed<ApiAuthServiceEventsMap>();
+
+  readonly apiAuthStarted$ = new Subject<ProviderInfo>();
+  readonly apiAuthorized$ = new Subject<ApiAuthorizedResult>();
 
   constructor(
     private readonly services: ApiService[],
@@ -24,9 +29,14 @@ export class ApiAuthService {
   ) {}
 
   async startAuth(provider: ApiProvider) {
-    await this.events.emit(IntegrationEvents.ApiAuthorizationStarted, {
-      provider,
-    });
+    this.apiAuthStarted$.next({ provider });
+
+    await this.events.emit(
+      IntegrationSubscriptionTopics.ApiAuthorizationStarted,
+      {
+        provider,
+      }
+    );
 
     this.apiAuthState.startApiAuth(provider);
 
@@ -50,10 +60,18 @@ export class ApiAuthService {
           const result = await service.handleAuthProtocol(url);
 
           if (result) {
-            await this.events.emit(IntegrationEvents.ApiAuthorized, {
+            this.apiAuthorized$.next({
               provider: service.provider,
               token: result.token,
             });
+
+            await this.events.emit(
+              IntegrationSubscriptionTopics.ApiAuthorized,
+              {
+                provider: service.provider,
+                token: result.token,
+              }
+            );
           }
         })
     );

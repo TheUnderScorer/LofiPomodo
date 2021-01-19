@@ -14,7 +14,7 @@ export const usePomodoroListeners = () => {
       return;
     }
 
-    const unsub = ipc.receive(
+    const unsub = ipc.subscribe(
       PomodoroEvents.Updated,
       (_, pomodoro: Pomodoro) => {
         setPomodoro(pomodoro);

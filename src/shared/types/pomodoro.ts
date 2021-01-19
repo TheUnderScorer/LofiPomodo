@@ -1,3 +1,5 @@
+import { PomodoroService } from '../../main/app/pomodoro/services/pomodoroService/PomodoroService';
+
 export interface Pomodoro {
   start: Date;
   state: PomodoroState;
@@ -45,4 +47,16 @@ export interface PomodoroSettings
 export interface ToggleMenuPayload {
   y: number;
   x: number;
+}
+
+export interface PomodoroStateChanged {
+  newState: PomodoroState;
+  oldState: PomodoroState;
+  pomodoro: PomodoroService;
+  trigger: Trigger;
+}
+
+export enum Trigger {
+  Manual = 'Manual',
+  Scheduled = 'Scheduled',
 }

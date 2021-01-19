@@ -1,15 +1,10 @@
 import { AppContext } from '../../../../context';
-import { PomodoroService } from '../../../pomodoro/services/pomodoroService/PomodoroService';
 
 export const trackTaskDuration = ({
   pomodoro,
   taskRepository,
 }: Pick<AppContext, 'pomodoro' | 'taskRepository'>) => {
-  pomodoro.events.onAny(async (eventName) => {
-    if (!PomodoroService.breakEventsMap.includes(eventName)) {
-      return;
-    }
-
+  const subscription = pomodoro.anyBreakStarted$.subscribe(async () => {
     const activeTask = await taskRepository.getActiveTask();
 
     if (!activeTask) {
@@ -27,4 +22,6 @@ export const trackTaskDuration = ({
 
     await taskRepository.update(activeTask);
   });
+
+  return () => subscription.unsubscribe();
 };

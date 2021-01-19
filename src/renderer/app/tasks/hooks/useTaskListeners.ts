@@ -1,7 +1,7 @@
 import { useCallback } from 'react';
 import { Task, TaskEvents } from '../../../../shared/types/tasks';
 import { isTaskActive } from '../../../../shared/app/tasks/isTaskActive';
-import { useIpcReceiver } from '../../../shared/ipc/useIpcReceiver';
+import { useIpcSubscriber } from '../../../shared/ipc/useIpcSubscriber';
 import { useTasksList } from './useTasksList';
 import { useActiveTask } from './useActiveTask';
 import { useGroupedTasksCount } from './useGroupedTasksCount';
@@ -29,7 +29,7 @@ export const useTasksListeners = () => {
     },
     [fetchActiveTask, getCount, getTasks]
   );
-  useIpcReceiver(TaskEvents.TasksDeleted, handleTaskRemoved);
+  useIpcSubscriber(TaskEvents.TasksDeleted, handleTaskRemoved);
 
   const handleActiveTaskChange = useCallback(
     async (_: undefined, task: Task) => {
@@ -39,5 +39,5 @@ export const useTasksListeners = () => {
     },
     [setActiveTask]
   );
-  useIpcReceiver(TaskEvents.TaskUpdated, handleActiveTaskChange);
+  useIpcSubscriber(TaskEvents.TaskUpdated, handleActiveTaskChange);
 };
