@@ -55,6 +55,8 @@ export const IntegrationSection: FC<IntegrationSectionProps> = ({
       <Text>{apiProviderLabelDictionary[provider]}</Text>
       <Flex justifyContent="flex-end" flex="1">
         <Button
+          className={`manage-${provider}`}
+          id={`manage_${provider}`}
           variant="solid"
           isLoading={authStateLoading}
           onClick={handleBtnClick}

@@ -1,53 +1,12 @@
 import { bootstrapTestApp } from '../setup';
-import { Element } from 'webdriverio';
 import { wait } from '../../src/shared/utils/timeout';
-import { SpectronClient } from 'spectron';
-
-type FieldCallback = (el: Element, client: SpectronClient) => Promise<void>;
-
-const durationFieldCallback = (value: number | string): FieldCallback => async (
-  field
-) => {
-  const parentEl = await field
-    .parentElement()
-    .then((parent) => parent.parentElement());
-
-  const buttons = await parentEl.$$('[role="button"]');
-  const [, decrement] = buttons;
-
-  /**
-   * I couldn't find any better way to clear the field, since 'field.clearValue()' was not working :/.
-   * So I set every duration field value to 120 seconds (which ends up displayed as "2" minutes) and then click the decrement button twice, to reduce it's value to "0".
-   * After that, "field.setValue()" is working correctly.
-   * */
-  await decrement.click();
-  await decrement.click();
-
-  await field.setValue(value);
-};
-
-const switchFieldCallback = (): FieldCallback => async (field, client) => {
-  const name = await field.getAttribute('name');
-  const label = await client.$(`label[for="${name}"]`);
-
-  await label.click();
-};
-
-const assertFieldValue = (value: string | number): FieldCallback => async (
-  field
-) => {
-  const fieldValue = await field.getValue();
-
-  expect(fieldValue).toEqual(value);
-};
-
-const assertFieldProperty = (prop: string, value: any): FieldCallback => async (
-  field
-) => {
-  const propValue = await field.getProperty(prop);
-
-  expect(propValue).toEqual(value);
-};
+import {
+  assertFieldProperty,
+  assertFieldValue,
+  durationFieldCallback,
+  FieldCallback,
+  switchFieldCallback,
+} from '../helpers/fields';
 
 describe('Settings - as a user', () => {
   it('I should be able to fill settings', async () => {

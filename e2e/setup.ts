@@ -83,9 +83,8 @@ export const closeApps = async () => {
   await Promise.all(
     runningApps.map(async (app) => {
       if (app.isRunning()) {
-        await closeAllWindows(app);
-
         try {
+          await closeAllWindows(app);
           await app.stop();
         } catch (e) {
           console.error(`Failed to stop app - ${e.message}`);

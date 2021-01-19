@@ -93,10 +93,10 @@ export const SettingsFormView: FC<SettingsFormViewProps> = () => {
           <Center flex="1">
             <Tabs index={activeTabIndex} onChange={setActiveTabIndex}>
               <TabList>
-                <Tab>
+                <Tab id="pomodoro_tab">
                   <Text>Pomodoro</Text>
                 </Tab>
-                <Tab>
+                <Tab className="integrations-tab" id="integrations_tab">
                   <Text>Integrations</Text>
                 </Tab>
               </TabList>
