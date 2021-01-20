@@ -8,7 +8,6 @@ import { DurationField } from '../../../../form/fields/DurationField';
 import { Divider, Stack, Switch } from '@chakra-ui/core';
 import { AppSettings } from '../../../../../shared/types/settings';
 import { PomodoroSettings } from '../../../../../shared/types';
-import { pomodoroState } from '../../state/pomodoroState';
 
 export interface PomodoroFormProps {
   form: UseFormMethods<AppSettings>;
