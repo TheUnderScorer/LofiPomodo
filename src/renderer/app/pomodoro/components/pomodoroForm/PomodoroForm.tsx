@@ -7,9 +7,12 @@ import {
 import { DurationField } from '../../../../form/fields/DurationField';
 import { Divider, Stack, Switch } from '@chakra-ui/core';
 import { AppSettings } from '../../../../../shared/types/settings';
+import { PomodoroSettings } from '../../../../../shared/types';
+import { pomodoroState } from '../../state/pomodoroState';
 
 export interface PomodoroFormProps {
   form: UseFormMethods<AppSettings>;
+  settings: PomodoroSettings & { autoStart?: boolean };
 }
 
 const formControlProps: Partial<FormControlProps> = {
@@ -19,7 +22,7 @@ const formControlProps: Partial<FormControlProps> = {
   alignItems: 'baseline',
 };
 
-export const PomodoroForm: FC<PomodoroFormProps> = ({ form }) => {
+export const PomodoroForm: FC<PomodoroFormProps> = ({ form, settings }) => {
   const { errors, control } = form;
 
   return (
@@ -32,6 +35,7 @@ export const PomodoroForm: FC<PomodoroFormProps> = ({ form }) => {
         <Controller
           name="pomodoro.workDurationSeconds"
           control={control}
+          defaultValue={settings.workDurationSeconds}
           rules={{
             max: 9999,
           }}
@@ -44,6 +48,7 @@ export const PomodoroForm: FC<PomodoroFormProps> = ({ form }) => {
         label="Break duration"
       >
         <Controller
+          defaultValue={settings.shortBreakDurationSeconds}
           name="pomodoro.shortBreakDurationSeconds"
           control={control}
           rules={{
@@ -58,6 +63,7 @@ export const PomodoroForm: FC<PomodoroFormProps> = ({ form }) => {
         label="Long break duration"
       >
         <Controller
+          defaultValue={settings.longBreakDurationSeconds}
           name="pomodoro.longBreakDurationSeconds"
           control={control}
           rules={{
@@ -73,6 +79,7 @@ export const PomodoroForm: FC<PomodoroFormProps> = ({ form }) => {
         label="Open separate window on break"
       >
         <Controller
+          defaultValue={settings.openFullWindowOnBreak}
           name="pomodoro.openFullWindowOnBreak"
           control={control}
           render={(props) => (
@@ -92,6 +99,7 @@ export const PomodoroForm: FC<PomodoroFormProps> = ({ form }) => {
         label="Start break automatically"
       >
         <Controller
+          defaultValue={settings.autoRunBreak}
           name="pomodoro.autoRunBreak"
           control={control}
           render={(props) => (
@@ -111,6 +119,7 @@ export const PomodoroForm: FC<PomodoroFormProps> = ({ form }) => {
         label="Start work automatically"
       >
         <Controller
+          defaultValue={settings.autoRunWork}
           name="pomodoro.autoRunWork"
           control={control}
           render={(props) => (
@@ -132,6 +141,7 @@ export const PomodoroForm: FC<PomodoroFormProps> = ({ form }) => {
       >
         <Controller
           name="autoStart"
+          defaultValue={settings.autoStart}
           control={control}
           render={(props) => (
             <Switch

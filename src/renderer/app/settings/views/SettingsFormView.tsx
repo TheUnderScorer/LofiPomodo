@@ -56,7 +56,13 @@ export const SettingsFormView: FC<SettingsFormViewProps> = () => {
   });
 
   const setSettingsMutation = useIpcMutation<AppSettings, boolean>(
-    SettingsEvents.SetSettings
+    SettingsEvents.SetSettings,
+    {
+      invalidateQueries: [
+        SettingsEvents.GetSettings,
+        SettingsEvents.GetSetting,
+      ],
+    }
   );
 
   const handleSubmit = useCallback(
@@ -142,7 +148,15 @@ export const SettingsFormView: FC<SettingsFormViewProps> = () => {
                   <Text>{setSettingsMutation.error.message}</Text>
                 </Alert>
               )}
-              {tab === 'Pomodoro' && <PomodoroForm form={form} />}
+              {tab === 'Pomodoro' && (
+                <PomodoroForm
+                  settings={{
+                    ...settings?.pomodoro,
+                    autoStart: settings.autoStart,
+                  }}
+                  form={form}
+                />
+              )}
               {tab === 'Integrations' && <IntegrationsForm form={form} />}
             </Flex>
             {tab === 'Pomodoro' && (

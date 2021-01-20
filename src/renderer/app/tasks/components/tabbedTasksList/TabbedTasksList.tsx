@@ -30,7 +30,6 @@ import { Heading } from '../../../../ui/atoms/heading/Heading';
 import { TaskContextMenu } from '../taskContextMenu/TaskContextMenu';
 import { TasksMenu } from '../tasksMenu/TasksMenu';
 import { useUpdateTask } from '../../hooks/useUpdateTask';
-import { SyncTasksBtn } from '../syncTasksBtn/SyncTasksBtn';
 import { isEqual } from 'lodash';
 
 export interface TabbedTasksListProps {

@@ -6,6 +6,10 @@ export const breakWindow = ({ pomodoro, windowFactory }: AppContext) => {
   pomodoro.anyBreakStarted$
     .pipe(filter((value) => value.trigger === Trigger.Scheduled))
     .subscribe(async () => {
+      if (!pomodoro.openFullWindowOnBreak) {
+        return;
+      }
+
       await windowFactory.createBreakWindow();
     });
 
