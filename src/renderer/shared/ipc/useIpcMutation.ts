@@ -1,5 +1,7 @@
 import { QueryKey, useMutation, useQueryClient } from 'react-query';
 import { useIpcRenderer } from '../../providers/IpcRendererProvider';
+import { useDialog } from '../../providers/dialogProvider/hooks/useDialog';
+import { errorDialog } from '../../providers/dialogProvider/factories/errorDialog';
 
 export interface IpcInvokeHookParams<T, Variables> {
   invokeAtMount?: boolean;
@@ -18,6 +20,7 @@ export const useIpcMutation = <Arg = any, ReturnValue = any>(
     invalidateQueries,
   }: IpcInvokeHookParams<ReturnValue, Arg> = {}
 ) => {
+  const { showDialog } = useDialog();
   const client = useQueryClient();
   const ipcRenderer = useIpcRenderer();
 
@@ -30,6 +33,8 @@ export const useIpcMutation = <Arg = any, ReturnValue = any>(
           error,
           variables,
         });
+
+        showDialog(errorDialog(error));
       },
       onSuccess: async (data, variables) => {
         console.info(`Mutation ${name} completed`, {

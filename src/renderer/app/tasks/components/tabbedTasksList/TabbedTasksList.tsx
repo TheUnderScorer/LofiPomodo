@@ -143,8 +143,6 @@ export const TabbedTasksList: FC<TabbedTasksListProps> = (props) => {
             right="20px"
             height="30px"
           >
-            <SyncTasksBtn variant="link" />
-
             <TasksMenu loading={loading || updateTasksMutation.isLoading} />
           </HStack>
         </Center>
