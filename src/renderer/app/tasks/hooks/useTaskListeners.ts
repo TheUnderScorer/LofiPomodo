@@ -1,19 +1,22 @@
 import { useCallback } from 'react';
-import { Task, TaskEvents } from '../../../../shared/types/tasks';
+import {
+  Task,
+  TaskEvents,
+  TaskSubscriptionTopics,
+} from '../../../../shared/types/tasks';
 import { isTaskActive } from '../../../../shared/app/tasks/isTaskActive';
 import { useIpcSubscriber } from '../../../shared/ipc/useIpcSubscriber';
 import { useTasksList } from './useTasksList';
 import { useActiveTask } from './useActiveTask';
 import { useGroupedTasksCount } from './useGroupedTasksCount';
-import { useSetRecoilState } from 'recoil';
-import { activeTaskAtom } from '../state/activeTask';
+import { useQueryClient } from 'react-query';
 
 export const useTasksListeners = () => {
   const { getTasks } = useTasksList();
   const { fetchActiveTask } = useActiveTask();
   const { getCount } = useGroupedTasksCount();
 
-  const setActiveTask = useSetRecoilState(activeTaskAtom);
+  const queryClient = useQueryClient();
 
   const handleTaskRemoved = useCallback(
     async (_: unknown, tasks: Task[]) => {
@@ -29,15 +32,17 @@ export const useTasksListeners = () => {
     },
     [fetchActiveTask, getCount, getTasks]
   );
-  useIpcSubscriber(TaskEvents.TasksDeleted, handleTaskRemoved);
+  useIpcSubscriber(TaskSubscriptionTopics.TasksDeleted, handleTaskRemoved);
 
   const handleActiveTaskChange = useCallback(
     async (_: undefined, task: Task) => {
-      if (isTaskActive(task)) {
-        setActiveTask(task);
-      }
+      console.log(`Active task changed:`, task);
+      queryClient.setQueryData(TaskEvents.GetActiveTask, task);
     },
-    [setActiveTask]
+    [queryClient]
   );
-  useIpcSubscriber(TaskEvents.TaskUpdated, handleActiveTaskChange);
+  useIpcSubscriber(
+    TaskSubscriptionTopics.ActiveTaskUpdated,
+    handleActiveTaskChange
+  );
 };

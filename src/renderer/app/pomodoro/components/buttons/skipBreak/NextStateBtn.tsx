@@ -1,6 +1,6 @@
 import { IconButton, IconButtonProps, Tooltip } from '@chakra-ui/core';
 import React, { FC, useMemo } from 'react';
-import { useIpcInvoke } from '../../../../../shared/ipc/useIpcInvoke';
+import { useIpcMutation } from '../../../../../shared/ipc/useIpcMutation';
 import { PomodoroEvents } from '../../../../../../shared/types';
 import { ArrowIcon } from '../../../../../ui/atoms/icons';
 import { usePomodoro } from '../../../hooks/usePomodoro';
@@ -22,13 +22,15 @@ export const NextStateBtn: FC<NextStateBtnProps> = (props) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [pomodoro!.state, pomodoro!.shortBreakCount, pomodoro!.longBreakInterval]);
 
-  const [invoke] = useIpcInvoke(PomodoroEvents.MoveToNextState);
+  const moveToNextStateMutation = useIpcMutation<void>(
+    PomodoroEvents.MoveToNextState
+  );
 
   return (
     <Tooltip label={`Skip to ${nextState}`}>
       <IconButton
         className="move-to-next-state"
-        onClick={() => invoke()}
+        onClick={() => moveToNextStateMutation.mutate()}
         aria-label="Move to next state"
         {...props}
       >

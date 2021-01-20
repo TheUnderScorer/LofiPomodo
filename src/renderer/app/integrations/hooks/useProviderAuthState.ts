@@ -15,7 +15,7 @@ export const useProviderAuthState = (provider: ApiProvider) => {
   const [isAuthorizing, setIsAuthorizing] = useState<boolean>(false);
   const [token, setToken] = useState<Nullable<string>>(null);
 
-  const { loading, refetch } = useIpcQuery<ProviderInfo, AuthState>(
+  const { isLoading, refetch } = useIpcQuery<ProviderInfo, AuthState>(
     IntegrationEvents.GetAuthState,
     {
       variables: {
@@ -54,7 +54,7 @@ export const useProviderAuthState = (provider: ApiProvider) => {
   );
 
   return {
-    loading,
+    loading: isLoading,
     isAuthorizing: isAuthorizing,
     token,
   };

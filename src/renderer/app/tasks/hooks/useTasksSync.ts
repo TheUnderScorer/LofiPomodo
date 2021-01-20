@@ -1,35 +1,27 @@
-import { useIpcInvoke } from '../../../shared/ipc/useIpcInvoke';
+import { useIpcMutation } from '../../../shared/ipc/useIpcMutation';
 import {
   IsSyncingWithApisResult,
   TaskEvents,
   TaskSynchronizerEvents,
 } from '../../../../shared/types/tasks';
 import { useCallback, useState } from 'react';
-import { useMount } from 'react-use';
 import { useIpcSubscriber } from '../../../shared/ipc/useIpcSubscriber';
-import { useTasksList } from './useTasksList';
-import { useGroupedTasksCount } from './useGroupedTasksCount';
-import { useActiveTask } from './useActiveTask';
+import { useIpcQuery } from '../../../shared/ipc/useIpcQuery';
 
 export const useTasksSync = () => {
-  const { getTasks } = useTasksList();
-  const { getCount } = useGroupedTasksCount();
-  const { fetchActiveTask } = useActiveTask();
+  const syncMutation = useIpcMutation<void>(TaskEvents.SyncWithApis, {
+    invalidateQueries: [
+      TaskEvents.GetTasks,
+      TaskEvents.CountByState,
+      TaskEvents.GetActiveTask,
+    ],
+  });
 
-  const [
-    sync,
-    { loading: isSyncingFromInvoke, error: syncErrorFromInvoke },
-  ] = useIpcInvoke<never>(TaskEvents.SyncWithApis);
-
-  const [getIsSyncing] = useIpcInvoke<never, IsSyncingWithApisResult>(
-    TaskEvents.IsSyncingWithApis
-  );
+  useIpcQuery<never, IsSyncingWithApisResult>(TaskEvents.IsSyncingWithApis, {
+    onComplete: (data) => setIsSyncing(Boolean(data?.isSyncing)),
+  });
 
   const [isSyncing, setIsSyncing] = useState(false);
-
-  useMount(() => {
-    getIsSyncing().then((result) => setIsSyncing(result.isSyncing));
-  });
 
   useIpcSubscriber(
     TaskSynchronizerEvents.SyncEnded,
@@ -39,11 +31,10 @@ export const useTasksSync = () => {
   );
 
   return {
-    isSyncing: isSyncing || isSyncingFromInvoke,
+    isSyncing: isSyncing || syncMutation.isLoading,
     sync: useCallback(async () => {
-      await sync();
-      await Promise.all([getTasks(), getCount(), fetchActiveTask()]);
-    }, [fetchActiveTask, getCount, getTasks, sync]),
-    error: syncErrorFromInvoke,
+      await syncMutation.mutateAsync();
+    }, [syncMutation]),
+    error: syncMutation.error,
   };
 };

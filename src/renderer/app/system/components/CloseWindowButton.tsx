@@ -1,7 +1,7 @@
 import React, { FC, useCallback } from 'react';
 import { Button, ButtonProps } from '@chakra-ui/core';
 import { Text } from '../../../ui/atoms/text/Text';
-import { useIpcInvoke } from '../../../shared/ipc/useIpcInvoke';
+import { useIpcMutation } from '../../../shared/ipc/useIpcMutation';
 import { AppSystemEvents } from '../../../../shared/types/system';
 import { useDialog } from '../../../providers/dialogProvider/hooks/useDialog';
 import { unsavedChangesDialog } from '../../../providers/dialogProvider/factories/unsavedChanges';
@@ -16,20 +16,20 @@ export const CloseWindowButton: FC<CloseWindowButtonProps> = ({
   ...props
 }) => {
   const { showDialog } = useDialog();
-  const [close] = useIpcInvoke<never>(AppSystemEvents.CloseWindow);
+  const closeMutation = useIpcMutation<void>(AppSystemEvents.CloseWindow);
 
   const handleClose = useCallback(() => {
     if (isDirty) {
-      showDialog(unsavedChangesDialog(close));
+      showDialog(unsavedChangesDialog(closeMutation.mutateAsync));
 
       return;
     }
 
-    close();
-  }, [close, isDirty, showDialog]);
+    closeMutation.mutate();
+  }, [closeMutation, isDirty, showDialog]);
 
   return (
-    <Button onClick={handleClose}>
+    <Button onClick={handleClose} {...props}>
       <Text>{children ?? 'Close'}</Text>
     </Button>
   );

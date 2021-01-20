@@ -1,23 +1,15 @@
-import { useRecoilState } from 'recoil';
-import { activeTaskAtom } from '../state/activeTask';
-import { useIpcInvoke } from '../../../shared/ipc/useIpcInvoke';
 import { Task, TaskEvents } from '../../../../shared/types/tasks';
+import { useIpcQuery } from '../../../shared/ipc/useIpcQuery';
 
 export const useActiveTask = () => {
-  const [fetchActiveTask, { loading, error }] = useIpcInvoke<
-    never,
-    Task | null
-  >(TaskEvents.GetActiveTask, {
-    invokeAtMount: true,
-    recoilAtom: activeTaskAtom,
-  });
-
-  const [activeTaskVal] = useRecoilState(activeTaskAtom);
+  const fetchActiveTaskQuery = useIpcQuery<never, Task | null>(
+    TaskEvents.GetActiveTask
+  );
 
   return {
-    activeTask: activeTaskVal,
-    fetchActiveTask,
-    loading,
-    error,
+    activeTask: fetchActiveTaskQuery.data,
+    fetchActiveTask: fetchActiveTaskQuery.refetch,
+    loading: fetchActiveTaskQuery.isLoading,
+    error: fetchActiveTaskQuery.error,
   };
 };

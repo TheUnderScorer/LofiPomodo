@@ -5,13 +5,15 @@ import {
 } from '../../../../../shared/types/integrations/trello';
 import { FormProvider, useForm, UseFormMethods } from 'react-hook-form';
 import { IntegrationEvents } from '../../../../../shared/types/integrations/integrations';
-import { useIpcInvoke } from '../../../../shared/ipc/useIpcInvoke';
+import { useIpcMutation } from '../../../../shared/ipc/useIpcMutation';
 import { Box, Flex, HStack } from '@chakra-ui/core';
 import { Alert } from '../../../../ui/molecules/alert/Alert';
 import { Text } from '../../../../ui/atoms/text/Text';
 import { ManageTrelloBoards } from './ManageTrelloBoards';
 import { SubmitButton } from '../../../../ui/atoms/submitButton/SubmitButton';
 import { useDebounce } from 'react-use';
+import { SettingsEvents } from '../../../../../shared/types/settings';
+import { uniqueArray } from '../../../../../shared/utils/array';
 
 export interface ManageTrelloFormProps {
   boards: TrelloBoard[];
@@ -39,7 +41,7 @@ export const ManageTrelloForm: FC<ManageTrelloFormProps> = ({
     shouldUnregister: false,
   });
 
-  const [save, { loading: submitting, error }] = useIpcInvoke<TrelloSettings>(
+  const saveTrelloBoardsMutation = useIpcMutation<TrelloSettings>(
     IntegrationEvents.SaveTrelloBoards,
     {
       onComplete: () => {
@@ -50,8 +52,11 @@ export const ManageTrelloForm: FC<ManageTrelloFormProps> = ({
 
   const handleSubmit = useCallback(
     async (values: TrelloSettings) => {
-      await save({
-        boards: values?.boards ?? [],
+      await saveTrelloBoardsMutation.mutateAsync({
+        boards: (values?.boards ?? []).map((value) => ({
+          ...value,
+          listIds: uniqueArray(value.listIds ?? []),
+        })),
       });
 
       form.reset(values, {
@@ -60,7 +65,7 @@ export const ManageTrelloForm: FC<ManageTrelloFormProps> = ({
         isSubmitted: true,
       });
     },
-    [form, save]
+    [form, saveTrelloBoardsMutation]
   );
 
   useDebounce(
@@ -92,9 +97,9 @@ export const ManageTrelloForm: FC<ManageTrelloFormProps> = ({
           pb={10}
           spacing={4}
         >
-          {error && (
+          {saveTrelloBoardsMutation.error && (
             <Alert mb={6} width="50%" type="error">
-              <Text>{error.message}</Text>
+              <Text>{saveTrelloBoardsMutation.error.message}</Text>
             </Alert>
           )}
           <ManageTrelloBoards boards={boards} />
@@ -103,7 +108,7 @@ export const ManageTrelloForm: FC<ManageTrelloFormProps> = ({
           <SubmitButton
             didSubmit={didSubmit}
             width="200px"
-            isLoading={submitting}
+            isLoading={saveTrelloBoardsMutation.isLoading}
             id="submit_trello"
           />
           {additionalButtons ? additionalButtons(form) : undefined}

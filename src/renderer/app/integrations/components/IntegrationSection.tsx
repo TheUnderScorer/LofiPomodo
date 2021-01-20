@@ -9,7 +9,7 @@ import { Text } from '../../../ui/atoms/text/Text';
 import { Button, Flex, Stack } from '@chakra-ui/core';
 import { apiProviderIconDictionary } from '../dictionaries/apiProviderIconDictionary';
 import { apiProviderLabelDictionary } from '../../../../shared/dictionary/integration';
-import { useIpcInvoke } from '../../../shared/ipc/useIpcInvoke';
+import { useIpcMutation } from '../../../shared/ipc/useIpcMutation';
 
 export interface IntegrationSectionProps {
   provider: ApiProvider;
@@ -24,7 +24,7 @@ export const IntegrationSection: FC<IntegrationSectionProps> = ({
 }) => {
   const { loading: authStateLoading, token } = useProviderAuthState(provider);
 
-  const [authorize] = useIpcInvoke<ProviderInfo>(
+  const authorizeMutation = useIpcMutation<ProviderInfo>(
     IntegrationEvents.AuthorizeApi,
     {
       variables: {
@@ -35,7 +35,7 @@ export const IntegrationSection: FC<IntegrationSectionProps> = ({
 
   const handleBtnClick = useCallback(async () => {
     if (!token) {
-      await authorize();
+      await authorizeMutation.mutateAsync({ provider });
 
       if (onStart) {
         onStart();
@@ -47,7 +47,7 @@ export const IntegrationSection: FC<IntegrationSectionProps> = ({
     if (onManage) {
       onManage(token);
     }
-  }, [authorize, onStart, token, onManage]);
+  }, [token, onManage, authorizeMutation, provider, onStart]);
 
   return (
     <Stack spacing={2} direction="row" alignItems="center" width="100%">

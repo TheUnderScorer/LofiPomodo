@@ -9,6 +9,7 @@ import { Typed as EventEmitter } from 'emittery';
 import { EntityNotFound } from './errors/EntityNotFound';
 import { mapToId } from '../../../shared/mappers/mapToId';
 import { EntitiesNotFound } from './errors/EntitiesNotFound';
+import { Subject } from 'rxjs';
 
 export enum RepositoryEvents {
   EntityUpdated = 'EntityUpdated',
@@ -31,6 +32,10 @@ export abstract class Repository<
   DbModel extends BaseModel,
   Model extends BaseModel = DbModel
 > implements BaseRepository<DbModel, Model> {
+  readonly entityUpdated$ = new Subject<EntityUpdatedPayload<Model>>();
+  readonly entitiesCreated$ = new Subject<Model[]>();
+  readonly entitiesDeleted$ = new Subject<Model[]>();
+
   readonly events = new EventEmitter<RepositoryEventsMap<Model>>();
 
   constructor(
@@ -45,6 +50,7 @@ export abstract class Repository<
   protected abstract fromDb(entity: DbModel): Model;
   protected abstract toDb(entity: Model): DbModel;
 
+  // TODO Extract this to unit of work
   async transaction<T>(callback: (repository: this) => Promise<T>): Promise<T> {
     const trx = await this.connection.transaction();
 
@@ -69,6 +75,8 @@ export abstract class Repository<
     const records = await this.findMany(ids);
 
     const result = await this.getQueryBuilder().delete().whereIn('id', ids);
+
+    this.entitiesDeleted$.next(records);
 
     await this.events.emit(RepositoryEvents.EntitiesDeleted, records);
 
@@ -126,6 +134,8 @@ export abstract class Repository<
 
     const result = await this.getQueryBuilder().insert(mappedEntities);
 
+    this.entitiesCreated$.next(entitiesArray);
+
     await this.events.emit(RepositoryEvents.EntitiesCreated, entitiesArray);
 
     return Boolean(result);
@@ -144,6 +154,11 @@ export abstract class Repository<
       .update(this.toDb(entity));
 
     if (result) {
+      this.entityUpdated$.next({
+        entity: updatedEntity,
+        prevEntity,
+      });
+
       await this.events.emit(RepositoryEvents.EntityUpdated, {
         entity: updatedEntity,
         prevEntity,
@@ -180,6 +195,11 @@ export abstract class Repository<
     await Promise.all(
       mappedEntities.map((entity) => {
         const prevEntity = prevEntities.find(({ id }) => entity.id === id);
+
+        this.entityUpdated$.next({
+          prevEntity: prevEntity!,
+          entity,
+        });
 
         return this.events.emit(RepositoryEvents.EntityUpdated, {
           prevEntity: prevEntity!,

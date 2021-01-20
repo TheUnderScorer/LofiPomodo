@@ -1,11 +1,15 @@
 import { useCallback } from 'react';
 import { Task, TaskEvents } from '../../../../shared/types/tasks';
-import { useIpcInvoke } from '../../../shared/ipc/useIpcInvoke';
+import { useIpcMutation } from '../../../shared/ipc/useIpcMutation';
 
 export const useTasksRemoval = () => {
-  const [removeTasksMutation, { loading, error }] = useIpcInvoke<string[]>(
-    TaskEvents.DeleteTasks
-  );
+  const removeTasksMutation = useIpcMutation<string[]>(TaskEvents.DeleteTasks, {
+    invalidateQueries: [
+      TaskEvents.GetActiveTask,
+      TaskEvents.CountByState,
+      TaskEvents.GetTasks,
+    ],
+  });
 
   const removeTasks = useCallback(
     async (tasks: Array<Task | string>) => {
@@ -13,14 +17,14 @@ export const useTasksRemoval = () => {
         typeof task === 'string' ? task : task.id
       );
 
-      await removeTasksMutation(ids);
+      await removeTasksMutation.mutateAsync(ids);
     },
     [removeTasksMutation]
   );
 
   return {
     removeTasks,
-    loading,
-    error,
+    loading: removeTasksMutation.isLoading,
+    error: removeTasksMutation.error,
   };
 };

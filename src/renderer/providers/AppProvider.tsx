@@ -16,8 +16,17 @@ import { Theme } from '../types/theme';
 import { usePrefersColorScheme } from '../shared/hooks/usePrefersColorScheme';
 import { ModalProvider } from './modalProvider/ModalProvider';
 import { DialogProvider } from './dialogProvider/DialogProvider';
+import { QueryClient, QueryClientProvider } from 'react-query';
 
 export interface AppProviderProps {}
+
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      refetchOnWindowFocus: false,
+    },
+  },
+});
 
 export const AppProvider: FC<AppProviderProps> = ({ children }) => {
   const colorMode = usePrefersColorScheme();
@@ -89,22 +98,24 @@ export const AppProvider: FC<AppProviderProps> = ({ children }) => {
     <RecoilRoot>
       <IpcRendererProvider>
         <ThemeProvider theme={theme}>
-          <ModalProvider>
-            <GlobalStyle />
-            <ColorModeProvider
-              options={{
-                initialColorMode: colorMode,
-              }}
-              value={colorMode}
-            >
-              <CSSReset />
-              <DialogProvider>
-                <MemoryRouter initialEntries={initialEntries}>
-                  {children}
-                </MemoryRouter>
-              </DialogProvider>
-            </ColorModeProvider>
-          </ModalProvider>
+          <QueryClientProvider client={queryClient}>
+            <ModalProvider>
+              <GlobalStyle />
+              <ColorModeProvider
+                options={{
+                  initialColorMode: colorMode,
+                }}
+                value={colorMode}
+              >
+                <CSSReset />
+                <DialogProvider>
+                  <MemoryRouter initialEntries={initialEntries}>
+                    {children}
+                  </MemoryRouter>
+                </DialogProvider>
+              </ColorModeProvider>
+            </ModalProvider>
+          </QueryClientProvider>
         </ThemeProvider>
       </IpcRendererProvider>
     </RecoilRoot>

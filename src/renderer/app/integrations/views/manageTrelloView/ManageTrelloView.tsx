@@ -14,11 +14,11 @@ import { CloseWindowButton } from '../../../system/components/CloseWindowButton'
 export interface ManageTrelloViewProps {}
 
 export const ManageTrelloView: FC<ManageTrelloViewProps> = () => {
-  const { loading: settingLoading, result: trelloSettings } = useGetSetting(
+  const { isLoading: settingLoading, data: trelloSettings } = useGetSetting(
     'trello'
   );
 
-  const { result, loading: queryLoading } = useIpcQuery<never, TrelloBoard[]>(
+  const { data, isLoading: queryLoading } = useIpcQuery<never, TrelloBoard[]>(
     IntegrationEvents.GetTrelloBoards
   );
 
@@ -33,17 +33,17 @@ export const ManageTrelloView: FC<ManageTrelloViewProps> = () => {
             <Spinner color="brand.primary" />
           </Center>
         )}
-        {!result?.length && !queryLoading && (
+        {!data?.length && !queryLoading && (
           <Alert type="warning">
             <Text>No boards found.</Text>
           </Alert>
         )}
-        {Boolean(result?.length) && !loading && (
+        {Boolean(data?.length) && !loading && (
           <ManageTrelloForm
             additionalButtons={(form) => (
               <CloseWindowButton isDirty={form.formState.isDirty} />
             )}
-            boards={result!}
+            boards={data!}
             trelloSettings={trelloSettings!}
           />
         )}

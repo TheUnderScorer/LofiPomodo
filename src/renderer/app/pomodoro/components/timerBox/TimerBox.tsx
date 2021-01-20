@@ -84,7 +84,7 @@ export const TimerBox: FC<TimerProps> = ({
           <Stack direction="row" spacing={2}>
             <PomodoroControl color="white" />
             <ResetState iconProps={{ variant: 'light' }} />
-            {is.windows && <PomodoroMenuBtn variant="outline" />}
+            {is?.windows && <PomodoroMenuBtn variant="outline" />}
           </Stack>
         </Center>
       </Stack>

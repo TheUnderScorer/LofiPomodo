@@ -1,6 +1,6 @@
 import { IconButton } from '@chakra-ui/core';
 import React, { FC } from 'react';
-import { useIpcInvoke } from '../../../../../shared/ipc/useIpcInvoke';
+import { useIpcMutation } from '../../../../../shared/ipc/useIpcMutation';
 import { PomodoroEvents } from '../../../../../../shared/types';
 import {
   RetryIcon,
@@ -12,11 +12,13 @@ export interface ResetStateProps {
 }
 
 export const ResetState: FC<ResetStateProps> = ({ iconProps }) => {
-  const [invoke] = useIpcInvoke(PomodoroEvents.RestartCurrentState);
+  const restartStateMutation = useIpcMutation<void>(
+    PomodoroEvents.RestartCurrentState
+  );
 
   return (
     <IconButton
-      onClick={() => invoke()}
+      onClick={() => restartStateMutation.mutate()}
       variant="outline"
       aria-label="Restart current state"
     >

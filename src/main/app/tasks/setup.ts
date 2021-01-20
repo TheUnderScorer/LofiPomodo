@@ -41,7 +41,7 @@ export const setupTasks = (context: AppContext) => {
       context.taskRepository.deleteCompletedTasks(),
     [TaskEvents.SyncWithApis]: () => taskSynchronizer.synchronize(),
     [TaskEvents.IsSyncingWithApis]: (): IsSyncingWithApisResult => ({
-      isSyncing: taskSynchronizer.syncing,
+      isSyncing: Boolean(taskSynchronizer.syncing),
     }),
   });
 };

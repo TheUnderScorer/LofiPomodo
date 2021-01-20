@@ -1,4 +1,4 @@
-import { useCallback, useState } from 'react';
+import { useState } from 'react';
 import { Order } from '../../../../shared/types/database';
 import {
   GetTasksPayload,
@@ -6,12 +6,8 @@ import {
   TaskEvents,
   TaskState,
 } from '../../../../shared/types/tasks';
-import { useIpcInvoke } from '../../../shared/ipc/useIpcInvoke';
-import { getById } from '../../../../shared/utils/getters';
-import { tasksListStore } from '../state/tasksList';
 import { atom, useRecoilState } from 'recoil';
-import { useGroupedTasksCount } from './useGroupedTasksCount';
-import { useActiveTask } from './useActiveTask';
+import { useIpcQuery } from '../../../shared/ipc/useIpcQuery';
 
 export interface TasksHookProps {
   defaultOrder?: Order<Task>;
@@ -23,53 +19,28 @@ const stateAtom = atom<TaskState>({
 });
 
 export const useTasksList = ({ defaultOrder }: TasksHookProps = {}) => {
-  const { getCount } = useGroupedTasksCount();
-  const { fetchActiveTask } = useActiveTask();
-
   const [state, setTaskState] = useRecoilState(stateAtom);
   const [order, setOrder] = useState<Order<Task> | undefined>(defaultOrder);
 
-  const [updateTaskMutation] = useIpcInvoke<Task, Task>(TaskEvents.UpdateTask);
-  const [getTasks, { error, loading, didFetch }] = useIpcInvoke<
-    GetTasksPayload,
-    Task[]
-  >(TaskEvents.GetTasks, {
-    recoilAtom: tasksListStore,
-    invokeAtMount: true,
-    variables: {
-      state,
-      order,
-    },
-  });
-  const [tasks] = useRecoilState(tasksListStore);
-
-  const updateTask = useCallback(
-    async (id: string, callback: (taskToUpdate: Task) => Task) => {
-      const task = getById(tasks ?? [], id);
-
-      if (!task) {
-        throw new Error(`Unable to update - no task found with id ${id}.`);
-      }
-
-      const updatedTask = callback(task);
-
-      await updateTaskMutation(updatedTask);
-
-      await Promise.all([getTasks(), getCount(), fetchActiveTask()]);
-    },
-    [fetchActiveTask, getCount, getTasks, tasks, updateTaskMutation]
+  const getTasksQuery = useIpcQuery<GetTasksPayload, Task[]>(
+    TaskEvents.GetTasks,
+    {
+      variables: {
+        state,
+        order,
+      },
+    }
   );
 
   return {
     order,
     setOrder,
-    tasks,
-    error,
-    getTasks,
-    loading,
-    updateTask,
+    tasks: getTasksQuery.data,
+    error: getTasksQuery.error,
+    getTasks: getTasksQuery.refetch,
+    loading: getTasksQuery.isLoading,
     state,
     setTaskState,
-    didFetch,
+    didFetch: getTasksQuery.isFetchedAfterMount,
   };
 };

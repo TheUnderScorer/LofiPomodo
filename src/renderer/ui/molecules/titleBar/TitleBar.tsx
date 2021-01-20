@@ -1,7 +1,7 @@
 import React, { FC, ReactNode } from 'react';
 import { Flex, FlexProps, IconButton } from '@chakra-ui/core';
 import './TitleBar.css';
-import { useIpcInvoke } from '../../../shared/ipc/useIpcInvoke';
+import { useIpcMutation } from '../../../shared/ipc/useIpcMutation';
 import { AppSystemEvents } from '../../../../shared/types/system';
 import { Text } from '../../atoms/text/Text';
 import { usePlatform } from '../../../app/system/hooks/usePlatform';
@@ -20,8 +20,10 @@ export const TitleBar: FC<TitleBarProps> = ({
 }) => {
   const { is } = usePlatform();
 
-  const [closeWindow] = useIpcInvoke(AppSystemEvents.CloseWindow);
-  const [minimizeWindow] = useIpcInvoke(AppSystemEvents.MinimizeWindow);
+  const closeWindowMutation = useIpcMutation<void>(AppSystemEvents.CloseWindow);
+  const minimizeWindowMutation = useIpcMutation<void>(
+    AppSystemEvents.MinimizeWindow
+  );
 
   return (
     <Flex
@@ -45,12 +47,12 @@ export const TitleBar: FC<TitleBarProps> = ({
         </Heading>
       )}
       {children}
-      {is.windows && (
+      {is?.windows && (
         <Flex position="absolute" right={1}>
           <IconButton
             className="minimize"
             aria-label="Minimize window"
-            onClick={() => minimizeWindow()}
+            onClick={() => minimizeWindowMutation.mutate()}
             variant="ghost"
           >
             <Text>_</Text>
@@ -58,7 +60,7 @@ export const TitleBar: FC<TitleBarProps> = ({
           <IconButton
             className="close"
             aria-label="Close window"
-            onClick={() => closeWindow()}
+            onClick={() => closeWindowMutation.mutate()}
             variant="ghost"
           >
             <Text>X</Text>

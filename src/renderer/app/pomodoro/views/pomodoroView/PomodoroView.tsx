@@ -29,7 +29,7 @@ export const PomodoroView: FC<PomodoroViewProps> = () => {
   return (
     <>
       <TitleBar pt={2} pr={2}>
-        {!is.windows && <PomodoroMenuBtn />}
+        {!is?.windows && <PomodoroMenuBtn />}
       </TitleBar>
       <CenterContainer className={`pomodoro-view-${colorMode}`} id="timer">
         <Box h="100%" w="100%" d="flex" flexDirection="column">
@@ -37,7 +37,7 @@ export const PomodoroView: FC<PomodoroViewProps> = () => {
             <>
               <TimerBox
                 containerProps={{
-                  pt: is.windows ? 3 : 10,
+                  pt: is?.windows ? 3 : 10,
                   pb: 5,
                 }}
               />

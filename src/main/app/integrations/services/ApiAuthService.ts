@@ -2,7 +2,6 @@ import { ApiService } from '../types';
 import {
   ApiAuthorizedResult,
   ApiProvider,
-  IntegrationEvents,
   IntegrationSubscriptionTopics,
   ProviderInfo,
 } from '../../../../shared/types/integrations/integrations';

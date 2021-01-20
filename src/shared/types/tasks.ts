@@ -32,8 +32,6 @@ export enum TaskEvents {
   GetTasks = 'GetTasks',
   CreateTask = 'CreateTask',
   GetActiveTask = 'GetActiveTask',
-  TaskUpdated = 'TaskUpdated',
-  TasksDeleted = 'TasksDeleted',
   GetTasksByState = 'GetTasksByState',
   UpdateTask = 'UpdateTask',
   UpdateTasks = 'UpdateTasks',
@@ -42,6 +40,11 @@ export enum TaskEvents {
   DeleteCompletedTasks = 'DeleteCompletedTasks',
   SyncWithApis = 'SyncWithApis',
   IsSyncingWithApis = 'IsSyncingWithApis',
+}
+
+export enum TaskSubscriptionTopics {
+  ActiveTaskUpdated = 'ActiveTaskUpdated',
+  TasksDeleted = 'TasksDeleted',
 }
 
 export interface GetTasksPayload {

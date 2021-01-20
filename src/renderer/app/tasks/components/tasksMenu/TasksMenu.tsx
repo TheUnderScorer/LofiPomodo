@@ -10,10 +10,9 @@ import React, { FC, useCallback } from 'react';
 import { FaIcon } from '../../../../ui/atoms/faIcon/FaIcon';
 import { faEllipsisH } from '@fortawesome/free-solid-svg-icons';
 import { useGroupedTasksCount } from '../../hooks/useGroupedTasksCount';
-import { useIpcInvoke } from '../../../../shared/ipc/useIpcInvoke';
+import { useIpcMutation } from '../../../../shared/ipc/useIpcMutation';
 import { TaskEvents } from '../../../../../shared/types/tasks';
 import { useInlineConfirm } from '../../../../shared/hooks/useInlineConfirm';
-import { useTasksList } from '../../hooks/useTasksList';
 
 export interface TasksMenuProps {
   menuButtonProps?: MenuButtonProps;
@@ -21,18 +20,19 @@ export interface TasksMenuProps {
 }
 
 export const TasksMenu: FC<TasksMenuProps> = ({ menuButtonProps, loading }) => {
-  const { count, getCount } = useGroupedTasksCount();
-  const { getTasks } = useTasksList();
+  const { count } = useGroupedTasksCount();
 
-  const [
-    removeDeletedCompletedTasksMutation,
-    { loading: removingCompletedTasks },
-  ] = useIpcInvoke(TaskEvents.DeleteCompletedTasks);
+  const removeDeletedCompletedTasksMutation = useIpcMutation<void>(
+    TaskEvents.DeleteCompletedTasks,
+    {
+      invalidateQueries: [TaskEvents.CountByState, TaskEvents.GetTasks],
+    }
+  );
+
   const handleDeleteCompletedTasks = useCallback(async () => {
-    await removeDeletedCompletedTasksMutation();
+    await removeDeletedCompletedTasksMutation.mutateAsync();
+  }, [removeDeletedCompletedTasksMutation]);
 
-    await Promise.all([getCount(), getTasks()]);
-  }, [getCount, getTasks, removeDeletedCompletedTasksMutation]);
   const inlineDeleteCompletedTasks = useInlineConfirm({
     confirmText: 'Delete?',
     actionText: 'Delete all completed tasks',
@@ -51,10 +51,12 @@ export const TasksMenu: FC<TasksMenuProps> = ({ menuButtonProps, loading }) => {
       <MenuList>
         <MenuItem
           color="brand.danger"
-          isDisabled={!count.Completed || removingCompletedTasks}
+          isDisabled={
+            !count?.Completed || removeDeletedCompletedTasksMutation.isLoading
+          }
           onClick={inlineDeleteCompletedTasks.handleClick}
         >
-          {removingCompletedTasks
+          {removeDeletedCompletedTasksMutation.isLoading
             ? 'Deleting...'
             : inlineDeleteCompletedTasks.text}
         </MenuItem>

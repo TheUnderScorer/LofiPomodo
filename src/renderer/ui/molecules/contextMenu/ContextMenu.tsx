@@ -48,6 +48,8 @@ export const ContextMenu: FC<ContextMenuProps> = ({ menu, children, id }) => {
 
   const toggleMenu: MouseEventHandler<HTMLElement> = useCallback(
     (event) => {
+      event.stopPropagation();
+
       const { innerWidth } = window;
 
       const x =

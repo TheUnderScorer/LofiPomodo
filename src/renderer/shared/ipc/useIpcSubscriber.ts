@@ -23,13 +23,15 @@ export const useIpcSubscriber = <T>(
 
   const handler = useCallback(
     (_: unknown, payload: T) => {
+      console.log(`Received ipc subscription event ${subject}: `, payload);
+
       if (recoilAtom) {
         setRecoilValue(payload);
       }
 
       callback(_, payload);
     },
-    [callback, recoilAtom, setRecoilValue]
+    [callback, recoilAtom, setRecoilValue, subject]
   );
 
   useEffect(() => {
