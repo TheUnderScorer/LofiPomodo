@@ -28,13 +28,11 @@ export class TaskCrudService {
       ...input,
     };
 
-    return this.taskRepository.transaction(async (repository) => {
-      await repository.incrementTodoIndexes();
-      await repository.insert(task);
-      await repository.flagActiveTask();
+    await this.taskRepository.incrementTodoIndexes();
+    await this.taskRepository.insert(task);
+    await this.taskRepository.flagActiveTask();
 
-      return task;
-    });
+    return task;
   }
 
   async updateTasks(tasks: Task[]) {
@@ -57,15 +55,12 @@ export class TaskCrudService {
       TaskState.Todo
     );
 
-    const updateResult = await this.taskRepository.transaction(
-      async (repository) => {
-        const result = await repository.updateMany(mappedTasks, prevTasks);
-
-        await repository.flagActiveTask();
-
-        return result;
-      }
+    const updateResult = await this.taskRepository.updateMany(
+      mappedTasks,
+      prevTasks
     );
+
+    await this.taskRepository.flagActiveTask();
 
     this.tasksCompleted$.next(completedTasks);
     this.tasksUncompleted$.next(unCompletedTasks);
@@ -74,9 +69,7 @@ export class TaskCrudService {
   }
 
   async deleteTasks(ids: string[]) {
-    await this.taskRepository.transaction(async (repository) => {
-      await repository.delete(ids);
-      await repository.flagActiveTask();
-    });
+    await this.taskRepository.delete(ids);
+    await this.taskRepository.flagActiveTask();
   }
 }

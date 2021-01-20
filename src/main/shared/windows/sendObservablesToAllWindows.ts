@@ -1,4 +1,4 @@
-import { Observable, merge } from 'rxjs';
+import { merge, Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { sendEventToAllWindows } from './sendEventToAllWindows';
 
@@ -17,7 +17,7 @@ export const sendObservablesToWindows = (
     }
   );
 
-  const merged$ = merge<Record<string, any>>(mappedObservables);
+  const merged$ = merge<Record<string, any>>(...mappedObservables);
 
   merged$.subscribe((payload) => {
     const { _event, ...rest } = payload;
