@@ -28,7 +28,6 @@ import { TrelloListsSelection } from './trelloListsSection/TrelloListsSection';
 import { get } from 'lodash';
 import { validateDuplicateTrelloBoards } from '../../../validators/validateDuplicateTrelloBoards';
 import { useIpcQuery } from '../../../../../shared/ipc/useIpcQuery';
-import { usePrevious } from 'react-use';
 
 export interface TrelloBoardListItemProps extends ListItemProps {
   boards: TrelloBoard[];

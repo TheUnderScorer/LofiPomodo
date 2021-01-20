@@ -34,6 +34,11 @@ export class TrelloTasksService implements TaskApiService {
 
   async syncTasks(): Promise<SyncTasksResult> {
     const cards = await this.trelloService.getCards();
+
+    if (!cards.length) {
+      return {};
+    }
+
     const cardIds = cards.map((list) => list.id);
 
     const trelloTasks = (await this.taskRepository.getBySource(

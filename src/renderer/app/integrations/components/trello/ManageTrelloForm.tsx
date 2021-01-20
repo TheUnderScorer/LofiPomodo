@@ -12,7 +12,6 @@ import { Text } from '../../../../ui/atoms/text/Text';
 import { ManageTrelloBoards } from './ManageTrelloBoards';
 import { SubmitButton } from '../../../../ui/atoms/submitButton/SubmitButton';
 import { useDebounce } from 'react-use';
-import { SettingsEvents } from '../../../../../shared/types/settings';
 import { uniqueArray } from '../../../../../shared/utils/array';
 
 export interface ManageTrelloFormProps {
