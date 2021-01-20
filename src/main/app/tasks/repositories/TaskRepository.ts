@@ -3,15 +3,21 @@ import {
   CountTasksByState,
   GetTasksPayload,
   Task,
+  TaskSource,
   TaskState,
 } from '../../../../shared/types/tasks';
 import { applyOrder } from '../../../shared/database/queryHelpers/applyOrder';
 import { applyPagination } from '../../../shared/database/queryHelpers/applyPagination';
 import { OrderDirection } from '../../../../shared/types/database';
 import { groupTasksByState } from '../../../../shared/app/tasks/groupTasksByState';
+import {
+  parseStringFields,
+  stringifyFields,
+} from '../../../../shared/utils/json';
 
-export interface TaskDb extends Omit<Task, 'pomodoroSpent'> {
+export interface TaskDb extends Omit<Task, 'pomodoroSpent' | 'providerMeta'> {
   pomodoroSpent?: string;
+  providerMeta?: string;
 }
 
 export class TaskRepository extends Repository<TaskDb, Task> {
@@ -60,13 +66,35 @@ export class TaskRepository extends Repository<TaskDb, Task> {
   async getActiveTask(): Promise<Task | null> {
     const task = await this.getQueryBuilder()
       .select()
-      .where({
-        index: 0,
-        state: TaskState.Todo,
-      })
+      .orderBy('index', OrderDirection.Asc)
+      .where('state', TaskState.Todo)
       .first<TaskDb | null>();
 
     return task ? this.fromDb(task) : null;
+  }
+
+  async flagActiveTask() {
+    const activeTaskByOrder = await this.getActiveTask();
+    const flaggedTasks = await this.getQueryBuilder().where<TaskDb[]>(
+      'active',
+      true
+    );
+
+    if (activeTaskByOrder) {
+      if (flaggedTasks) {
+        await Promise.all(
+          flaggedTasks.map((task) => {
+            task.active = false;
+
+            return this.update(this.fromDb(task));
+          })
+        );
+      }
+
+      activeTaskByOrder.active = true;
+
+      await this.update(activeTaskByOrder);
+    }
   }
 
   async getAllGroupedByState() {
@@ -133,25 +161,40 @@ export class TaskRepository extends Repository<TaskDb, Task> {
     await this.updateMany(mappedTasks);
   }
 
+  async findTasksWithoutSourceIdByState(sourceIds: string[], state: TaskState) {
+    const records = await this.getQueryBuilder()
+      .whereNotIn('sourceId', sourceIds)
+      .andWhereNot<TaskDb[]>('state', state);
+
+    return records.map((record) => this.fromDb(record));
+  }
+
+  async getBySource(source: TaskSource) {
+    const result = await this.getQueryBuilder()
+      .select<TaskDb[]>()
+      .where('source', source);
+
+    return result.map((item) => this.fromDb(item));
+  }
+
+  async getBySourceIds(source: TaskSource, ids: string[]) {
+    const result = await this.getQueryBuilder()
+      .select<TaskDb[]>()
+      .where('source', source)
+      .andWhere('sourceId', 'IN', ids);
+
+    return result.map((item) => this.fromDb(item));
+  }
+
   async deleteCompletedTasks() {
     return this.getQueryBuilder().where('state', TaskState.Completed).delete();
   }
 
   protected fromDb(entity: TaskDb): Task {
-    return {
-      ...entity,
-      pomodoroSpent: entity.pomodoroSpent
-        ? JSON.parse(entity.pomodoroSpent)
-        : undefined,
-    };
+    return parseStringFields(entity, ['pomodoroSpent', 'providerMeta']) as Task;
   }
 
   protected toDb(entity: Task): TaskDb {
-    return {
-      ...entity,
-      pomodoroSpent: entity.pomodoroSpent
-        ? JSON.stringify(entity.pomodoroSpent)
-        : undefined,
-    };
+    return stringifyFields(entity, ['pomodoroSpent', 'providerMeta']);
   }
 }

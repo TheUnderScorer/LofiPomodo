@@ -63,6 +63,10 @@ export const useIpcInvoke = <
 
   const invoke = useCallback(
     async (args?: Arg) => {
+      if (!ipc) {
+        return;
+      }
+
       const invokeArgs = {
         ...(args ?? {}),
         ...(watchVariables ?? {}),
@@ -95,6 +99,8 @@ export const useIpcInvoke = <
 
         return ipcResult;
       } catch (e) {
+        console.error(`Invocation ${name} failed:`, e);
+
         setError(e);
       } finally {
         setLoading(false);
@@ -118,6 +124,10 @@ export const useIpcInvoke = <
 
   useEffect(() => {
     if (prevVariables && variablesDep !== prevVariables) {
+      console.log({
+        prevVariables,
+        variablesDep,
+      });
       invoke();
     }
   }, [variablesDep, invoke, prevVariables]);

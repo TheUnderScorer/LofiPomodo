@@ -14,6 +14,8 @@ import History from 'history';
 import { PomodoroState } from '../../shared/types';
 import { Theme } from '../types/theme';
 import { usePrefersColorScheme } from '../shared/hooks/usePrefersColorScheme';
+import { ModalProvider } from './modalProvider/ModalProvider';
+import { DialogProvider } from './dialogProvider/DialogProvider';
 
 export interface AppProviderProps {}
 
@@ -36,7 +38,7 @@ export const AppProvider: FC<AppProviderProps> = ({ children }) => {
           textPrimary: color,
           textSecondary: chakraTheme.colors.gray['500'],
           iconPrimary: color,
-          danger: chakraTheme.colors.red['500'],
+          danger: '#FC8181',
         },
       },
       config: {
@@ -87,18 +89,22 @@ export const AppProvider: FC<AppProviderProps> = ({ children }) => {
     <RecoilRoot>
       <IpcRendererProvider>
         <ThemeProvider theme={theme}>
-          <GlobalStyle />
-          <ColorModeProvider
-            options={{
-              initialColorMode: colorMode,
-            }}
-            value={colorMode}
-          >
-            <CSSReset />
-            <MemoryRouter initialEntries={initialEntries}>
-              {children}
-            </MemoryRouter>
-          </ColorModeProvider>
+          <ModalProvider>
+            <GlobalStyle />
+            <ColorModeProvider
+              options={{
+                initialColorMode: colorMode,
+              }}
+              value={colorMode}
+            >
+              <CSSReset />
+              <DialogProvider>
+                <MemoryRouter initialEntries={initialEntries}>
+                  {children}
+                </MemoryRouter>
+              </DialogProvider>
+            </ColorModeProvider>
+          </ModalProvider>
         </ThemeProvider>
       </IpcRendererProvider>
     </RecoilRoot>

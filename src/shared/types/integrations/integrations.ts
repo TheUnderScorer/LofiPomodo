@@ -1,4 +1,4 @@
-import { Nullable } from './base';
+import { Nullable } from '../base';
 
 export enum IntegrationEvents {
   GetAuthState = 'GetAuthState',
@@ -6,6 +6,9 @@ export enum IntegrationEvents {
   ApiAuthorized = 'ApiAuthorized',
   ApiAuthorizationFailed = 'ApiAuthorizationFailed',
   ApiAuthorizationStarted = 'ApiAuthorizationStarted',
+  GetTrelloBoards = 'GetTrelloBoards',
+  GetTrelloBoardLists = 'GetTrelloBoardLists',
+  SaveTrelloBoards = 'SaveTrelloBoards',
 }
 
 export interface ProviderInfo {
@@ -30,4 +33,8 @@ export enum TrelloEvents {
 
 export enum ApiProvider {
   Trello = 'Trello',
+}
+
+export interface GetTrelloBoardListsArgs {
+  boardId: string;
 }

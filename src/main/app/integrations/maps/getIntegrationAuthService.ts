@@ -1,4 +1,4 @@
-import { ApiProvider } from '../../../../shared/types/integrations';
+import { ApiProvider } from '../../../../shared/types/integrations/integrations';
 import { AppContext } from '../../../context';
 
 export const getIntegrationAuthService = (

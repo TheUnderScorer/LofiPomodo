@@ -1,5 +1,5 @@
 import { PomodoroSettings } from './pomodoro';
-import { TrelloSettings } from './taskProviders';
+import { TrelloSettings } from './integrations/trello';
 
 export interface AutostartSettings {
   autoStart?: boolean;

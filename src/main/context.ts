@@ -9,7 +9,7 @@ import { app } from 'electron';
 import { getDbPath, setupConnection } from './shared/database/connection';
 import { TaskRepository } from './app/tasks/repositories/TaskRepository';
 import { Tables } from '../shared/types/database';
-import { TasksService } from './app/tasks/services/TasksService';
+import { TaskCrudService } from './app/tasks/services/TaskCrudService';
 import fs from 'fs';
 import { MenuFactory } from './shared/menu/MenuFactory';
 import { SettingsService } from './app/settings/services/SettingsService';
@@ -17,9 +17,11 @@ import { TrelloClient } from './app/integrations/trello/TrelloClient';
 import fetch from 'node-fetch';
 import { TrelloService } from './app/integrations/trello/TrelloService';
 import { ApiAuthService } from './app/integrations/services/ApiAuthService';
-import { ApiAuthState } from './app/integrations/services/ApiAuthState';
+import { ApiAuthStateService } from './app/integrations/services/ApiAuthStateService';
 import { ApiService } from './app/integrations/types';
 import { ContextMenuFactory } from './shared/menu/ContextMenuFactory';
+import { TrelloTasksService } from './app/tasks/services/trelloTaskService/TrelloTasksService';
+import { TaskSynchronizer } from './app/tasks/services/TaskSynchronizer';
 
 export interface AppContext {
   ipcService: IpcMainService;
@@ -30,24 +32,29 @@ export interface AppContext {
   menuFactory: MenuFactory;
   contextMenuFactory: ContextMenuFactory;
   autoLaunch: AutoLaunch;
-  tasksService: TasksService;
+  taskCrudService: TaskCrudService;
   taskRepository: TaskRepository;
   settingsService: SettingsService;
   trelloClient: TrelloClient;
   trelloService: TrelloService;
   apiAuthService: ApiAuthService;
-  apiAuthState: ApiAuthState;
+  apiAuthState: ApiAuthStateService;
+  taskSynchronizer: TaskSynchronizer;
 }
 
-const handleIntegrations = (
+const handleIntegrations = async (
   store: ElectronStore<AppStore>,
   windowFactory: WindowFactory,
   trelloClient: TrelloClient
 ) => {
   const trelloService = new TrelloService(store, trelloClient);
   const apiServices: ApiService[] = [trelloService];
-  const apiAuthState = new ApiAuthState(windowFactory, apiServices);
+  const apiAuthState = new ApiAuthStateService(apiServices);
   const apiAuthService = new ApiAuthService(apiServices, apiAuthState);
+
+  if (process.env.TRELLO_TOKEN) {
+    await trelloService.setUserToken(process.env.TRELLO_TOKEN);
+  }
 
   return { trelloService, apiAuthState, apiAuthService };
 };
@@ -67,7 +74,7 @@ export const createContext = async (): Promise<AppContext> => {
 
   await connection.migrate.latest();
 
-  const tasksService = new TasksService(taskRepository);
+  const taskCrudService = new TaskCrudService(taskRepository);
 
   const preload = path.join(__dirname, 'preload.js');
   const store = new ElectronStore<AppStore>();
@@ -91,11 +98,16 @@ export const createContext = async (): Promise<AppContext> => {
     fetch
   );
 
-  const { trelloService, apiAuthState, apiAuthService } = handleIntegrations(
-    store,
-    windowFactory,
-    trelloClient
-  );
+  const {
+    trelloService,
+    apiAuthState,
+    apiAuthService,
+  } = await handleIntegrations(store, windowFactory, trelloClient);
+
+  const taskApiServices = [
+    new TrelloTasksService(trelloService, taskRepository, taskCrudService),
+  ];
+  const taskSynchronizer = new TaskSynchronizer(taskApiServices, store);
 
   return {
     ipcService: new IpcMainService(),
@@ -105,7 +117,7 @@ export const createContext = async (): Promise<AppContext> => {
     preloadPath: preload,
     windowFactory,
     menuFactory,
-    tasksService,
+    taskCrudService,
     autoLaunch,
     settingsService: new SettingsService(pomodoro, autoLaunch, store),
     trelloClient,
@@ -113,5 +125,6 @@ export const createContext = async (): Promise<AppContext> => {
     apiAuthService,
     apiAuthState,
     contextMenuFactory: new ContextMenuFactory(pomodoro),
+    taskSynchronizer,
   };
 };

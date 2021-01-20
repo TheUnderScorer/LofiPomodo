@@ -1,10 +1,6 @@
 import React, { FC, useCallback, useMemo, useState } from 'react';
 import { TitleBar } from '../../../ui/molecules/titleBar/TitleBar';
 import {
-  Alert,
-  AlertDescription,
-  AlertIcon,
-  Button,
   Center,
   Container,
   Flex,
@@ -24,6 +20,8 @@ import { useIpcInvoke } from '../../../shared/ipc/useIpcInvoke';
 import { PomodoroForm } from '../../pomodoro/components/pomodoroForm/PomodoroForm';
 import { useForm } from 'react-hook-form';
 import { IntegrationsForm } from '../../integrations/components/IntegrationsForm';
+import { SubmitButton } from '../../../ui/atoms/submitButton/SubmitButton';
+import { Alert } from '../../../ui/molecules/alert/Alert';
 
 type SettingTab = 'Pomodoro' | 'Integrations';
 
@@ -72,21 +70,21 @@ export const SettingsFormView: FC<SettingsFormViewProps> = () => {
     [setSettings, history]
   );
 
-  const platform = usePlatform();
+  const { is } = usePlatform();
 
   return (
     <>
       <TitleBar
         position="relative"
         justifyContent="flex-start"
-        pt={platform !== 'win32' ? '60px' : 2}
+        pt={!is.windows ? '60px' : 2}
         pl={2}
       >
         <Flex w="100%" position="relative">
           <IconButton
             className="go-back-btn"
             left="0"
-            top={platform === 'win32' ? 1 : 0}
+            top={is.windows ? 1 : 0}
             onClick={() => history.goBack()}
             aria-label="Go back"
           >
@@ -95,10 +93,10 @@ export const SettingsFormView: FC<SettingsFormViewProps> = () => {
           <Center flex="1">
             <Tabs index={activeTabIndex} onChange={setActiveTabIndex}>
               <TabList>
-                <Tab>
+                <Tab id="pomodoro_tab">
                   <Text>Pomodoro</Text>
                 </Tab>
-                <Tab>
+                <Tab className="integrations-tab" id="integrations_tab">
                   <Text>Integrations</Text>
                 </Tab>
               </TabList>
@@ -112,9 +110,7 @@ export const SettingsFormView: FC<SettingsFormViewProps> = () => {
         pt={12}
         pb={3}
         id="settings"
-        height={
-          platform === 'win32' ? 'calc(100vh - 40px)' : 'calc(100vh - 60px)'
-        }
+        height={is.windows ? 'calc(100vh - 40px)' : 'calc(100vh - 60px)'}
         centerContent
         width="100%"
         maxW="100%"
@@ -142,26 +138,15 @@ export const SettingsFormView: FC<SettingsFormViewProps> = () => {
               pt={2}
             >
               {error && (
-                <Alert backgroundColor="brand.danger" status="error" mb={6}>
-                  <AlertIcon />
-                  <AlertDescription>
-                    <Text>{error.message}</Text>
-                  </AlertDescription>
+                <Alert type="error" mb={6}>
+                  <Text>{error.message}</Text>
                 </Alert>
               )}
               {tab === 'Pomodoro' && <PomodoroForm form={form} />}
               {tab === 'Integrations' && <IntegrationsForm form={form} />}
             </Flex>
             {tab === 'Pomodoro' && (
-              <Button
-                id="submit_settings"
-                type="submit"
-                minWidth="150px"
-                isLoading={loading}
-                backgroundColor="brand.primary"
-              >
-                <Text>Save</Text>
-              </Button>
+              <SubmitButton id="submit_settings" isLoading={loading} />
             )}
           </Flex>
         )}

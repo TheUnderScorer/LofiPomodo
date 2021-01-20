@@ -1,5 +1,5 @@
 import { dialog } from 'electron';
-import { AppError } from '../../../errors/AppError';
+import { AppError } from '../../../../shared/errors/AppError';
 
 export const createErrorDialog = async (error: Error) => {
   await dialog.showMessageBox({

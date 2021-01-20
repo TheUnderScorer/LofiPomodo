@@ -1,7 +1,7 @@
 import { keyboardShortcuts } from '../../../../shared/keyboardShortcuts';
 import { pomodoroStateDictionary } from '../../../../shared/dictionary/pomodoro';
-import { getNextState } from '../../../app/pomodoro/logic/nextState';
-import { PomodoroService } from '../../../app/pomodoro/services/pomodoroService/PomodoroService';
+import { getNextState } from '../logic/nextState';
+import { PomodoroService } from '../services/pomodoroService/PomodoroService';
 
 export const getPomodoroMenuItems = (pomodoroService: PomodoroService) => [
   {

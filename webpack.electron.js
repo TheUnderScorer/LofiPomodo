@@ -8,6 +8,7 @@ const migrationEntries = migrations.reduce((obj, migration) => {
   const name = path.parse(migration).name;
 
   return {
+    ...obj,
     [`db/migrations/${name}`]: migration,
   };
 }, {});

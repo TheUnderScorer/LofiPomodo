@@ -1,5 +1,5 @@
 import { useRecoilState } from 'recoil';
-import { activeTask } from '../state/activeTask';
+import { activeTaskAtom } from '../state/activeTask';
 import { useIpcInvoke } from '../../../shared/ipc/useIpcInvoke';
 import { Task, TaskEvents } from '../../../../shared/types/tasks';
 
@@ -9,10 +9,10 @@ export const useActiveTask = () => {
     Task | null
   >(TaskEvents.GetActiveTask, {
     invokeAtMount: true,
-    recoilAtom: activeTask,
+    recoilAtom: activeTaskAtom,
   });
 
-  const [activeTaskVal] = useRecoilState(activeTask);
+  const [activeTaskVal] = useRecoilState(activeTaskAtom);
 
   return {
     activeTask: activeTaskVal,

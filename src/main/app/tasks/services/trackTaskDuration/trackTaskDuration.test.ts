@@ -1,16 +1,16 @@
 import ElectronStore from 'electron-store';
 import { createMockProxy } from 'jest-mock-proxy';
-import { AppStore } from '../../../../shared/types/store';
-import { wait } from '../../../../shared/utils/timeout';
-import { createMockTask } from '../../../../tests/mocks/tasks';
+import { AppStore } from '../../../../../shared/types/store';
+import { wait } from '../../../../../shared/utils/timeout';
+import { createMockTask } from '../../../../../tests/mocks/tasks';
 import {
   PomodoroService,
   PomodoroServiceEvents,
   Trigger,
-} from '../../pomodoro/services/pomodoroService/PomodoroService';
-import { TaskRepository } from '../repositories/TaskRepository';
+} from '../../../pomodoro/services/pomodoroService/PomodoroService';
+import { TaskRepository } from '../../repositories/TaskRepository';
 import { trackTaskDuration } from './trackTaskDuration';
-import { Task } from '../../../../shared/types/tasks';
+import { Task } from '../../../../../shared/types/tasks';
 
 describe('Track task duration', () => {
   const taskRepository = createMockProxy<TaskRepository>();

@@ -4,4 +4,5 @@ export const routes = {
   tasks: () => '/tasks',
   settings: () => '/settings',
   pomodoroSettings: () => '/settings/pomodoro',
+  manageTrello: () => '/integrations/trello/manage',
 };

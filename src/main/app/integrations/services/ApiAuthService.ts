@@ -4,9 +4,9 @@ import {
   ApiProvider,
   IntegrationEvents,
   ProviderInfo,
-} from '../../../../shared/types/integrations';
+} from '../../../../shared/types/integrations/integrations';
 import { Typed } from 'emittery';
-import { ApiAuthState } from './ApiAuthState';
+import { ApiAuthStateService } from './ApiAuthStateService';
 import { getServiceByProvider } from './getServiceByProvider';
 import { shell } from 'electron';
 
@@ -20,7 +20,7 @@ export class ApiAuthService {
 
   constructor(
     private readonly services: ApiService[],
-    private readonly apiAuthState: ApiAuthState
+    private readonly apiAuthState: ApiAuthStateService
   ) {}
 
   async startAuth(provider: ApiProvider) {

@@ -3,7 +3,7 @@ import { PomodoroState, ToggleMenuPayload } from '../../../../shared/types';
 import { Menu } from 'electron';
 import { createSectionTitle } from '../../../shared/menu/sectionTitle';
 import { createErrorDialog } from '../../../shared/dialog/factories/errorDialog';
-import { AppError } from '../../../errors/AppError';
+import { AppError } from '../../../../shared/errors/AppError';
 import { createDurationsMenu } from '../menu/menuFactory';
 
 export const handleTimerMenu = (context: AppContext) => async (

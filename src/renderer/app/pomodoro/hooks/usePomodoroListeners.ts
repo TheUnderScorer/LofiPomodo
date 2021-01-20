@@ -10,6 +10,10 @@ export const usePomodoroListeners = () => {
   const setPomodoro = useSetRecoilState(pomodoroState);
 
   useEffect(() => {
+    if (!ipc) {
+      return;
+    }
+
     const unsub = ipc.receive(
       PomodoroEvents.Updated,
       (_, pomodoro: Pomodoro) => {

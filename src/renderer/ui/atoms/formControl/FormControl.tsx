@@ -1,17 +1,26 @@
-import React, { FC } from 'react';
+import React, { FC, ReactNode } from 'react';
 import {
+  Box,
+  BoxProps,
   FormControl as BaseFormControl,
   FormControlProps as BaseFormControlProps,
   FormErrorMessage,
   FormHelperText,
   FormLabel,
+  IconButton,
+  Tooltip,
 } from '@chakra-ui/core';
+import { FaIcon } from '../faIcon/FaIcon';
+import { faInfo } from '@fortawesome/free-solid-svg-icons';
 
-export interface FormControlProps extends BaseFormControlProps {
+export interface FormControlProps
+  extends Omit<BaseFormControlProps, 'helperText'> {
   label?: string;
-  helperText?: string;
+  helperText?: ReactNode;
   name?: string;
   error?: string;
+  helperInTooltip?: boolean;
+  contentBoxProps?: BoxProps;
 }
 
 export const FormControl: FC<FormControlProps> = ({
@@ -20,6 +29,8 @@ export const FormControl: FC<FormControlProps> = ({
   name,
   error,
   children,
+  helperInTooltip,
+  contentBoxProps,
   ...rest
 }) => {
   return (
@@ -29,8 +40,23 @@ export const FormControl: FC<FormControlProps> = ({
           {label}
         </FormLabel>
       )}
-      {children}
-      {helperText && <FormHelperText>{helperText}</FormHelperText>}
+      <Box
+        d={helperInTooltip ? 'flex' : undefined}
+        alignItems="center"
+        {...contentBoxProps}
+      >
+        {children}
+        {helperInTooltip && helperText && (
+          <Tooltip label={helperText as string}>
+            <IconButton variant="link" aria-label="Field helper text">
+              <FaIcon icon={faInfo} />
+            </IconButton>
+          </Tooltip>
+        )}
+      </Box>
+      {helperText && !helperInTooltip && (
+        <FormHelperText>{helperText}</FormHelperText>
+      )}
       {error && <FormErrorMessage>{error}</FormErrorMessage>}
     </BaseFormControl>
   );

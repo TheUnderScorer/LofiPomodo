@@ -3,16 +3,13 @@ import { Container, useColorMode } from '@chakra-ui/core';
 import { Route, Switch } from 'react-router-dom';
 import { routes } from '../shared/routes/routes';
 import { PomodoroView } from './app/pomodoro/views/pomodoroView/PomodoroView';
-import { usePomodoroListeners } from './app/pomodoro/hooks/usePomodoroListeners';
-import { useTasksListeners } from './app/tasks/hooks/useTaskListeners';
 import { BreakView } from './app/pomodoro/views/breakView/BreakView';
 import { SettingsFormView } from './app/settings/views/SettingsFormView';
+import { ManageTrelloView } from './app/integrations/views/manageTrelloView/ManageTrelloView';
+import './styles/animations.css';
 
 const App = () => {
   const { colorMode } = useColorMode();
-
-  usePomodoroListeners();
-  useTasksListeners();
 
   return (
     <Container
@@ -31,6 +28,9 @@ const App = () => {
         </Route>
         <Route path={routes.settings()}>
           <SettingsFormView />
+        </Route>
+        <Route path={routes.manageTrello()}>
+          <ManageTrelloView />
         </Route>
       </Switch>
     </Container>

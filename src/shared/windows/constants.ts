@@ -4,17 +4,34 @@ import { is } from 'electron-util';
 const timerWindowSize = 500;
 const breakWindowSize = 600;
 
-export const windowProps: Record<WindowTypes, WindowProps> = {
+const baseWindowProps = {
+  height: timerWindowSize + 100,
+  width: timerWindowSize,
+  minHeight: is.windows ? 190 : 216,
+  minWidth: timerWindowSize,
+  fullscreenable: false,
+  maximizable: false,
+  simpleFullscreen: false,
+  center: true,
+  fullscreen: false,
+  minimizable: false,
+  titleBarStyle: is.windows ? 'customButtonsOnHover' : 'hiddenInset',
+  frame: !is.windows,
+};
+
+export const windowProps: Readonly<Record<WindowTypes, WindowProps>> = {
   [WindowTypes.Timer]: {
-    height: timerWindowSize + 100,
-    width: timerWindowSize,
-    minHeight: is.windows ? 190 : 216,
-    minWidth: timerWindowSize,
+    ...baseWindowProps,
   },
   [WindowTypes.Break]: {
     height: breakWindowSize,
     width: breakWindowSize,
     minHeight: breakWindowSize,
     minWidth: breakWindowSize,
+  },
+  [WindowTypes.ManageTrello]: {
+    ...baseWindowProps,
+    height: baseWindowProps.height + 200,
+    width: baseWindowProps.height + 200,
   },
 };

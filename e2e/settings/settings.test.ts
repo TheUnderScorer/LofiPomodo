@@ -1,54 +1,12 @@
 import { bootstrapTestApp } from '../setup';
-import { Element } from 'webdriverio';
 import { wait } from '../../src/shared/utils/timeout';
-
-type FieldCallback = (el: Element) => Promise<void>;
-
-const durationFieldCallback = (value: number | string): FieldCallback => async (
-  field
-) => {
-  const parentEl = await field
-    .parentElement()
-    .then((parent) => parent.parentElement());
-
-  const buttons = await parentEl.$$('[role="button"]');
-  const [, decrement] = buttons;
-
-  /**
-   * I couldn't find any better way to clear the field, since 'field.clearValue()' was not working :/.
-   * So I set every duration field value to 120 seconds (which ends up displayed as "2" minutes) and then click the decrement button twice, to reduce it's value to "0".
-   * After that, "field.setValue()" is working correctly.
-   * */
-  await decrement.click();
-  await decrement.click();
-
-  await field.setValue(value);
-};
-
-const switchFieldCallback = (): FieldCallback => async (field) => {
-  const name = await field.getAttribute('name');
-  const parent = await field.parentElement().then((el) => el.parentElement());
-
-  const label = await parent.$(`label[for="${name}"]`);
-
-  await label.click();
-};
-
-const assertFieldValue = (value: string | number): FieldCallback => async (
-  field
-) => {
-  const fieldValue = await field.getValue();
-
-  expect(fieldValue).toEqual(value);
-};
-
-const assertFieldProperty = (prop: string, value: any): FieldCallback => async (
-  field
-) => {
-  const propValue = await field.getProperty(prop);
-
-  expect(propValue).toEqual(value);
-};
+import {
+  assertFieldProperty,
+  assertFieldValue,
+  durationFieldCallback,
+  FieldCallback,
+  switchFieldCallback,
+} from '../helpers/fields';
 
 describe('Settings - as a user', () => {
   it('I should be able to fill settings', async () => {
@@ -83,7 +41,7 @@ describe('Settings - as a user', () => {
     for (const [name, handler] of Object.entries(payloadNameMap)) {
       const field = await app.client.$(`[name="pomodoro.${name}"]`);
 
-      await handler(field);
+      await handler(field, app.client);
     }
 
     const submitBtn = await app.client.$('#submit_settings');
@@ -100,7 +58,7 @@ describe('Settings - as a user', () => {
     for (const [name, checker] of Object.entries(fieldChecksMap)) {
       const field = await app.client.$(`[name="pomodoro.${name}"]`);
 
-      await checker(field);
+      await checker(field, app.client);
     }
   });
 });

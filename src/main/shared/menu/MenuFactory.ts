@@ -1,7 +1,7 @@
 import { PomodoroService } from '../../app/pomodoro/services/pomodoroService/PomodoroService';
 import { Menu, MenuItemConstructorOptions } from 'electron';
 import { appMenu, is } from 'electron-util';
-import { getPomodoroMenuItems } from './shared/pomodoro';
+import { getPomodoroMenuItems } from '../../app/pomodoro/menu/getPomodoroMenuItems';
 
 export class MenuFactory {
   constructor(private readonly pomodoroService: PomodoroService) {}

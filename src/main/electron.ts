@@ -43,9 +43,9 @@ const setupAppMenu = (context: AppContext) => {
 
 app.whenReady().then(async () => {
   try {
-    setupSingleInstance();
-
     const context = await createContext();
+
+    setupSingleInstance(context.windowFactory);
 
     setupProtocol([
       ({ url }) => context.apiAuthService.handleAuthProtocol(url),

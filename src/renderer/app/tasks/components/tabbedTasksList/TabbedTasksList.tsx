@@ -2,6 +2,7 @@ import {
   Badge,
   Box,
   Center,
+  HStack,
   Stack,
   Tab,
   TabList,
@@ -30,6 +31,7 @@ import { useActiveTask } from '../../hooks/useActiveTask';
 import { TaskContextMenu } from '../taskContextMenu/TaskContextMenu';
 import { TasksMenu } from '../tasksMenu/TasksMenu';
 import { useUpdateTask } from '../../hooks/useUpdateTask';
+import { SyncTasksBtn } from '../syncTasksBtn/SyncTasksBtn';
 
 export interface TabbedTasksListProps {
   listProps?: Omit<TasksListProps, 'tasks'>;
@@ -41,12 +43,19 @@ export const TabbedTasksList: FC<TabbedTasksListProps> = (props) => {
   const isDragRef = useRef(false);
 
   const { count: tasksCount } = useGroupedTasksCount();
-  const { tasks, loading, setTaskState, didFetch, getTasks } = useTasksList();
+  const {
+    tasks,
+    loading,
+    setTaskState,
+    didFetch,
+    getTasks,
+    state,
+  } = useTasksList();
   const { fetchActiveTask } = useActiveTask();
   const { updateTask } = useUpdateTask();
 
   const [activeIndex, setActiveIndex] = useState(0);
-  const [tasksState, setStoredTasks] = useState<Task[]>(tasks);
+  const [storedTasks, setStoredTasks] = useState<Task[]>(tasks);
 
   const activeState = useMemo(() => states[activeIndex], [activeIndex]);
 
@@ -63,16 +72,21 @@ export const TabbedTasksList: FC<TabbedTasksListProps> = (props) => {
 
   const handleTaskChange = useCallback(
     async (task: Task) => {
-      const index = tasksState.findIndex(({ id }) => task.id === id);
+      const index = storedTasks.findIndex(({ id }) => task.id === id);
 
-      const newTasks = [...tasksState];
-      newTasks[index] = task;
+      const newTasks = [...storedTasks];
+
+      if (task.state !== state) {
+        setTimeout(() => newTasks.splice(index, 1), 200);
+      } else {
+        newTasks[index] = task;
+      }
 
       setStoredTasks(newTasks);
 
-      await updateTask(task);
+      setTimeout(() => updateTask(task), 200);
     },
-    [tasksState, updateTask]
+    [state, storedTasks, updateTask]
   );
 
   useEffect(() => {
@@ -123,16 +137,17 @@ export const TabbedTasksList: FC<TabbedTasksListProps> = (props) => {
             })}
           </TabList>
 
-          <TasksMenu
-            loading={loading || isUpdating}
-            menuButtonProps={{
-              position: 'absolute',
-              top: '10px',
-              right: '15px',
-              width: '30px',
-              height: '30px',
-            }}
-          />
+          <HStack
+            alignItems="center"
+            position="absolute"
+            top="10px"
+            right="20px"
+            height="30px"
+          >
+            <SyncTasksBtn variant="link" />
+
+            <TasksMenu loading={loading || isUpdating} />
+          </HStack>
         </Center>
         <TabPanels h="100%">
           <TabPanel h="100%">
@@ -150,7 +165,7 @@ export const TabbedTasksList: FC<TabbedTasksListProps> = (props) => {
                 </Center>
               }
               loading={loading}
-              tasks={tasksState}
+              tasks={storedTasks}
               {...listProps}
               itemProps={{
                 onTaskChange: handleTaskChange,
@@ -162,7 +177,7 @@ export const TabbedTasksList: FC<TabbedTasksListProps> = (props) => {
             <TasksList
               isDragDisabled
               loading={loading}
-              tasks={tasksState}
+              tasks={storedTasks}
               {...listProps}
               itemProps={{
                 onTaskChange: handleTaskChange,
