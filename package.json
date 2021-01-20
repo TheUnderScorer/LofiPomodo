@@ -201,5 +201,5 @@
     "rebuild:x64": "electron-rebuild -f -w sqlite3 --arch x64",
     "start-m1-gh-runner": "arch -x86_64 ./actions-runner/run.sh"
   },
-  "version": "1.7.2"
+  "version": "1.8.0"
 }

@@ -1,3 +1,23 @@
+# [1.8.0](https://github.com/TheUnderScorer/pixel-pomodo/compare/v1.7.2...v1.8.0) (2021-01-20)
+
+
+### Bug Fixes
+
+* **windows:** Open timer window on second instance ([5dda1ef](https://github.com/TheUnderScorer/pixel-pomodo/commit/5dda1ef2555e1d461d930b59b34096708aefafc2))
+
+
+### Features
+
+* Add trello settings view ([d71f650](https://github.com/TheUnderScorer/pixel-pomodo/commit/d71f65017a893f9af2fce29a90b6f0dc96678768))
+* Add warning dialog before closing unsaved form ([8df546f](https://github.com/TheUnderScorer/pixel-pomodo/commit/8df546fc391b90baded54c213e84c65768941a54))
+* Handle done tasks in trello ([531e2b7](https://github.com/TheUnderScorer/pixel-pomodo/commit/531e2b7dada3e5e3277a70b94cf74f268947186e))
+* Sync tasks from trello ([38ea431](https://github.com/TheUnderScorer/pixel-pomodo/commit/38ea431613a7f37214fb19fce1fd1b19e1e66005))
+
+
+### Performance Improvements
+
+* Optimize tasks list ([8604080](https://github.com/TheUnderScorer/pixel-pomodo/commit/8604080c5069d0796d7029ecc1e3f9f3c7ced72d))
+
 ## [1.7.2](https://github.com/TheUnderScorer/pixel-pomodo/compare/v1.7.1...v1.7.2) (2021-01-05)
 
 
