@@ -36,6 +36,7 @@ export const PomodoroView: FC<PomodoroViewProps> = () => {
           {pomodoro && (
             <>
               <TimerBox
+                showSettingsBtnInFooterOnWindows
                 containerProps={{
                   pt: is?.windows ? 3 : 10,
                   pb: 5,

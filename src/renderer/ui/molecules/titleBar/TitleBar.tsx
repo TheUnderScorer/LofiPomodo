@@ -35,6 +35,7 @@ export const TitleBar: FC<TitleBarProps> = ({
       className="title-bar"
       h={titleBarHeight}
       w="100%"
+      zIndex="10"
       {...props}
     >
       {pageTitle && (
