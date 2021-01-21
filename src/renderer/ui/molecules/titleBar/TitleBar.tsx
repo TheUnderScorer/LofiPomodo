@@ -9,6 +9,7 @@ import { Heading } from '../../atoms/heading/Heading';
 
 export interface TitleBarProps extends FlexProps {
   pageTitle?: ReactNode;
+  actionOnClose?: 'quit' | 'closeWindow';
 }
 
 export const titleBarHeight = '40px';
@@ -16,10 +17,12 @@ export const titleBarHeight = '40px';
 export const TitleBar: FC<TitleBarProps> = ({
   children,
   pageTitle,
+  actionOnClose = 'quit',
   ...props
 }) => {
   const { is } = usePlatform();
 
+  const quitAppMutation = useIpcMutation<void>(AppSystemOperations.QuitApp);
   const closeWindowMutation = useIpcMutation<void>(
     AppSystemOperations.CloseWindow
   );
@@ -61,9 +64,13 @@ export const TitleBar: FC<TitleBarProps> = ({
             <Text>_</Text>
           </IconButton>
           <IconButton
-            className="close"
-            aria-label="Close window"
-            onClick={() => closeWindowMutation.mutate()}
+            className={actionOnClose === 'quit' ? 'quit' : 'close'}
+            aria-label={actionOnClose === 'quit' ? 'Quit app' : 'Close window'}
+            onClick={() =>
+              actionOnClose === 'quit'
+                ? quitAppMutation.mutate()
+                : closeWindowMutation.mutate()
+            }
             variant="ghost"
           >
             <Text>X</Text>

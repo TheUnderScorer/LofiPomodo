@@ -6,6 +6,7 @@ export enum AppSystemOperations {
   GetIs = 'GetIs',
   ResizeWindow = 'ResizeWindow',
   OpenWindow = 'OpenWindow',
+  QuitApp = 'QuitApp',
 }
 
 export interface ResizeWindowPayload {

@@ -1,4 +1,4 @@
-import { BrowserWindow } from 'electron';
+import { app, BrowserWindow } from 'electron';
 import {
   AppSystemOperations,
   OpenWindowPayload,
@@ -11,8 +11,12 @@ export const setupSystem = (context: AppContext) => {
   const { ipcService, windowFactory } = context;
 
   ipcService.registerAsMap({
-    [AppSystemOperations.CloseWindow]: () =>
-      BrowserWindow.getFocusedWindow()?.close(),
+    [AppSystemOperations.QuitApp]: () => {
+      app.quit();
+    },
+    [AppSystemOperations.CloseWindow]: () => {
+      return BrowserWindow.getFocusedWindow()?.close();
+    },
     [AppSystemOperations.ToggleWindowSize]: () => {
       const window = BrowserWindow.getFocusedWindow();
 

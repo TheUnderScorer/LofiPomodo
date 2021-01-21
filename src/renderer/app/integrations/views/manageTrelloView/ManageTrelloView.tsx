@@ -26,7 +26,12 @@ export const ManageTrelloView: FC<ManageTrelloViewProps> = () => {
 
   return (
     <>
-      <TitleBar mb={6} pageTitle="Manage trello" position="relative" />
+      <TitleBar
+        actionOnClose="closeWindow"
+        mb={6}
+        pageTitle="Manage trello"
+        position="relative"
+      />
       <CenterContainer>
         {loading && (
           <Center h="100%">

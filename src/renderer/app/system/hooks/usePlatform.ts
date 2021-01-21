@@ -16,6 +16,9 @@ export const usePlatform = () => {
 
   return {
     platform: getPlatformQuery.data,
-    is: getIsQuery.data,
+    is: {
+      ...getIsQuery.data,
+      windows: true,
+    },
   };
 };
