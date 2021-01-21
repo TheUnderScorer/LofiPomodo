@@ -28,8 +28,6 @@ const closeAllWindows = async (app: Application) => {
   for (let i = 0; i < allWindows; i++) {
     await app.client.windowByIndex(i);
 
-    console.log(`Closing window ${i}`);
-
     try {
       await app.client.execute(() => {
         window.close();
@@ -41,12 +39,7 @@ const closeAllWindows = async (app: Application) => {
 };
 
 export const bootstrapTestApp = async (env: object = {}) => {
-  console.log(`Creating app using path ${Electron}`);
-  console.log('Waiting for renderer...');
-
   await waitForRenderer();
-
-  console.log('Renderer ready!');
 
   const app = new Application({
     path: Electron as any,
@@ -76,10 +69,6 @@ export const bootstrapTestApp = async (env: object = {}) => {
 };
 
 export const closeApps = async () => {
-  console.log(`Found ${runningApps.length} running apps.`);
-
-  let clearedApps = 0;
-
   await Promise.all(
     runningApps.map(async (app) => {
       if (app.isRunning()) {
@@ -89,13 +78,9 @@ export const closeApps = async () => {
         } catch (e) {
           console.error(`Failed to stop app - ${e.message}`);
         }
-
-        clearedApps += 1;
       }
     })
   );
-
-  console.log(`Stopped ${clearedApps} apps.`);
 
   runningApps = [];
 };
