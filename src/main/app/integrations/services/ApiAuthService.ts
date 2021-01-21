@@ -2,25 +2,17 @@ import { ApiService } from '../types';
 import {
   ApiAuthorizedResult,
   ApiProvider,
-  IntegrationSubscriptionTopics,
   ProviderInfo,
 } from '../../../../shared/types/integrations/integrations';
-import { Typed } from 'emittery';
 import { ApiAuthStateService } from './ApiAuthStateService';
 import { getServiceByProvider } from './getServiceByProvider';
 import { shell } from 'electron';
 import { Subject } from 'rxjs';
 
-export interface ApiAuthServiceEventsMap {
-  [IntegrationSubscriptionTopics.ApiAuthorizationStarted]: ProviderInfo;
-  [IntegrationSubscriptionTopics.ApiAuthorized]: ApiAuthorizedResult;
-}
-
 export class ApiAuthService {
-  readonly events = new Typed<ApiAuthServiceEventsMap>();
-
   readonly apiAuthStarted$ = new Subject<ProviderInfo>();
   readonly apiAuthorized$ = new Subject<ApiAuthorizedResult>();
+  readonly apiUnauthorized$ = new Subject<ProviderInfo>();
 
   constructor(
     private readonly services: ApiService[],
@@ -30,13 +22,6 @@ export class ApiAuthService {
   async startAuth(provider: ApiProvider) {
     this.apiAuthStarted$.next({ provider });
 
-    await this.events.emit(
-      IntegrationSubscriptionTopics.ApiAuthorizationStarted,
-      {
-        provider,
-      }
-    );
-
     this.apiAuthState.startApiAuth(provider);
 
     const url = await getServiceByProvider(
@@ -45,6 +30,12 @@ export class ApiAuthService {
     ).getAuthorizationUrl();
 
     await shell.openExternal(url);
+  }
+
+  async unAuthorize(provider: ApiProvider) {
+    await getServiceByProvider(this.services, provider).unAuthorize();
+
+    this.apiUnauthorized$.next({ provider });
   }
 
   async handleAuthProtocol(url: string) {
@@ -63,14 +54,6 @@ export class ApiAuthService {
               provider: service.provider,
               token: result.token,
             });
-
-            await this.events.emit(
-              IntegrationSubscriptionTopics.ApiAuthorized,
-              {
-                provider: service.provider,
-                token: result.token,
-              }
-            );
           }
         })
     );

@@ -2,7 +2,7 @@ import React, { FC } from 'react';
 import { CenterContainer } from '../../../../ui/templates/centerContainer/CenterContainer';
 import { TitleBar } from '../../../../ui/molecules/titleBar/TitleBar';
 import { TrelloBoard } from '../../../../../shared/types/integrations/trello';
-import { IntegrationEvents } from '../../../../../shared/types/integrations/integrations';
+import { IntegrationOperations } from '../../../../../shared/types/integrations/integrations';
 import { Center, Spinner } from '@chakra-ui/core';
 import { useIpcQuery } from '../../../../shared/ipc/useIpcQuery';
 import { Alert } from '../../../../ui/molecules/alert/Alert';
@@ -19,7 +19,7 @@ export const ManageTrelloView: FC<ManageTrelloViewProps> = () => {
   );
 
   const { data, isLoading: queryLoading } = useIpcQuery<never, TrelloBoard[]>(
-    IntegrationEvents.GetTrelloBoards
+    IntegrationOperations.GetTrelloBoards
   );
 
   const loading = queryLoading || settingLoading;

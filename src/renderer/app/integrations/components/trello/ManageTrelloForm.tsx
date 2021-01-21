@@ -4,7 +4,7 @@ import {
   TrelloSettings,
 } from '../../../../../shared/types/integrations/trello';
 import { FormProvider, useForm, UseFormMethods } from 'react-hook-form';
-import { IntegrationEvents } from '../../../../../shared/types/integrations/integrations';
+import { IntegrationOperations } from '../../../../../shared/types/integrations/integrations';
 import { useIpcMutation } from '../../../../shared/ipc/useIpcMutation';
 import { Box, Flex, HStack } from '@chakra-ui/core';
 import { Alert } from '../../../../ui/molecules/alert/Alert';
@@ -41,7 +41,7 @@ export const ManageTrelloForm: FC<ManageTrelloFormProps> = ({
   });
 
   const saveTrelloBoardsMutation = useIpcMutation<TrelloSettings>(
-    IntegrationEvents.SaveTrelloBoards,
+    IntegrationOperations.SaveTrelloBoards,
     {
       onComplete: () => {
         setDidSubmit(true);

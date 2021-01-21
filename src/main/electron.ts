@@ -44,7 +44,7 @@ const setupAppMenu = (context: AppContext) => {
 
 app.whenReady().then(async () => {
   try {
-    if (is.development) {
+    if (is.development && process.env.TEST !== 'true') {
       await waitForRenderer();
     }
 

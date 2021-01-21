@@ -21,7 +21,7 @@ import { FormControl } from '../../../../../ui/atoms/formControl/FormControl';
 import { Text } from '../../../../../ui/atoms/text/Text';
 import {
   GetTrelloBoardListsArgs,
-  IntegrationEvents,
+  IntegrationOperations,
 } from '../../../../../../shared/types/integrations/integrations';
 import { OptionSeparator } from '../../../../../ui/atoms/optionSeparator/OptionSeparator';
 import { TrelloListsSelection } from './trelloListsSection/TrelloListsSection';
@@ -69,7 +69,7 @@ export const TrelloBoardListItem: FC<TrelloBoardListItemProps> = ({
   const { data: fetchedLists, ...fetchListsQuery } = useIpcQuery<
     GetTrelloBoardListsArgs,
     TrelloList[]
-  >(IntegrationEvents.GetTrelloBoardLists, {
+  >(IntegrationOperations.GetTrelloBoardLists, {
     variables: {
       boardId: board,
     },

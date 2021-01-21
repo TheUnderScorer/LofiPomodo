@@ -1,7 +1,7 @@
 import {
   ApiProvider,
   AuthState,
-  IntegrationEvents,
+  IntegrationOperations,
   IntegrationSubscriptionTopics,
   ProviderInfo,
 } from '../../../../shared/types/integrations/integrations';
@@ -16,7 +16,7 @@ export const useProviderAuthState = (provider: ApiProvider) => {
   const [token, setToken] = useState<Nullable<string>>(null);
 
   const { isLoading, refetch } = useIpcQuery<ProviderInfo, AuthState>(
-    IntegrationEvents.GetAuthState,
+    IntegrationOperations.GetAuthState,
     {
       variables: {
         provider,

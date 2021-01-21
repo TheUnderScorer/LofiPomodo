@@ -45,6 +45,20 @@ export class TrelloService implements ApiService {
     return Boolean(trello?.userToken && trello?.member);
   }
 
+  async unAuthorize(): Promise<void> {
+    const settings = this.trelloSettings;
+
+    if (!settings) {
+      return;
+    }
+
+    settings.userToken = undefined;
+    settings.member = undefined;
+    settings.boards = [];
+
+    this.store.set('trello', settings);
+  }
+
   async getUserToken() {
     return this.store.get('trello.userToken', null) as Nullable<string>;
   }

@@ -1,7 +1,7 @@
 import { AppContext } from '../../context';
 import {
   GetTrelloBoardListsArgs,
-  IntegrationEvents,
+  IntegrationOperations,
   ProviderInfo,
 } from '../../../shared/types/integrations/integrations';
 import { forwardIntegrationEventsToWindows } from './services/forwardIntegrationEvents';
@@ -12,20 +12,30 @@ export const setupIntegrations = (context: AppContext) => {
   setupAuthTimeoutDialog(context.apiAuthState);
 
   context.ipcService.registerAsMap({
-    [IntegrationEvents.AuthorizeApi]: (_, { provider }: ProviderInfo) =>
-      context.apiAuthService.startAuth(provider),
-    [IntegrationEvents.GetAuthState]: (_, { provider }: ProviderInfo) =>
-      context.apiAuthState.getStateForProvider(provider),
-    [IntegrationEvents.GetTrelloBoards]: () =>
-      context.trelloService.getUserBoards(),
-    [IntegrationEvents.GetTrelloBoardLists]: (
+    [IntegrationOperations.AuthorizeApi]: (_, { provider }: ProviderInfo) => {
+      return context.apiAuthService.startAuth(provider);
+    },
+    [IntegrationOperations.GetAuthState]: (_, { provider }: ProviderInfo) => {
+      return context.apiAuthState.getStateForProvider(provider);
+    },
+    [IntegrationOperations.GetTrelloBoards]: () => {
+      return context.trelloService.getUserBoards();
+    },
+    [IntegrationOperations.GetTrelloBoardLists]: (
       _,
       { boardId }: GetTrelloBoardListsArgs
-    ) => context.trelloService.getBoardLists(boardId),
-    [IntegrationEvents.SaveTrelloBoards]: (
+    ) => {
+      return context.trelloService.getBoardLists(boardId);
+    },
+    [IntegrationOperations.SaveTrelloBoards]: (
       _,
       { boards }: Pick<TrelloSettings, 'boards'>
-    ) => context.trelloService.saveBoards(boards ?? []),
+    ) => {
+      return context.trelloService.saveBoards(boards ?? []);
+    },
+    [IntegrationOperations.UnauthorizeApi]: (_, { provider }: ProviderInfo) => {
+      return context.apiAuthService.unAuthorize(provider);
+    },
   });
 
   forwardIntegrationEventsToWindows(context.apiAuthService);

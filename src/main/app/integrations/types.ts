@@ -7,6 +7,7 @@ import { Nullable } from '../../../shared/types';
 export interface ApiService {
   getUserToken(): Promise<Nullable<string>>;
   isAuthorized(): Promise<boolean>;
+  unAuthorize(): Promise<void>;
   getAuthorizationUrl(): Promise<string>;
   handleAuthProtocol(
     url: string
