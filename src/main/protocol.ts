@@ -1,4 +1,4 @@
-import { app, protocol } from 'electron';
+import { app, dialog, protocol } from 'electron';
 import { name } from '../../package.json';
 
 interface HttpProtocolArgs {
@@ -13,6 +13,10 @@ const getDeepLinkUrl = (argv: string[]): string | undefined => {
 
 export const setupProtocol = (handlers: HttpProtocolHandler[] = []) => {
   const callHandlers = async (args: HttpProtocolArgs) => {
+    await dialog.showMessageBox({
+      message: `Triggered protocol handlers: ${args.url}`,
+    });
+
     await Promise.all(handlers.map((handler) => handler(args)));
   };
 
@@ -27,6 +31,10 @@ export const setupProtocol = (handlers: HttpProtocolHandler[] = []) => {
     console.log(`Second instance triggered:`, {
       argv,
       event,
+    });
+
+    await dialog.showMessageBox({
+      message: `Second instance started: ${argv.join(', ')}`,
     });
 
     const url = getDeepLinkUrl(argv);

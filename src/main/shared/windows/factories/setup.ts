@@ -27,5 +27,11 @@ export const setupWindow = async (window: BrowserWindow, windowUrl: string) => {
 
   await window.loadURL(windowUrlToLoad);
 
+  window.webContents.on('before-input-event', (_, input) => {
+    if (input.key === 'F12') {
+      window.webContents.openDevTools({ mode: 'detach' });
+    }
+  });
+
   return window;
 };
