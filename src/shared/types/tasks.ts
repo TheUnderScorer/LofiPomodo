@@ -80,7 +80,7 @@ export interface TaskSynchronizerJson {
   };
 }
 
-export enum TaskSynchronizerEvents {
+export enum TaskSynchronizerSubscriptionTopics {
   SyncStarted = 'SyncStarted',
   SyncEnded = 'SyncEnded',
   SyncFailed = 'SyncFailed',
@@ -89,10 +89,4 @@ export enum TaskSynchronizerEvents {
 export interface TaskSynchronizerFailedPayload {
   error: Error;
   service: TaskSynchronizer;
-}
-
-export interface TaskSynchronizerEventsPayloadMap {
-  [TaskSynchronizerEvents.SyncStarted]: TaskSynchronizer;
-  [TaskSynchronizerEvents.SyncEnded]: TaskSynchronizer;
-  [TaskSynchronizerEvents.SyncFailed]: TaskSynchronizerFailedPayload;
 }

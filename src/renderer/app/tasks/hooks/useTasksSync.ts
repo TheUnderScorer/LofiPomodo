@@ -2,7 +2,7 @@ import { useIpcMutation } from '../../../shared/ipc/useIpcMutation';
 import {
   IsSyncingWithApisResult,
   TaskEvents,
-  TaskSynchronizerEvents,
+  TaskSynchronizerSubscriptionTopics,
 } from '../../../../shared/types/tasks';
 import { useCallback, useState } from 'react';
 import { useIpcSubscriber } from '../../../shared/ipc/useIpcSubscriber';
@@ -24,7 +24,7 @@ export const useTasksSync = () => {
   const [isSyncing, setIsSyncing] = useState(false);
 
   useIpcSubscriber(
-    TaskSynchronizerEvents.SyncEnded,
+    TaskSynchronizerSubscriptionTopics.SyncEnded,
     useCallback(() => {
       setIsSyncing(false);
     }, [])

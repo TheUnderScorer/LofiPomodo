@@ -1,16 +1,17 @@
 import { TaskApiService } from '../../../../shared/types/taskProviders';
 import ElectronStore from 'electron-store';
 import { AppStore } from '../../../../shared/types/store';
-import { Typed } from 'emittery';
 import { Jsonable } from '../../../../shared/types/json';
 import {
-  TaskSynchronizerEvents,
-  TaskSynchronizerEventsPayloadMap,
+  TaskSynchronizerFailedPayload,
   TaskSynchronizerJson,
 } from '../../../../shared/types/tasks';
+import { Subject } from 'rxjs';
 
 export class TaskSynchronizer implements Jsonable<TaskSynchronizerJson> {
-  readonly events = new Typed<TaskSynchronizerEventsPayloadMap>();
+  readonly syncStarted$ = new Subject<this>();
+  readonly syncEnded$ = new Subject<this>();
+  readonly syncFailed$ = new Subject<TaskSynchronizerFailedPayload>();
 
   private isSyncing = false;
   private lastError?: Error;
@@ -39,18 +40,18 @@ export class TaskSynchronizer implements Jsonable<TaskSynchronizerJson> {
       return;
     }
 
-    await this.events.emit(TaskSynchronizerEvents.SyncStarted, this);
+    this.syncStarted$.next(this);
 
     try {
       await Promise.all(this.apiServices.map((service) => service.syncTasks()));
 
-      await this.events.emit(TaskSynchronizerEvents.SyncEnded, this);
+      this.syncEnded$.next(this);
     } catch (e) {
       console.error(`Task sync failed:`, e);
 
       this.lastError = e;
 
-      await this.events.emit(TaskSynchronizerEvents.SyncFailed, {
+      this.syncFailed$.next({
         error: e,
         service: this,
       });

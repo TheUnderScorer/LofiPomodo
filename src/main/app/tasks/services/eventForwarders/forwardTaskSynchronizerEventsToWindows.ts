@@ -1,23 +1,17 @@
 import { TaskSynchronizer } from '../TaskSynchronizer';
-import { sendEventToAllWindows } from '../../../../shared/windows/sendEventToAllWindows';
-import {
-  TaskSynchronizerEvents,
-  TaskSynchronizerFailedPayload,
-} from '../../../../../shared/types/tasks';
+import { TaskSynchronizerSubscriptionTopics } from '../../../../../shared/types/tasks';
+import { sendObservablesToWindows } from '../../../../shared/windows/sendObservablesToAllWindows';
+import { map } from 'rxjs/operators';
 
 export const forwardTaskSynchronizerEventsToWindows = (
   taskSynchronizer: TaskSynchronizer
 ) => {
-  taskSynchronizer.events.onAny((event, payload) => {
-    if (event === TaskSynchronizerEvents.SyncFailed) {
-      sendEventToAllWindows(
-        event,
-        (payload as TaskSynchronizerFailedPayload).service.toJSON()
-      );
-
-      return;
-    }
-
-    sendEventToAllWindows(event, (payload as TaskSynchronizer).toJSON());
+  sendObservablesToWindows({
+    [TaskSynchronizerSubscriptionTopics.SyncStarted]:
+      taskSynchronizer.syncStarted$,
+    [TaskSynchronizerSubscriptionTopics.SyncEnded]: taskSynchronizer.syncEnded$,
+    [TaskSynchronizerSubscriptionTopics.SyncFailed]: taskSynchronizer.syncFailed$.pipe(
+      map((payload) => payload.service.toJSON())
+    ),
   });
 };
