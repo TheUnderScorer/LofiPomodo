@@ -15,7 +15,10 @@ import { useHistory } from 'react-router-dom';
 import { usePlatform } from '../../system/hooks/usePlatform';
 import { Text } from '../../../ui/atoms/text/Text';
 import './SettingsFormView.styles.css';
-import { AppSettings, SettingsEvents } from '../../../../shared/types/settings';
+import {
+  AppSettings,
+  SettingsOperations,
+} from '../../../../shared/types/settings';
 import { useIpcMutation } from '../../../shared/ipc/useIpcMutation';
 import { PomodoroForm } from '../../pomodoro/components/pomodoroForm/PomodoroForm';
 import { useForm } from 'react-hook-form';
@@ -51,16 +54,16 @@ export const SettingsFormView: FC<SettingsFormViewProps> = () => {
   const { isLoading: queryLoading, data: settings } = useIpcQuery<
     never,
     AppSettings
-  >(SettingsEvents.GetSettings, {
+  >(SettingsOperations.GetSettings, {
     onComplete: fillForm,
   });
 
   const setSettingsMutation = useIpcMutation<AppSettings, boolean>(
-    SettingsEvents.SetSettings,
+    SettingsOperations.SetSettings,
     {
       invalidateQueries: [
-        SettingsEvents.GetSettings,
-        SettingsEvents.GetSetting,
+        SettingsOperations.GetSettings,
+        SettingsOperations.GetSetting,
       ],
     }
   );

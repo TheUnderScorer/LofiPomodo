@@ -1,6 +1,6 @@
 import { BrowserWindow } from 'electron';
 import {
-  AppSystemEvents,
+  AppSystemOperations,
   OpenWindowPayload,
   ResizeWindowPayload,
 } from '../../../shared/types/system';
@@ -11,9 +11,9 @@ export const setupSystem = (context: AppContext) => {
   const { ipcService, windowFactory } = context;
 
   ipcService.registerAsMap({
-    [AppSystemEvents.CloseWindow]: () =>
+    [AppSystemOperations.CloseWindow]: () =>
       BrowserWindow.getFocusedWindow()?.close(),
-    [AppSystemEvents.ToggleWindowSize]: () => {
+    [AppSystemOperations.ToggleWindowSize]: () => {
       const window = BrowserWindow.getFocusedWindow();
 
       if (!window?.isFullScreenable()) {
@@ -22,20 +22,20 @@ export const setupSystem = (context: AppContext) => {
 
       window?.setFullScreen(!window?.isFullScreen());
     },
-    [AppSystemEvents.MinimizeWindow]: () => {
+    [AppSystemOperations.MinimizeWindow]: () => {
       const window = BrowserWindow.getFocusedWindow();
 
       if (window?.isMinimizable) {
         window?.minimize();
       }
     },
-    [AppSystemEvents.GetPlatform]: () => {
+    [AppSystemOperations.GetPlatform]: () => {
       return process.platform;
     },
-    [AppSystemEvents.GetIs]: () => {
+    [AppSystemOperations.GetIs]: () => {
       return is;
     },
-    [AppSystemEvents.ResizeWindow]: (
+    [AppSystemOperations.ResizeWindow]: (
       _,
       { height, width, animate = true }: ResizeWindowPayload
     ) => {
@@ -43,7 +43,7 @@ export const setupSystem = (context: AppContext) => {
 
       window?.setSize(width, height, animate);
     },
-    [AppSystemEvents.OpenWindow]: async (
+    [AppSystemOperations.OpenWindow]: async (
       _,
       { windowType }: OpenWindowPayload
     ) => {

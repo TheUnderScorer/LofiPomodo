@@ -3,7 +3,7 @@ import { Order } from '../../../../shared/types/database';
 import {
   GetTasksPayload,
   Task,
-  TaskEvents,
+  TaskOperations,
   TaskState,
 } from '../../../../shared/types/tasks';
 import { atom, useRecoilState } from 'recoil';
@@ -23,7 +23,7 @@ export const useTasksList = ({ defaultOrder }: TasksHookProps = {}) => {
   const [order, setOrder] = useState<Order<Task> | undefined>(defaultOrder);
 
   const getTasksQuery = useIpcQuery<GetTasksPayload, Task[]>(
-    TaskEvents.GetTasks,
+    TaskOperations.GetTasks,
     {
       variables: {
         state,

@@ -1,7 +1,7 @@
 import { useCallback } from 'react';
 import {
   Task,
-  TaskEvents,
+  TaskOperations,
   TaskSubscriptionTopics,
 } from '../../../../shared/types/tasks';
 import { useIpcSubscriber } from '../../../shared/ipc/useIpcSubscriber';
@@ -13,7 +13,7 @@ export const useTasksListeners = () => {
   const handleActiveTaskChange = useCallback(
     async (_: undefined, task: Task) => {
       console.log(`Active task changed:`, task);
-      queryClient.setQueryData(TaskEvents.GetActiveTask, task);
+      queryClient.setQueryData(TaskOperations.GetActiveTask, task);
     },
     [queryClient]
   );

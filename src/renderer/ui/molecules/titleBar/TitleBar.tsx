@@ -2,7 +2,7 @@ import React, { FC, ReactNode } from 'react';
 import { Flex, FlexProps, IconButton } from '@chakra-ui/core';
 import './TitleBar.css';
 import { useIpcMutation } from '../../../shared/ipc/useIpcMutation';
-import { AppSystemEvents } from '../../../../shared/types/system';
+import { AppSystemOperations } from '../../../../shared/types/system';
 import { Text } from '../../atoms/text/Text';
 import { usePlatform } from '../../../app/system/hooks/usePlatform';
 import { Heading } from '../../atoms/heading/Heading';
@@ -20,9 +20,11 @@ export const TitleBar: FC<TitleBarProps> = ({
 }) => {
   const { is } = usePlatform();
 
-  const closeWindowMutation = useIpcMutation<void>(AppSystemEvents.CloseWindow);
+  const closeWindowMutation = useIpcMutation<void>(
+    AppSystemOperations.CloseWindow
+  );
   const minimizeWindowMutation = useIpcMutation<void>(
-    AppSystemEvents.MinimizeWindow
+    AppSystemOperations.MinimizeWindow
   );
 
   return (

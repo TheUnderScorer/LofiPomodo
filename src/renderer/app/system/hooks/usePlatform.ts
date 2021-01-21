@@ -1,4 +1,4 @@
-import { AppSystemEvents } from '../../../../shared/types/system';
+import { AppSystemOperations } from '../../../../shared/types/system';
 import { useIpcQuery } from '../../../shared/ipc/useIpcQuery';
 
 interface Is {
@@ -10,9 +10,9 @@ interface Is {
 
 export const usePlatform = () => {
   const getPlatformQuery = useIpcQuery<void, NodeJS.Platform>(
-    AppSystemEvents.GetPlatform
+    AppSystemOperations.GetPlatform
   );
-  const getIsQuery = useIpcQuery<void, Is>(AppSystemEvents.GetIs);
+  const getIsQuery = useIpcQuery<void, Is>(AppSystemOperations.GetIs);
 
   return {
     platform: getPlatformQuery.data,

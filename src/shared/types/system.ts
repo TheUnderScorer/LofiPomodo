@@ -1,4 +1,4 @@
-export enum AppSystemEvents {
+export enum AppSystemOperations {
   CloseWindow = 'CloseWindow',
   ToggleWindowSize = 'ToggleWindowSize',
   MinimizeWindow = 'MinimizeWindow',

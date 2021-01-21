@@ -1,12 +1,12 @@
 import { BrowserWindow } from 'electron';
-import isDev from 'electron-is-dev';
 import path from 'path';
 import url from 'url';
+import { is } from 'electron-util';
 
 export const setupWindow = async (window: BrowserWindow, windowUrl: string) => {
   // Either use dev server when on dev, or production build otherwise.
   const windowUrlToLoad =
-    isDev && process.env.NODE_ENV !== 'production'
+    is.development && process.env.NODE_ENV !== 'production'
       ? url.format({
           pathname: '//localhost:3000/',
           protocol: 'http',

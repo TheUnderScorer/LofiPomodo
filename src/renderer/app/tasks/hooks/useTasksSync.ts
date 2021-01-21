@@ -1,7 +1,7 @@
 import { useIpcMutation } from '../../../shared/ipc/useIpcMutation';
 import {
   IsSyncingWithApisResult,
-  TaskEvents,
+  TaskOperations,
   TaskSynchronizerSubscriptionTopics,
 } from '../../../../shared/types/tasks';
 import { useCallback, useState } from 'react';
@@ -9,17 +9,20 @@ import { useIpcSubscriber } from '../../../shared/ipc/useIpcSubscriber';
 import { useIpcQuery } from '../../../shared/ipc/useIpcQuery';
 
 export const useTasksSync = () => {
-  const syncMutation = useIpcMutation<void>(TaskEvents.SyncWithApis, {
+  const syncMutation = useIpcMutation<void>(TaskOperations.SyncWithApis, {
     invalidateQueries: [
-      TaskEvents.GetTasks,
-      TaskEvents.CountByState,
-      TaskEvents.GetActiveTask,
+      TaskOperations.GetTasks,
+      TaskOperations.CountByState,
+      TaskOperations.GetActiveTask,
     ],
   });
 
-  useIpcQuery<never, IsSyncingWithApisResult>(TaskEvents.IsSyncingWithApis, {
-    onComplete: (data) => setIsSyncing(Boolean(data?.isSyncing)),
-  });
+  useIpcQuery<never, IsSyncingWithApisResult>(
+    TaskOperations.IsSyncingWithApis,
+    {
+      onComplete: (data) => setIsSyncing(Boolean(data?.isSyncing)),
+    }
+  );
 
   const [isSyncing, setIsSyncing] = useState(false);
 

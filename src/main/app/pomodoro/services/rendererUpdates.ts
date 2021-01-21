@@ -1,11 +1,9 @@
 import { AppContext } from '../../../context';
-import { PomodoroEvents } from '../../../../shared/types';
-import { BrowserWindow } from 'electron';
+import { PomodoroSubscriptionTopics } from '../../../../shared/types';
+import { sendObservablesToWindows } from '../../../shared/windows/sendObservablesToAllWindows';
 
 export const sendUpdatesToWindows = ({ pomodoro }: AppContext) => {
-  pomodoro.changed$.subscribe((data) => {
-    BrowserWindow.getAllWindows().forEach((window) => {
-      window.webContents.send(PomodoroEvents.Updated, data.toJSON());
-    });
+  sendObservablesToWindows({
+    [PomodoroSubscriptionTopics.Updated]: pomodoro.changed$,
   });
 };

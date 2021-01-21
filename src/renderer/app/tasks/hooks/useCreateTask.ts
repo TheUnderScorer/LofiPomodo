@@ -1,7 +1,7 @@
 import {
   CreateTaskInput,
   Task,
-  TaskEvents,
+  TaskOperations,
 } from '../../../../shared/types/tasks';
 import { useIpcMutation } from '../../../shared/ipc/useIpcMutation';
 
@@ -11,7 +11,7 @@ export interface CreateTaskHookProps {
 
 export const useCreateTask = ({ onCreate }: CreateTaskHookProps = {}) => {
   const createTaskMutation = useIpcMutation<CreateTaskInput, Task>(
-    TaskEvents.CreateTask,
+    TaskOperations.CreateTask,
     {
       onComplete: (task) => {
         if (task && onCreate) {
@@ -19,9 +19,9 @@ export const useCreateTask = ({ onCreate }: CreateTaskHookProps = {}) => {
         }
       },
       invalidateQueries: [
-        TaskEvents.GetTasks,
-        TaskEvents.CountByState,
-        TaskEvents.GetActiveTask,
+        TaskOperations.GetTasks,
+        TaskOperations.CountByState,
+        TaskOperations.GetActiveTask,
       ],
     }
   );

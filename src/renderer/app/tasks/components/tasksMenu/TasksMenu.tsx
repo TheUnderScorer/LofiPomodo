@@ -18,7 +18,7 @@ import {
 } from '@fortawesome/free-solid-svg-icons';
 import { useGroupedTasksCount } from '../../hooks/useGroupedTasksCount';
 import { useIpcMutation } from '../../../../shared/ipc/useIpcMutation';
-import { TaskEvents } from '../../../../../shared/types/tasks';
+import { TaskOperations } from '../../../../../shared/types/tasks';
 import { useInlineConfirm } from '../../../../shared/hooks/useInlineConfirm';
 import { useTasksSync } from '../../hooks/useTasksSync';
 import { Text } from '../../../../ui/atoms/text/Text';
@@ -33,9 +33,9 @@ export const TasksMenu: FC<TasksMenuProps> = ({ menuButtonProps, loading }) => {
   const { count } = useGroupedTasksCount();
 
   const removeDeletedCompletedTasksMutation = useIpcMutation<void>(
-    TaskEvents.DeleteCompletedTasks,
+    TaskOperations.DeleteCompletedTasks,
     {
-      invalidateQueries: [TaskEvents.CountByState, TaskEvents.GetTasks],
+      invalidateQueries: [TaskOperations.CountByState, TaskOperations.GetTasks],
     }
   );
 

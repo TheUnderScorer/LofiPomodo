@@ -1,8 +1,6 @@
 import { TrelloTasksService } from './TrelloTasksService';
 import { createMockProxy } from 'jest-mock-proxy';
-import { TaskCrudEventsMap } from '../TaskCrudService';
 import { TaskRepository } from '../../repositories/TaskRepository';
-import { Typed } from 'emittery';
 import {
   TrelloBoardSettings,
   TrelloCard,
@@ -33,10 +31,6 @@ describe('TrelloTasksService', () => {
     trelloService.boardSettings = [];
     taskRepository.mockClear();
     taskCrudService.createTask.mockClear();
-
-    Object.assign(taskCrudService, {
-      events: new Typed<TaskCrudEventsMap, never>(),
-    });
 
     trelloTaskService = new TrelloTasksService(
       trelloService,

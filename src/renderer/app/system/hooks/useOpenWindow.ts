@@ -1,5 +1,5 @@
 import {
-  AppSystemEvents,
+  AppSystemOperations,
   OpenWindowPayload,
   WindowTypes,
 } from '../../../../shared/types/system';
@@ -8,7 +8,7 @@ import { useCallback } from 'react';
 
 export const useOpenWindow = (type: WindowTypes) => {
   const openWindowMutation = useIpcMutation<OpenWindowPayload, never>(
-    AppSystemEvents.OpenWindow
+    AppSystemOperations.OpenWindow
   );
 
   return {

@@ -1,26 +1,9 @@
 import { resolve } from 'path';
 import { Application } from 'spectron';
 import Electron from 'electron';
-import fetch from 'node-fetch';
+import { waitForRenderer } from '../src/main/shared/utils/dev';
 
 let runningApps: Application[] = [];
-
-const waitForRenderer = async () => {
-  return new Promise<void>((resolve) => {
-    const intervalId = setInterval(async () => {
-      try {
-        const response = await fetch('http://localhost:3000');
-
-        if (response.status === 200) {
-          clearInterval(intervalId);
-          resolve();
-        }
-      } catch {
-        // Nothing here ;)
-      }
-    }, 2000);
-  });
-};
 
 const closeAllWindows = async (app: Application) => {
   const allWindows = await app.client.getWindowCount();

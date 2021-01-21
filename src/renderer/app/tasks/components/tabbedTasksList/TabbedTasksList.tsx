@@ -18,7 +18,11 @@ import React, {
   useRef,
   useState,
 } from 'react';
-import { Task, TaskEvents, TaskState } from '../../../../../shared/types/tasks';
+import {
+  Task,
+  TaskOperations,
+  TaskState,
+} from '../../../../../shared/types/tasks';
 import { taskStateDictionary } from '../../../../../shared/dictionary/tasks';
 import { TasksList, TasksListProps } from '../tasksList/TasksList';
 import { Text } from '../../../../ui/atoms/text/Text';
@@ -51,9 +55,12 @@ export const TabbedTasksList: FC<TabbedTasksListProps> = (props) => {
   const activeState = useMemo(() => states[activeIndex], [activeIndex]);
 
   const updateTasksMutation = useIpcMutation<Task[], Task[]>(
-    TaskEvents.UpdateTasks,
+    TaskOperations.UpdateTasks,
     {
-      invalidateQueries: [TaskEvents.GetTasks, TaskEvents.GetActiveTask],
+      invalidateQueries: [
+        TaskOperations.GetTasks,
+        TaskOperations.GetActiveTask,
+      ],
     }
   );
 

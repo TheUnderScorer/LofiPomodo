@@ -28,7 +28,7 @@ export interface CreateTaskInput<ProviderMeta = any>
   source?: TaskSource;
 }
 
-export enum TaskEvents {
+export enum TaskOperations {
   GetTasks = 'GetTasks',
   CreateTask = 'CreateTask',
   GetActiveTask = 'GetActiveTask',

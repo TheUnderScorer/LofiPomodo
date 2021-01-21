@@ -1,9 +1,9 @@
-import { TaskEvents, TaskState } from '../../../../shared/types/tasks';
+import { TaskOperations, TaskState } from '../../../../shared/types/tasks';
 import { useIpcQuery } from '../../../shared/ipc/useIpcQuery';
 
 export const useGroupedTasksCount = () => {
   const getCountQuery = useIpcQuery<void, Record<TaskState, number>>(
-    TaskEvents.CountByState
+    TaskOperations.CountByState
   );
 
   return {

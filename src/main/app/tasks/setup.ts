@@ -4,7 +4,7 @@ import {
   GetTasksPayload,
   IsSyncingWithApisResult,
   Task,
-  TaskEvents,
+  TaskOperations,
 } from '../../../shared/types/tasks';
 import { trackTaskDuration } from './services/trackTaskDuration/trackTaskDuration';
 import { forwardTaskUpdatesToWindows } from './services/eventForwarders/forwardTaskUpdatesToWindows';
@@ -18,29 +18,29 @@ export const setupTasks = (context: AppContext) => {
   forwardTaskSynchronizerEventsToWindows(taskSynchronizer);
 
   ipcService.registerAsMap({
-    [TaskEvents.GetTasks]: (_, payload: GetTasksPayload = {}) => {
+    [TaskOperations.GetTasks]: (_, payload: GetTasksPayload = {}) => {
       return taskRepository.listTasks(payload);
     },
-    [TaskEvents.CreateTask]: (_, input: CreateTaskInput) => {
+    [TaskOperations.CreateTask]: (_, input: CreateTaskInput) => {
       return context.taskCrudService.createTask(input);
     },
-    [TaskEvents.GetActiveTask]: async () => {
+    [TaskOperations.GetActiveTask]: async () => {
       return context.taskRepository.getActiveTask();
     },
-    [TaskEvents.GetTasksByState]: () =>
+    [TaskOperations.GetTasksByState]: () =>
       context.taskRepository.getAllGroupedByState(),
-    [TaskEvents.UpdateTask]: (_, task: Task) =>
+    [TaskOperations.UpdateTask]: (_, task: Task) =>
       context.taskCrudService.updateTasks([task]),
-    [TaskEvents.UpdateTasks]: (_, tasks: Record<number, Task>) =>
+    [TaskOperations.UpdateTasks]: (_, tasks: Record<number, Task>) =>
       context.taskCrudService.updateTasks(Object.values(tasks)),
-    [TaskEvents.CountByState]: () =>
+    [TaskOperations.CountByState]: () =>
       context.taskRepository.countGroupedByState(),
-    [TaskEvents.DeleteTasks]: (_, ids: Record<number, string>) =>
+    [TaskOperations.DeleteTasks]: (_, ids: Record<number, string>) =>
       context.taskCrudService.deleteTasks(Object.values(ids)),
-    [TaskEvents.DeleteCompletedTasks]: () =>
+    [TaskOperations.DeleteCompletedTasks]: () =>
       context.taskRepository.deleteCompletedTasks(),
-    [TaskEvents.SyncWithApis]: () => taskSynchronizer.synchronize(),
-    [TaskEvents.IsSyncingWithApis]: (): IsSyncingWithApisResult => ({
+    [TaskOperations.SyncWithApis]: () => taskSynchronizer.synchronize(),
+    [TaskOperations.IsSyncingWithApis]: (): IsSyncingWithApisResult => ({
       isSyncing: Boolean(taskSynchronizer.syncing),
     }),
   });

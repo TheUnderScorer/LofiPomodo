@@ -1,7 +1,7 @@
 import { IconButton, IconButtonProps, Tooltip } from '@chakra-ui/core';
 import React, { FC, useMemo } from 'react';
 import { useIpcMutation } from '../../../../../shared/ipc/useIpcMutation';
-import { PomodoroEvents } from '../../../../../../shared/types';
+import { PomodoroOperations } from '../../../../../../shared/types';
 import { ArrowIcon } from '../../../../../ui/atoms/icons';
 import { usePomodoro } from '../../../hooks/usePomodoro';
 import { getNextState } from '../../../../../../main/app/pomodoro/logic/nextState';
@@ -23,7 +23,7 @@ export const NextStateBtn: FC<NextStateBtnProps> = (props) => {
   }, [pomodoro!.state, pomodoro!.shortBreakCount, pomodoro!.longBreakInterval]);
 
   const moveToNextStateMutation = useIpcMutation<void>(
-    PomodoroEvents.MoveToNextState
+    PomodoroOperations.MoveToNextState
   );
 
   return (

@@ -23,13 +23,16 @@ export enum PomodoroState {
   LongBreak = 'LongBreak',
 }
 
-export enum PomodoroEvents {
-  Updated = 'Updated',
+export enum PomodoroOperations {
   Update = 'Update',
   GetState = 'GetState',
   ToggleTimerMenu = 'ToggleTimerMenu',
   RestartCurrentState = 'RestartCurrentState',
   MoveToNextState = 'MoveToNextState',
+}
+
+export enum PomodoroSubscriptionTopics {
+  Updated = 'Updated',
 }
 
 export interface PomodoroSettings
