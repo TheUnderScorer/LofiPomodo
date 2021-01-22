@@ -55,7 +55,7 @@ const startWithPatterns = [
   '/redirectServer',
 ];
 
-const endWithPatterns = ['.ts', '.tsx', '.map', '.o', '.obj'];
+const endWithPatterns = ['.ts', '.tsx', '.map'];
 
 const signMacos = require('./tools/signMacos');
 

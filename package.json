@@ -34,7 +34,7 @@
     "node-fetch": "^2.6.1",
     "p-limit": "^2.3.0",
     "rxjs": "^6.6.3",
-    "sqlite3": "^5.0.0",
+    "sqlite3": "^5.0.1",
     "typescript": "^4.1.3",
     "uuid": "^8.3.1"
   },
@@ -202,9 +202,9 @@
     "make:x64-windows:docker": "docker-compose run packager-x64-windows",
     "make:x64-linux": "electron-forge make --arch=x64 --platform=linux",
     "make:x64-linux:docker": "docker-compose run packager-x64-linux",
-    "rebuild": "electron-rebuild -f -w sqlite3",
-    "rebuild:arm64": "electron-rebuild -f -w sqlite3 --arch arm64",
-    "rebuild:x64": "electron-rebuild -f -w sqlite3 --arch x64",
+    "rebuild": "electron-rebuild -f",
+    "rebuild:arm64": "electron-rebuild -f --arch arm64",
+    "rebuild:x64": "electron-rebuild -f --arch x64",
     "start-m1-gh-runner": "arch -x86_64 ./actions-runner/run.sh",
     "clear-node-modules": "modclean -n default:safe -I @semantic-release/changelog,@csstools/normalize.css,electron-installer-dmg,@electron-forge/*,electron-winstaller,electron-installer-debian -r"
   },
