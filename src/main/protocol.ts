@@ -1,4 +1,4 @@
-import { app, dialog, protocol } from 'electron';
+import { app, protocol } from 'electron';
 import { name } from '../../package.json';
 
 interface HttpProtocolArgs {
@@ -7,16 +7,12 @@ interface HttpProtocolArgs {
 
 type HttpProtocolHandler = (args: HttpProtocolArgs) => Promise<void> | void;
 
-const getDeepLinkUrl = (argv: string[]): string | undefined => {
-  return argv.find((arg) => arg.includes(name));
+const getDeepLinkUrls = (argv: string[]): string[] => {
+  return argv.filter((arg) => arg.includes(name));
 };
 
 export const setupProtocol = (handlers: HttpProtocolHandler[] = []) => {
   const callHandlers = async (args: HttpProtocolArgs) => {
-    await dialog.showMessageBox({
-      message: `Triggered protocol handlers: ${args.url}`,
-    });
-
     await Promise.all(handlers.map((handler) => handler(args)));
   };
 
@@ -28,19 +24,10 @@ export const setupProtocol = (handlers: HttpProtocolHandler[] = []) => {
    * @platform Windows
    * */
   app.on('second-instance', async (event, argv) => {
-    console.log(`Second instance triggered:`, {
-      argv,
-      event,
-    });
+    const urls = getDeepLinkUrls(argv);
 
-    await dialog.showMessageBox({
-      message: `Second instance started: ${argv.join(', ')}`,
-    });
-
-    const url = getDeepLinkUrl(argv);
-
-    if (url) {
-      await callHandlers({ url });
+    if (urls.length) {
+      await Promise.all(urls.map((url) => callHandlers({ url })));
     }
   });
 
