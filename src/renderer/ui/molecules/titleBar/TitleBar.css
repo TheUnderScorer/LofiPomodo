@@ -1,8 +1,11 @@
-.title-bar .draggable {
-  -webkit-user-select: none;
+.title-bar {
   -webkit-app-region: drag;
   width: 100%;
   position: absolute;
   height: 40px;
   left: 0;
+}
+
+.title-bar button {
+  -webkit-app-region: no-drag;
 }

@@ -8,7 +8,7 @@ interface HttpProtocolArgs {
 type HttpProtocolHandler = (args: HttpProtocolArgs) => Promise<void> | void;
 
 const getDeepLinkUrls = (argv: string[]): string[] => {
-  return argv.filter((arg) => arg.includes(name));
+  return argv.filter((arg) => arg.toLowerCase().includes(name.toLowerCase()));
 };
 
 export const setupProtocol = (handlers: HttpProtocolHandler[] = []) => {
