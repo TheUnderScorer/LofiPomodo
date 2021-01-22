@@ -1,6 +1,8 @@
 const fs = require('fs');
 const path = require('path');
 const pkg = require('./package.json');
+const glob = require('glob');
+const modClean = require('modclean');
 
 const ignorePatterns = [
   /.idea/,
@@ -110,6 +112,23 @@ module.exports = {
           ),
         };
       });
+    },
+    packageAfterPrune: async (config, buildPath) => {
+      const nodeModulesPath = path.join(buildPath, 'node_modules');
+
+      const mcResult = modClean({
+        cwd: nodeModulesPath,
+        ignorePatterns: ['sqlite3'],
+      });
+
+      const cleanResult = await mcResult.clean();
+
+      console.log(
+        `\nDeleted ${cleanResult.deleted.length} files from node_modules.`
+      );
+      console.log(
+        `\nEmptied ${cleanResult.empty.length} files from node_modules.`
+      );
     },
     postPackage: async (forgeConfig, options) => {
       if (options.platform === 'darwin' && options.arch === 'arm64') {
