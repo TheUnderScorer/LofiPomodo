@@ -34,7 +34,7 @@ jobs:
 
       - name: Set Node.js 14.x
         uses: actions/setup-node@v2-beta
-        if: ${{ matrix.os != 'macbook-pro-m1' }}
+        if: ${{ matrix.arch != 'arm64' && matrix.os != 'macbook-pro-m1' }}
         with:
           node-version: '14'
 
@@ -71,18 +71,18 @@ jobs:
         if: ${{ matrix.arch != 'arm64' && matrix.os != 'macbook-pro-m1' }}
         run: npm run build:all
 
+        # Special build with arch -arm64 prefix on m1 macbook pro
+      - name: Build (arm64 macos)
+        if: ${{ matrix.arch == 'arm64' && matrix.os == 'macbook-pro-m1' }}
+        run: arch -arm64 npm run build:all && arch -arm64 npm run rebuild:arm64
+
+      - name: Clear deps
+        run: npm run clear-node-modules
+
       # Packager is used only on ubuntu
       - name: Build packager
         if: ${{ matrix.os == 'ubuntu-latest' }}
         run: npm run build-packager
-
-      - name: Cleanup node modules
-        run: npm run clear-node-modules
-
-      # Special build with arch -arm64 prefix on m1 macbook pro
-      - name: Build (arm64 macos)
-        if: ${{ matrix.arch == 'arm64' && matrix.os == 'macbook-pro-m1' }}
-        run: arch -arm64 npm run build:all && arch -arm64 npm run rebuild:arm64
 
       - name: Pack mac x64
         if: ${{ matrix.arch == 'x64' && matrix.os == 'macos-latest' }}
