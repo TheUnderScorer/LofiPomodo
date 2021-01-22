@@ -8,7 +8,7 @@ import React, {
   useState,
 } from 'react';
 import { atom, useRecoilState } from 'recoil';
-import { clone } from 'ramda';
+import clone from 'lodash.clonedeep';
 import { useMount } from 'react-use';
 
 export interface ContextMenuBag {

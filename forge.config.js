@@ -29,6 +29,7 @@ const startWithPatterns = [
   '/node_modules/electron/',
   '/node_modules/electron-prebuilt/',
   '/node_modules/react',
+  '/node_modules/babel',
   '/node_modules/jest',
   '/node_modules/@jest',
   '/node_modules/post-css',
@@ -37,6 +38,8 @@ const startWithPatterns = [
   '/node_modules/webpack',
   '/node_modules/babel',
   '/node_modules/@babel',
+  '/node_modules/browserify',
+  '/node_modules/caniuse',
   '/node_modules/eslint',
   '/node_modules/workbox',
   '/node_modules/@chakra',
@@ -52,7 +55,7 @@ const startWithPatterns = [
   '/redirectServer',
 ];
 
-const endWithPatterns = ['.ts', '.tsx'];
+const endWithPatterns = ['.ts', '.tsx', '.map', '.o', '.obj'];
 
 const signMacos = require('./tools/signMacos');
 
@@ -72,6 +75,28 @@ const parseArtifact = (artifact, platform, arch) => {
   console.log(`Created artifact ${newPath}`);
 
   return newFileName;
+};
+
+/**
+ * @type {electronPackager.Options} Options
+ */
+const packagerConfig = {
+  ignore: (path) => {
+    return (
+      ignorePatterns.some((regex) => regex.test(path)) ||
+      startWithPatterns.some((start) => path.startsWith(start)) ||
+      endWithPatterns.some((end) => path.endsWith(end))
+    );
+  },
+  executableName: pkg.productName,
+  asar: true,
+  protocols: [
+    {
+      name: pkg.name,
+      schemes: [pkg.name],
+      role: 'Viewer',
+    },
+  ],
 };
 
 module.exports = {
@@ -97,24 +122,7 @@ module.exports = {
       }
     },
   },
-  packagerConfig: {
-    ignore: (path) => {
-      return (
-        ignorePatterns.some((regex) => regex.test(path)) ||
-        startWithPatterns.some((start) => path.startsWith(start)) ||
-        endWithPatterns.some((end) => path.endsWith(end))
-      );
-    },
-    executableName: pkg.productName,
-    asar: true,
-    protocols: [
-      {
-        name: pkg.name,
-        schemes: [pkg.name],
-        role: 'Viewer',
-      },
-    ],
-  },
+  packagerConfig,
   makers: [
     {
       name: '@electron-forge/maker-squirrel',

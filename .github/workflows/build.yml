@@ -39,7 +39,7 @@ jobs:
           node-version: '14'
 
       - name: Install npm dependencies
-        run: npm install
+        run: npm install && npm i modclean -g
 
       - name: Rebuild deps in x64
         if: ${{ matrix.arch == 'x64' }}
@@ -80,6 +80,9 @@ jobs:
       - name: Build packager
         if: ${{ matrix.os == 'ubuntu-latest' }}
         run: npm run build-packager
+
+      - name: Cleanup node modules
+        run: npm run clear-node-modules
 
       - name: Pack mac x64
         if: ${{ matrix.arch == 'x64' && matrix.os == 'macos-latest' }}

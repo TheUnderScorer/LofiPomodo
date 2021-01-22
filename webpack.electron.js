@@ -1,7 +1,8 @@
 const path = require('path');
 const TsconfigPathsPlugin = require('tsconfig-paths-webpack-plugin');
-const nodeExternals = require('webpack-node-externals');
 const glob = require('glob');
+const TerserPlugin = require('terser-webpack-plugin');
+const pkg = require('./package.json');
 
 const migrations = glob.sync(path.resolve(__dirname, './db/migrations/*.ts'));
 const migrationEntries = migrations.reduce((obj, migration) => {
@@ -13,20 +14,39 @@ const migrationEntries = migrations.reduce((obj, migration) => {
   };
 }, {});
 
+const isProduction = process.env.NODE_ENV === 'production';
+
+const devToolConfig = isProduction
+  ? {
+      devtool: 'source-map',
+    }
+  : {};
+
+const optimization = isProduction
+  ? {
+      minimizer: [
+        new TerserPlugin({
+          parallel: true,
+        }),
+      ],
+    }
+  : {};
+
 module.exports = {
-  mode: process.env.NODE_ENV === 'production' ? 'production' : 'development',
+  mode: isProduction ? 'production' : 'development',
   entry: {
     electron: './src/main/electron.ts',
     preload: './src/main/preload.js',
     ...migrationEntries,
   },
   target: 'electron-main',
-  devtool: 'source-map',
-  externals: [nodeExternals()],
+  ...devToolConfig,
+  externals: [...Object.keys(pkg.dependencies || {})],
   node: {
     __dirname: false,
     __filename: false,
   },
+  optimization,
   module: {
     rules: [
       {

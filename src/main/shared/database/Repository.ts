@@ -5,27 +5,14 @@ import {
 } from '../../../shared/types/database';
 import Knex, { QueryBuilder } from 'knex';
 import { castAsArray } from '../../../shared/utils/array';
-import { Typed as EventEmitter } from 'emittery';
 import { EntityNotFound } from './errors/EntityNotFound';
 import { mapToId } from '../../../shared/mappers/mapToId';
 import { EntitiesNotFound } from './errors/EntitiesNotFound';
 import { Subject } from 'rxjs';
 
-export enum RepositoryEvents {
-  EntityUpdated = 'EntityUpdated',
-  EntitiesCreated = 'EntitiesCreated',
-  EntitiesDeleted = 'EntitiesDeleted',
-}
-
 export interface EntityUpdatedPayload<T> {
   prevEntity: T;
   entity: T;
-}
-
-export interface RepositoryEventsMap<T> {
-  [RepositoryEvents.EntityUpdated]: EntityUpdatedPayload<T>;
-  [RepositoryEvents.EntitiesCreated]: T[];
-  [RepositoryEvents.EntitiesDeleted]: T[];
 }
 
 export abstract class Repository<
@@ -35,8 +22,6 @@ export abstract class Repository<
   readonly entityUpdated$ = new Subject<EntityUpdatedPayload<Model>>();
   readonly entitiesCreated$ = new Subject<Model[]>();
   readonly entitiesDeleted$ = new Subject<Model[]>();
-
-  readonly events = new EventEmitter<RepositoryEventsMap<Model>>();
 
   constructor(
     protected readonly connection: Knex,
@@ -56,7 +41,6 @@ export abstract class Repository<
 
     try {
       const repository = new (this as any).constructor(trx, this.table);
-      repository.events = this.events;
 
       const result = await callback(repository);
 
@@ -77,8 +61,6 @@ export abstract class Repository<
     const result = await this.getQueryBuilder().delete().whereIn('id', ids);
 
     this.entitiesDeleted$.next(records);
-
-    await this.events.emit(RepositoryEvents.EntitiesDeleted, records);
 
     return result;
   }
@@ -136,8 +118,6 @@ export abstract class Repository<
 
     this.entitiesCreated$.next(entitiesArray);
 
-    await this.events.emit(RepositoryEvents.EntitiesCreated, entitiesArray);
-
     return Boolean(result);
   }
 
@@ -155,11 +135,6 @@ export abstract class Repository<
 
     if (result) {
       this.entityUpdated$.next({
-        entity: updatedEntity,
-        prevEntity,
-      });
-
-      await this.events.emit(RepositoryEvents.EntityUpdated, {
         entity: updatedEntity,
         prevEntity,
       });
@@ -192,21 +167,14 @@ export abstract class Repository<
       return t.commit();
     });
 
-    await Promise.all(
-      mappedEntities.map((entity) => {
-        const prevEntity = prevEntities.find(({ id }) => entity.id === id);
+    mappedEntities.forEach((entity) => {
+      const prevEntity = prevEntities.find(({ id }) => entity.id === id);
 
-        this.entityUpdated$.next({
-          prevEntity: prevEntity!,
-          entity,
-        });
-
-        return this.events.emit(RepositoryEvents.EntityUpdated, {
-          prevEntity: prevEntity!,
-          entity,
-        });
-      })
-    );
+      this.entityUpdated$.next({
+        prevEntity: prevEntity!,
+        entity,
+      });
+    });
 
     return mappedEntities;
   }
