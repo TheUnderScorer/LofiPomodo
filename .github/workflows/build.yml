@@ -42,11 +42,11 @@ jobs:
         run: npm install
 
       - name: Rebuild deps in x64
-        if: ${{ matrix.arch == 'x64' }}
+        if: ${{ matrix.arch == 'x64' && matrix.os != 'ubuntu-latest' }}
         run: npm run rebuild:x64
 
       - name: Rebuild deps in arm64
-        if: ${{ matrix.arch == 'arm64' && matrix.os != 'macbook-pro-m1' }}
+        if: ${{ matrix.arch == 'arm64' && matrix.os != 'macbook-pro-m1' && matrix.os != 'ubuntu-latest' }}
         run: npm run rebuild:arm64
 
       - name: Get tag
