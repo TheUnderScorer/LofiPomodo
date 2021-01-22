@@ -11,7 +11,5 @@ COPY ./forge.config.js /project/forge.config.js
 COPY ./tools /project/tools
 
 RUN npm install --verbose
-RUN npm install modclean -g
 RUN npm run rebuild
-RUN npm run clear-node-modules
 

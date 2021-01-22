@@ -68,9 +68,6 @@ jobs:
         if: ${{ matrix.arch == 'arm64' && matrix.os == 'macbook-pro-m1' }}
         run: arch -arm64 npm run build:all && arch -arm64 npm run rebuild:arm64
 
-      - name: Clear deps
-        run: npm run clear-node-modules
-
       # Packager is used only on ubuntu
       - name: Build packager
         if: ${{ matrix.os == 'ubuntu-latest' }}
