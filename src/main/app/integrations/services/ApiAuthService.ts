@@ -39,19 +39,17 @@ export class ApiAuthService {
   }
 
   async handleAuthProtocol(url: string) {
-    console.log(`Handling url ${url} in ApiAuthService.`);
-
     await Promise.all(
       this.services
         .filter((service) =>
           this.apiAuthState.isBeingAuthorized(service.provider)
         )
         .map(async (service) => {
-          this.apiAuthState.endApiAuth(service.provider);
-
           const result = await service.handleAuthProtocol(url);
 
           if (result) {
+            this.apiAuthState.endApiAuth(service.provider);
+
             this.apiAuthorized$.next({
               provider: service.provider,
               token: result.token,

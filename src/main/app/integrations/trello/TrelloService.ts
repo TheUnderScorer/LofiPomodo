@@ -138,8 +138,6 @@ export class TrelloService implements ApiService {
    * Example url: pixelpomodo://auth/trello?token=1234567
    * */
   async handleAuthProtocol(url: string) {
-    console.log(`Handling ${url} in TrelloService.`);
-
     if (!url.startsWith(TrelloService.urlSchema)) {
       return undefined;
     }
