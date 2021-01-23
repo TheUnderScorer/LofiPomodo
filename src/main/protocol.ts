@@ -24,7 +24,11 @@ export const setupProtocol = (handlers: HttpProtocolHandler[] = []) => {
    * @platform Windows
    * */
   app.on('second-instance', async (event, argv) => {
+    console.log(`Second instance started ${argv}`);
+
     const urls = getDeepLinkUrls(argv);
+
+    console.log(`Filtered deep links: ${urls}`);
 
     if (urls.length) {
       await Promise.all(urls.map((url) => callHandlers({ url })));

@@ -39,6 +39,8 @@ export class ApiAuthService {
   }
 
   async handleAuthProtocol(url: string) {
+    console.log(`Handling url ${url} in ApiAuthService.`);
+
     await Promise.all(
       this.services
         .filter((service) =>
