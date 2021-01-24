@@ -23,11 +23,13 @@ import { PomodoroMenuBtn } from '../pomodoroMenu/PomodoroMenuBtn';
 export interface TimerProps {
   containerProps?: BoxProps;
   stackProps?: StackProps;
+  showSettingsBtnInFooterOnWindows?: boolean;
 }
 
 export const TimerBox: FC<TimerProps> = ({
   containerProps = {},
   stackProps = {},
+  showSettingsBtnInFooterOnWindows,
 }) => {
   const { pomodoro } = usePomodoro();
   const { is } = usePlatform();
@@ -84,7 +86,9 @@ export const TimerBox: FC<TimerProps> = ({
           <Stack direction="row" spacing={2}>
             <PomodoroControl color="white" />
             <ResetState iconProps={{ variant: 'light' }} />
-            {is.windows && <PomodoroMenuBtn variant="outline" />}
+            {is?.windows && showSettingsBtnInFooterOnWindows && (
+              <PomodoroMenuBtn variant="outline" />
+            )}
           </Stack>
         </Center>
       </Stack>

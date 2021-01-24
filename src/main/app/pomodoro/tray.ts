@@ -26,7 +26,7 @@ export const setupTray = (context: AppContext) => {
 
     setTitle(context.pomodoro);
 
-    context.pomodoro.subscribe((state) => {
+    context.pomodoro.changed$.subscribe((state) => {
       setTitle(state);
     });
 

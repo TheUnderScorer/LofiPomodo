@@ -6,22 +6,13 @@ import {
 } from '../../../../shared/types/tasks';
 import { v4 as uuid } from 'uuid';
 import { TaskRepository } from '../repositories/TaskRepository';
-import { Typed as EventEmitter } from 'emittery';
 import { mapToId } from '../../../../shared/mappers/mapToId';
 import { filterByChangedState } from '../arrayFilters/filterByChangedState';
-
-export enum TaskCrudEvents {
-  Completed = 'TaskCompleted',
-  UnCompleted = 'TaskUnCompleted',
-}
-
-export interface TaskCrudEventsMap {
-  [TaskCrudEvents.Completed]: Task;
-  [TaskCrudEvents.UnCompleted]: Task;
-}
+import { Subject } from 'rxjs';
 
 export class TaskCrudService {
-  public readonly events = new EventEmitter<TaskCrudEventsMap>();
+  readonly tasksCompleted$ = new Subject<Task[]>();
+  readonly tasksUncompleted$ = new Subject<Task[]>();
 
   constructor(private readonly taskRepository: TaskRepository) {}
 
@@ -37,13 +28,11 @@ export class TaskCrudService {
       ...input,
     };
 
-    return this.taskRepository.transaction(async (repository) => {
-      await repository.incrementTodoIndexes();
-      await repository.insert(task);
-      await repository.flagActiveTask();
+    await this.taskRepository.incrementTodoIndexes();
+    await this.taskRepository.insert(task);
+    await this.taskRepository.flagActiveTask();
 
-      return task;
-    });
+    return task;
   }
 
   async updateTasks(tasks: Task[]) {
@@ -60,41 +49,27 @@ export class TaskCrudService {
       TaskState.Completed
     );
 
-    const unCompletedTask = filterByChangedState(
+    const unCompletedTasks = filterByChangedState(
       mappedTasks,
       prevTasks,
       TaskState.Todo
     );
 
-    const updateResult = await this.taskRepository.transaction(
-      async (repository) => {
-        const result = await repository.updateMany(mappedTasks, prevTasks);
-
-        await repository.flagActiveTask();
-
-        return result;
-      }
+    const updateResult = await this.taskRepository.updateMany(
+      mappedTasks,
+      prevTasks
     );
 
-    Promise.all(
-      completedTasks.map((task) =>
-        this.events.emit(TaskCrudEvents.Completed, task)
-      )
-    ).catch(console.error);
+    await this.taskRepository.flagActiveTask();
 
-    Promise.all([
-      unCompletedTask.map((task) =>
-        this.events.emit(TaskCrudEvents.UnCompleted, task)
-      ),
-    ]).catch(console.error);
+    this.tasksCompleted$.next(completedTasks);
+    this.tasksUncompleted$.next(unCompletedTasks);
 
     return updateResult;
   }
 
   async deleteTasks(ids: string[]) {
-    await this.taskRepository.transaction(async (repository) => {
-      await repository.delete(ids);
-      await repository.flagActiveTask();
-    });
+    await this.taskRepository.delete(ids);
+    await this.taskRepository.flagActiveTask();
   }
 }

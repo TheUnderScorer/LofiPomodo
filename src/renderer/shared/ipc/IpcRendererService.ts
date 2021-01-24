@@ -7,6 +7,8 @@ export class IpcRendererService {
     name: string,
     arg?: Arg
   ): Promise<ReturnValue> {
+    console.log(`Invoking ${name} with args:`, arg);
+
     const result = await this.ipc.invoke(name, arg);
 
     if (result?.error) {
@@ -16,7 +18,7 @@ export class IpcRendererService {
     return result;
   }
 
-  receive(name: string, listener: (event: object, ...args: any[]) => void) {
+  subscribe(name: string, listener: (event: object, ...args: any[]) => void) {
     this.ipc.on(name, listener);
 
     return () => {

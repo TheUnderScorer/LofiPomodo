@@ -1,5 +1,5 @@
 import { bootstrapTestApp } from '../setup';
-import { manageIntegration } from './utils';
+import { goToSettings, manageIntegration } from './utils';
 import { ApiProvider } from '../../src/shared/types/integrations/integrations';
 import { wait } from '../../src/shared/utils/timeout';
 import { waitForElement } from '../helpers/waitForElement';
@@ -38,8 +38,6 @@ describe('Trello integrations - as a user', () => {
 
     await manageIntegration(ApiProvider.Trello, app);
 
-    await wait(1000);
-
     await app.client.windowByIndex(1);
 
     await handler.waitForField('boardSelect');
@@ -57,5 +55,23 @@ describe('Trello integrations - as a user', () => {
     await app.client.refresh();
 
     await handler.assertAllFields();
+  });
+
+  it('should handle un authorization', async () => {
+    const app = await bootstrapTestApp();
+
+    await goToSettings(app, 'Integrations');
+
+    const menuBtn = await app.client.$(`.${ApiProvider.Trello}-menu-btn`);
+    await menuBtn.click();
+
+    const unAuthorizeBtn = await app.client.$(
+      `.unauthorize-${ApiProvider.Trello}`
+    );
+
+    await unAuthorizeBtn.click();
+
+    const manageBtn = await app.client.$(`#manage_${ApiProvider.Trello}`);
+    expect(await manageBtn.getText()).toEqual('Authorize');
   });
 });

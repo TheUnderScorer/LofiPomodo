@@ -1,24 +1,24 @@
 import { useCallback } from 'react';
-import { useGroupedTasksCount } from './useGroupedTasksCount';
-import { Task, TaskEvents } from '../../../../shared/types/tasks';
-import { useIpcInvoke } from '../../../shared/ipc/useIpcInvoke';
-import { useTasksList } from './useTasksList';
-import { useActiveTask } from './useActiveTask';
+import { Task, TaskOperations } from '../../../../shared/types/tasks';
+import { useIpcMutation } from '../../../shared/ipc/useIpcMutation';
 
 export const useUpdateTask = () => {
-  const { getTasks } = useTasksList();
-  const { getCount } = useGroupedTasksCount();
-  const { fetchActiveTask } = useActiveTask();
-
-  const [updateTaskMutation] = useIpcInvoke<Task, Task>(TaskEvents.UpdateTask);
+  const updateTaskMutation = useIpcMutation<Task, Task>(
+    TaskOperations.UpdateTask,
+    {
+      invalidateQueries: [
+        TaskOperations.GetTasks,
+        TaskOperations.CountByState,
+        TaskOperations.GetActiveTask,
+      ],
+    }
+  );
 
   const updateTask = useCallback(
     async (task: Task) => {
-      await updateTaskMutation(task);
-
-      await Promise.all([getTasks(), getCount(), fetchActiveTask()]);
+      await updateTaskMutation.mutate(task);
     },
-    [fetchActiveTask, getCount, getTasks, updateTaskMutation]
+    [updateTaskMutation]
   );
 
   return {

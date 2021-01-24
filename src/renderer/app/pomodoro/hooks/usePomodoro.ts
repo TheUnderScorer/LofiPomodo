@@ -2,7 +2,7 @@ import { useRecoilState } from 'recoil';
 import { pomodoroState } from '../state/pomodoroState';
 import { useIpcRenderer } from '../../../providers/IpcRendererProvider';
 import { useCallback, useEffect, useState } from 'react';
-import { Pomodoro, PomodoroEvents } from '../../../../shared/types';
+import { Pomodoro, PomodoroOperations } from '../../../../shared/types';
 
 export const usePomodoro = () => {
   const ipc = useIpcRenderer();
@@ -14,7 +14,7 @@ export const usePomodoro = () => {
     (update: (prev: Pomodoro) => Pomodoro) => {
       const payload = update(pomodoro!);
 
-      ipc.invoke(PomodoroEvents.Update, payload).catch(console.error);
+      ipc.invoke(PomodoroOperations.Update, payload).catch(console.error);
     },
     [ipc, pomodoro]
   );
@@ -22,7 +22,7 @@ export const usePomodoro = () => {
   useEffect(() => {
     if (!pomodoro && !loading) {
       setLoading(true);
-      ipc.invoke(PomodoroEvents.GetState).then((state: Pomodoro) => {
+      ipc.invoke(PomodoroOperations.GetState).then((state: Pomodoro) => {
         setPomodoro(state);
         setLoading(false);
       });

@@ -2,7 +2,7 @@ import { useEffect } from 'react';
 import { useIpcRenderer } from '../../../providers/IpcRendererProvider';
 import { useSetRecoilState } from 'recoil';
 import { pomodoroState } from '../state/pomodoroState';
-import { Pomodoro, PomodoroEvents } from '../../../../shared/types';
+import { Pomodoro, PomodoroSubscriptionTopics } from '../../../../shared/types';
 
 export const usePomodoroListeners = () => {
   const ipc = useIpcRenderer();
@@ -14,8 +14,8 @@ export const usePomodoroListeners = () => {
       return;
     }
 
-    const unsub = ipc.receive(
-      PomodoroEvents.Updated,
+    const unsub = ipc.subscribe(
+      PomodoroSubscriptionTopics.Updated,
       (_, pomodoro: Pomodoro) => {
         setPomodoro(pomodoro);
       }

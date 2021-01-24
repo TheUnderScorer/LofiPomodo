@@ -1,49 +1,43 @@
-import { useIpcInvoke } from '../../../shared/ipc/useIpcInvoke';
+import { useIpcMutation } from '../../../shared/ipc/useIpcMutation';
 import {
   IsSyncingWithApisResult,
-  TaskEvents,
-  TaskSynchronizerEvents,
+  TaskOperations,
+  TaskSynchronizerSubscriptionTopics,
 } from '../../../../shared/types/tasks';
 import { useCallback, useState } from 'react';
-import { useMount } from 'react-use';
-import { useIpcReceiver } from '../../../shared/ipc/useIpcReceiver';
-import { useTasksList } from './useTasksList';
-import { useGroupedTasksCount } from './useGroupedTasksCount';
-import { useActiveTask } from './useActiveTask';
+import { useIpcSubscriber } from '../../../shared/ipc/useIpcSubscriber';
+import { useIpcQuery } from '../../../shared/ipc/useIpcQuery';
 
 export const useTasksSync = () => {
-  const { getTasks } = useTasksList();
-  const { getCount } = useGroupedTasksCount();
-  const { fetchActiveTask } = useActiveTask();
+  const syncMutation = useIpcMutation<void>(TaskOperations.SyncWithApis, {
+    invalidateQueries: [
+      TaskOperations.GetTasks,
+      TaskOperations.CountByState,
+      TaskOperations.GetActiveTask,
+    ],
+  });
 
-  const [
-    sync,
-    { loading: isSyncingFromInvoke, error: syncErrorFromInvoke },
-  ] = useIpcInvoke<never>(TaskEvents.SyncWithApis);
-
-  const [getIsSyncing] = useIpcInvoke<never, IsSyncingWithApisResult>(
-    TaskEvents.IsSyncingWithApis
+  useIpcQuery<never, IsSyncingWithApisResult>(
+    TaskOperations.IsSyncingWithApis,
+    {
+      onComplete: (data) => setIsSyncing(Boolean(data?.isSyncing)),
+    }
   );
 
   const [isSyncing, setIsSyncing] = useState(false);
 
-  useMount(() => {
-    getIsSyncing().then((result) => setIsSyncing(result.isSyncing));
-  });
-
-  useIpcReceiver(
-    TaskSynchronizerEvents.SyncEnded,
+  useIpcSubscriber(
+    TaskSynchronizerSubscriptionTopics.SyncEnded,
     useCallback(() => {
       setIsSyncing(false);
     }, [])
   );
 
   return {
-    isSyncing: isSyncing || isSyncingFromInvoke,
+    isSyncing: isSyncing || syncMutation.isLoading,
     sync: useCallback(async () => {
-      await sync();
-      await Promise.all([getTasks(), getCount(), fetchActiveTask()]);
-    }, [fetchActiveTask, getCount, getTasks, sync]),
-    error: syncErrorFromInvoke,
+      await syncMutation.mutateAsync();
+    }, [syncMutation]),
+    error: syncMutation.error,
   };
 };

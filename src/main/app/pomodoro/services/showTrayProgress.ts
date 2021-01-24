@@ -6,7 +6,7 @@ export const showTrayProgress = ({ windowFactory, pomodoro }: AppContext) => {
     return;
   }
 
-  pomodoro.subscribe(() => {
+  pomodoro.changed$.subscribe(() => {
     const { timerWindow } = windowFactory;
 
     if (timerWindow) {

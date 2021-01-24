@@ -16,7 +16,7 @@ import { Draggable } from 'react-beautiful-dnd';
 import { FaIcon } from '../../../../../ui/atoms/faIcon/FaIcon';
 import { faGripLines } from '@fortawesome/free-solid-svg-icons';
 import { ContextMenu } from '../../../../../ui/molecules/contextMenu/ContextMenu';
-import { useDebounce, useMount, usePrevious } from 'react-use';
+import { useDebounce, usePrevious } from 'react-use';
 
 export interface TaskListItemProps extends ListItemProps {
   task: Task;
@@ -38,10 +38,6 @@ export const TaskListItem: FC<TaskListItemProps> = ({
   isDisabled,
   ...props
 }) => {
-  useMount(() => {
-    console.log('Mount...');
-  });
-
   const [title, setTitle] = useState(task.title);
   const [duration, setDuration] = useState(task.estimatedPomodoroDuration ?? 0);
   const prevDuration = usePrevious(duration);
@@ -132,7 +128,11 @@ export const TaskListItem: FC<TaskListItemProps> = ({
       index={arrIndex}
     >
       {({ draggableProps, dragHandleProps, innerRef }) => (
-        <ContextMenu id={task.id} menu={contextMenu ? contextMenu(task) : null}>
+        <ContextMenu
+          key={task.id}
+          id={task.id}
+          menu={contextMenu ? contextMenu(task) : null}
+        >
           {(bag) => (
             <ListItem
               onContextMenu={bag.onContextMenu}

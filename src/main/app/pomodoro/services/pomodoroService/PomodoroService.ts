@@ -1,9 +1,10 @@
 import {
-  CanSubscribe,
   Changable,
+  ChangeSubject,
   Pomodoro,
   PomodoroState,
-  Subscriber,
+  PomodoroStateChanged,
+  Trigger,
 } from '../../../../../shared/types';
 import { getInitialPomodoro } from '../../data';
 import ElectronStore from 'electron-store';
@@ -12,36 +13,15 @@ import { getDurationByState, getNextState } from '../../logic/nextState';
 import { secondsToTime } from '../../../../../shared/utils/time';
 import { Reactive } from '../../../../../shared/reactive';
 import { percent } from '../../../../../shared/utils/math';
-import { Typed as TypedEmittery } from 'emittery';
 import { shouldRun } from '../../logic/autorun';
 import { stateDurationMap } from '../../maps';
 import { Jsonable } from '../../../../../shared/types/json';
-
-export enum Trigger {
-  Manual = 'Manual',
-  Scheduled = 'Scheduled',
-}
-
-export enum PomodoroServiceEvents {
-  BreakStarted = 'PomodoroBreakStarted',
-  WorkStarted = 'PomodoroWorkStarted',
-  LongBreakStarted = 'PomodoroLongBreakStarted',
-}
-
-export interface PomodoroStateChangedPayload {
-  pomodoro: PomodoroService;
-  trigger: Trigger;
-}
-
-export interface PomodoroServiceEventsMap {
-  [PomodoroServiceEvents.BreakStarted]: PomodoroStateChangedPayload;
-  [PomodoroServiceEvents.LongBreakStarted]: PomodoroStateChangedPayload;
-  [PomodoroServiceEvents.WorkStarted]: PomodoroStateChangedPayload;
-}
+import { Observable, Subject } from 'rxjs';
+import { filter } from 'rxjs/operators';
 
 @Reactive()
 export class PomodoroService
-  implements Changable, Pomodoro, CanSubscribe<PomodoroService>, Jsonable {
+  implements Changable, Pomodoro, ChangeSubject<PomodoroService>, Jsonable {
   isRunning!: boolean;
   longBreakDurationSeconds!: number;
   longBreakInterval!: number;
@@ -57,20 +37,25 @@ export class PomodoroService
 
   timeoutId: any = null;
 
-  subscribe!: Subscriber<PomodoroService>;
+  changed$!: Observable<PomodoroService>;
 
-  events = new TypedEmittery<PomodoroServiceEventsMap>();
+  readonly stateChanged$ = new Subject<PomodoroStateChanged>();
+  readonly anyBreakStarted$ = this.stateChanged$.pipe(
+    filter((payload) => payload.newState !== PomodoroState.Work)
+  );
+  readonly shortBreakStarted$ = this.stateChanged$.pipe(
+    filter((payload) => payload.newState === PomodoroState.Break)
+  );
+  readonly longBreakStarted$ = this.stateChanged$.pipe(
+    filter((payload) => payload.newState === PomodoroState.LongBreak)
+  );
+  readonly workStarted$ = this.stateChanged$.pipe(
+    filter((payload) => payload.newState === PomodoroState.Work)
+  );
 
-  public static readonly breakEventsMap = [
-    PomodoroServiceEvents.LongBreakStarted,
-    PomodoroServiceEvents.BreakStarted,
-  ];
+  readonly timerTick$ = new Subject<this>();
 
-  private static newStateEventMap = {
-    [PomodoroState.Work]: PomodoroServiceEvents.WorkStarted,
-    [PomodoroState.LongBreak]: PomodoroServiceEvents.LongBreakStarted,
-    [PomodoroState.Break]: PomodoroServiceEvents.BreakStarted,
-  };
+  readonly timerStop$ = new Subject<this>();
 
   constructor(private readonly store: ElectronStore<AppStore>) {
     const storeValue = store.get('pomodoroState');
@@ -105,6 +90,8 @@ export class PomodoroService
       clearTimeout(this.timeoutId);
       this.timeoutId = null;
 
+      this.timerStop$.next(this);
+
       return true;
     }
 
@@ -132,6 +119,8 @@ export class PomodoroService
       if (newRemainingSeconds <= 0) {
         await this.moveToNextState();
       } else {
+        this.timerTick$.next(this);
+
         this.fill({
           remainingSeconds: newRemainingSeconds,
         });
@@ -145,6 +134,8 @@ export class PomodoroService
     trigger: Trigger = Trigger.Scheduled,
     nextState?: PomodoroState
   ) {
+    const oldState = this.state;
+
     const newStart = new Date();
     const newPomodoroState = nextState ?? getNextState(this);
     const newRemainingSeconds = getDurationByState(this, newPomodoroState);
@@ -170,9 +161,9 @@ export class PomodoroService
       start: newStart,
     });
 
-    const eventToEmit = PomodoroService.newStateEventMap[newPomodoroState];
-
-    await this.events.emit(eventToEmit, {
+    this.stateChanged$.next({
+      newState: newPomodoroState,
+      oldState,
       pomodoro: this,
       trigger,
     });

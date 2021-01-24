@@ -1,3 +1,5 @@
+import { PomodoroService } from '../../main/app/pomodoro/services/pomodoroService/PomodoroService';
+
 export interface Pomodoro {
   start: Date;
   state: PomodoroState;
@@ -21,13 +23,16 @@ export enum PomodoroState {
   LongBreak = 'LongBreak',
 }
 
-export enum PomodoroEvents {
-  Updated = 'Updated',
+export enum PomodoroOperations {
   Update = 'Update',
   GetState = 'GetState',
   ToggleTimerMenu = 'ToggleTimerMenu',
   RestartCurrentState = 'RestartCurrentState',
   MoveToNextState = 'MoveToNextState',
+}
+
+export enum PomodoroSubscriptionTopics {
+  Updated = 'Updated',
 }
 
 export interface PomodoroSettings
@@ -45,4 +50,16 @@ export interface PomodoroSettings
 export interface ToggleMenuPayload {
   y: number;
   x: number;
+}
+
+export interface PomodoroStateChanged {
+  newState: PomodoroState;
+  oldState: PomodoroState;
+  pomodoro: PomodoroService;
+  trigger: Trigger;
+}
+
+export enum Trigger {
+  Manual = 'Manual',
+  Scheduled = 'Scheduled',
 }

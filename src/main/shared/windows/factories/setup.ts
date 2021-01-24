@@ -1,12 +1,12 @@
 import { BrowserWindow } from 'electron';
-import isDev from 'electron-is-dev';
 import path from 'path';
 import url from 'url';
+import { is } from 'electron-util';
 
 export const setupWindow = async (window: BrowserWindow, windowUrl: string) => {
   // Either use dev server when on dev, or production build otherwise.
   const windowUrlToLoad =
-    isDev && process.env.NODE_ENV !== 'production'
+    is.development && process.env.NODE_ENV !== 'production'
       ? url.format({
           pathname: '//localhost:3000/',
           protocol: 'http',
@@ -26,6 +26,12 @@ export const setupWindow = async (window: BrowserWindow, windowUrl: string) => {
   console.log(`Using ${windowUrlToLoad} as renderer url.`);
 
   await window.loadURL(windowUrlToLoad);
+
+  window.webContents.on('before-input-event', (_, input) => {
+    if (input.key === 'F12') {
+      window.webContents.openDevTools({ mode: 'detach' });
+    }
+  });
 
   return window;
 };

@@ -1,15 +1,13 @@
-import { useIpcInvoke } from '../../../shared/ipc/useIpcInvoke';
-import { TaskEvents } from '../../../../shared/types/tasks';
-import { groupedTasksCountStore } from '../state/groupedTasksCount';
+import { TaskOperations, TaskState } from '../../../../shared/types/tasks';
+import { useIpcQuery } from '../../../shared/ipc/useIpcQuery';
 
 export const useGroupedTasksCount = () => {
-  const [getCount, { result: count }] = useIpcInvoke(TaskEvents.CountByState, {
-    recoilAtom: groupedTasksCountStore,
-    invokeAtMount: true,
-  });
+  const getCountQuery = useIpcQuery<void, Record<TaskState, number>>(
+    TaskOperations.CountByState
+  );
 
   return {
-    count: count!,
-    getCount,
+    count: getCountQuery.data,
+    getCount: getCountQuery.refetch,
   };
 };

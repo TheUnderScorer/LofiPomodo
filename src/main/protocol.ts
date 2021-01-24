@@ -7,6 +7,10 @@ interface HttpProtocolArgs {
 
 type HttpProtocolHandler = (args: HttpProtocolArgs) => Promise<void> | void;
 
+const getDeepLinkUrls = (argv: string[]): string[] => {
+  return argv.filter((arg) => arg.toLowerCase().includes(name.toLowerCase()));
+};
+
 export const setupProtocol = (handlers: HttpProtocolHandler[] = []) => {
   const callHandlers = async (args: HttpProtocolArgs) => {
     await Promise.all(handlers.map((handler) => handler(args)));
@@ -14,6 +18,22 @@ export const setupProtocol = (handlers: HttpProtocolHandler[] = []) => {
 
   app.setAsDefaultProtocolClient(name);
 
+  /**
+   * Handles url passed to second instance
+   *
+   * @platform Windows
+   * */
+  app.on('second-instance', async (event, argv) => {
+    const urls = getDeepLinkUrls(argv);
+
+    if (urls.length) {
+      await Promise.all(urls.map((url) => callHandlers({ url })));
+    }
+  });
+
+  /**
+   * @platform OSX|Linux
+   * */
   app.on('open-url', async (event, url) => {
     await callHandlers({ url });
   });

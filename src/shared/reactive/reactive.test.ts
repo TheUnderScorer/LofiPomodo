@@ -40,7 +40,7 @@ describe('Reactive', () => {
       const obj = createReactive();
       obj.val1 = 2;
 
-      await wait(2);
+      await wait(10);
 
       expect(onChange).toHaveBeenCalledTimes(1);
       expect(obj.val2).toEqual('test');
@@ -56,10 +56,10 @@ describe('Reactive', () => {
 
     it('should call subscribers on change', async () => {
       const obj = createReactive();
-      obj.subscribe(subscriber);
+      obj.changed$.subscribe(subscriber);
       obj.val2 = 'test';
 
-      await wait(2);
+      await wait(10);
 
       expect(subscriber).toHaveBeenCalledTimes(1);
       expect(subscriber).toHaveBeenCalledWith(obj);
@@ -67,8 +67,8 @@ describe('Reactive', () => {
 
     it('should return function to unregister subscriber', () => {
       const obj = createReactive();
-      const unregister = obj.subscribe(subscriber);
-      unregister();
+      const sub = obj.changed$.subscribe(subscriber);
+      sub.unsubscribe();
 
       obj.val2 = 'test';
 

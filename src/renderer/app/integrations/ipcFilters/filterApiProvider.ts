@@ -2,7 +2,7 @@ import {
   ApiProvider,
   ProviderInfo,
 } from '../../../../shared/types/integrations/integrations';
-import { IpcReceiverCallback } from '../../../shared/ipc/useIpcReceiver';
+import { IpcReceiverCallback } from '../../../shared/ipc/useIpcSubscriber';
 
 // Filters Ipc receiver events to make sure that callback is only triggered for event related to given provider
 export const filterApiProvider = <T extends ProviderInfo>(

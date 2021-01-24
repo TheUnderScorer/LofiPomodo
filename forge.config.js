@@ -1,6 +1,8 @@
 const fs = require('fs');
 const path = require('path');
 const pkg = require('./package.json');
+const glob = require('glob');
+const modClean = require('modclean');
 
 const ignorePatterns = [
   /.idea/,
@@ -29,6 +31,7 @@ const startWithPatterns = [
   '/node_modules/electron/',
   '/node_modules/electron-prebuilt/',
   '/node_modules/react',
+  '/node_modules/babel',
   '/node_modules/jest',
   '/node_modules/@jest',
   '/node_modules/post-css',
@@ -37,6 +40,8 @@ const startWithPatterns = [
   '/node_modules/webpack',
   '/node_modules/babel',
   '/node_modules/@babel',
+  '/node_modules/browserify',
+  '/node_modules/caniuse',
   '/node_modules/eslint',
   '/node_modules/workbox',
   '/node_modules/@chakra',
@@ -52,7 +57,7 @@ const startWithPatterns = [
   '/redirectServer',
 ];
 
-const endWithPatterns = ['.ts', '.tsx'];
+const endWithPatterns = ['.ts', '.tsx', '.map'];
 
 const signMacos = require('./tools/signMacos');
 
@@ -74,6 +79,28 @@ const parseArtifact = (artifact, platform, arch) => {
   return newFileName;
 };
 
+/**
+ * @type {electronPackager.Options} Options
+ */
+const packagerConfig = {
+  ignore: (path) => {
+    return (
+      ignorePatterns.some((regex) => regex.test(path)) ||
+      startWithPatterns.some((start) => path.startsWith(start)) ||
+      endWithPatterns.some((end) => path.endsWith(end))
+    );
+  },
+  executableName: pkg.productName,
+  asar: true,
+  protocols: [
+    {
+      name: pkg.name,
+      schemes: [pkg.name],
+      role: 'Viewer',
+    },
+  ],
+};
+
 module.exports = {
   hooks: {
     postMake: (forgeConfig, results) => {
@@ -86,6 +113,23 @@ module.exports = {
         };
       });
     },
+    packageAfterPrune: async (config, buildPath) => {
+      const nodeModulesPath = path.join(buildPath, 'node_modules');
+
+      const mcResult = modClean({
+        cwd: nodeModulesPath,
+        ignorePatterns: ['sqlite3'],
+      });
+
+      const cleanResult = await mcResult.clean();
+
+      console.log(
+        `\nDeleted ${cleanResult.deleted.length} files from node_modules.`
+      );
+      console.log(
+        `\nEmptied ${cleanResult.empty.length} files from node_modules.`
+      );
+    },
     postPackage: async (forgeConfig, options) => {
       if (options.platform === 'darwin' && options.arch === 'arm64') {
         const appPath = path.join(
@@ -97,24 +141,7 @@ module.exports = {
       }
     },
   },
-  packagerConfig: {
-    ignore: (path) => {
-      return (
-        ignorePatterns.some((regex) => regex.test(path)) ||
-        startWithPatterns.some((start) => path.startsWith(start)) ||
-        endWithPatterns.some((end) => path.endsWith(end))
-      );
-    },
-    executableName: pkg.productName,
-    asar: true,
-    protocols: [
-      {
-        name: pkg.name,
-        schemes: [pkg.name],
-        role: 'Viewer',
-      },
-    ],
-  },
+  packagerConfig,
   makers: [
     {
       name: '@electron-forge/maker-squirrel',

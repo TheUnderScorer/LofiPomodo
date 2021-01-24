@@ -1,14 +1,19 @@
 import { Nullable } from '../base';
 
-export enum IntegrationEvents {
+export enum IntegrationOperations {
   GetAuthState = 'GetAuthState',
   AuthorizeApi = 'AuthorizeApi',
-  ApiAuthorized = 'ApiAuthorized',
-  ApiAuthorizationFailed = 'ApiAuthorizationFailed',
-  ApiAuthorizationStarted = 'ApiAuthorizationStarted',
+  UnauthorizeApi = 'UnauthorizeApi',
   GetTrelloBoards = 'GetTrelloBoards',
   GetTrelloBoardLists = 'GetTrelloBoardLists',
   SaveTrelloBoards = 'SaveTrelloBoards',
+}
+
+export enum IntegrationSubscriptionTopics {
+  ApiAuthorized = 'ApiAuthorized',
+  ApiUnauthorized = 'ApiUnauthorized',
+  ApiAuthorizationFailed = 'ApiAuthorizationFailed',
+  ApiAuthorizationStarted = 'ApiAuthorizationStarted',
 }
 
 export interface ProviderInfo {

@@ -1,8 +1,6 @@
 import { TrelloTasksService } from './TrelloTasksService';
 import { createMockProxy } from 'jest-mock-proxy';
-import { TaskCrudEventsMap } from '../TaskCrudService';
 import { TaskRepository } from '../../repositories/TaskRepository';
-import { Typed } from 'emittery';
 import {
   TrelloBoardSettings,
   TrelloCard,
@@ -10,6 +8,7 @@ import {
 } from '../../../../../shared/types/integrations/trello';
 import { v4 as uuid } from 'uuid';
 import { Task, TaskSource, TaskState } from '../../../../../shared/types/tasks';
+import { Subject } from 'rxjs';
 
 describe('TrelloTasksService', () => {
   let trelloTaskService: TrelloTasksService;
@@ -20,8 +19,9 @@ describe('TrelloTasksService', () => {
     updateCard: jest.fn(),
   };
   const taskCrudService = {
-    events: createMockProxy<Typed<any>>(),
     createTask: jest.fn(),
+    tasksCompleted$: new Subject(),
+    tasksUncompleted$: new Subject(),
   };
   const taskRepository = createMockProxy<TaskRepository>();
 
@@ -31,10 +31,6 @@ describe('TrelloTasksService', () => {
     trelloService.boardSettings = [];
     taskRepository.mockClear();
     taskCrudService.createTask.mockClear();
-
-    Object.assign(taskCrudService, {
-      events: new Typed<TaskCrudEventsMap, never>(),
-    });
 
     trelloTaskService = new TrelloTasksService(
       trelloService,

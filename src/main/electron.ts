@@ -1,5 +1,4 @@
 import { app, Menu } from 'electron';
-import isDev from 'electron-is-dev';
 import { AppContext, createContext } from './context';
 import { setupPomodoro } from './app/pomodoro/setup';
 import { setupTasks } from './app/tasks/setup';
@@ -12,6 +11,8 @@ import { setupProtocol } from './protocol';
 import { createErrorDialog } from './shared/dialog/factories/errorDialog';
 import path from 'path';
 import { setupSingleInstance } from './singleInstance';
+import { is } from 'electron-util';
+import { waitForRenderer } from './shared/utils/dev';
 
 if (require('electron-squirrel-startup')) {
   app.quit();
@@ -23,7 +24,7 @@ config({
   path: envPath,
 });
 
-if (!isDev) {
+if (!is.development) {
   Object.assign(console, log.functions);
 }
 
@@ -36,13 +37,17 @@ log.debug(`Dirname: ${__dirname}`);
 const setupAppMenu = (context: AppContext) => {
   Menu.setApplicationMenu(context.menuFactory.createAppMenu());
 
-  context.pomodoro.subscribe(() => {
+  context.pomodoro.changed$.subscribe(() => {
     Menu.setApplicationMenu(context.menuFactory.createAppMenu());
   });
 };
 
 app.whenReady().then(async () => {
   try {
+    if (is.development && process.env.TEST !== 'true') {
+      await waitForRenderer();
+    }
+
     const context = await createContext();
 
     setupSingleInstance(context.windowFactory);

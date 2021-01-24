@@ -1,22 +1,21 @@
 import {
-  AppSystemEvents,
+  AppSystemOperations,
   OpenWindowPayload,
   WindowTypes,
 } from '../../../../shared/types/system';
-import { useIpcInvoke } from '../../../shared/ipc/useIpcInvoke';
+import { useIpcMutation } from '../../../shared/ipc/useIpcMutation';
 import { useCallback } from 'react';
 
 export const useOpenWindow = (type: WindowTypes) => {
-  const [openWindow, { loading, error }] = useIpcInvoke<
-    OpenWindowPayload,
-    never
-  >(AppSystemEvents.OpenWindow);
+  const openWindowMutation = useIpcMutation<OpenWindowPayload, never>(
+    AppSystemOperations.OpenWindow
+  );
 
   return {
     openWindow: useCallback(async () => {
-      await openWindow({ windowType: type });
-    }, [openWindow, type]),
-    loading,
-    error,
+      await openWindowMutation.mutateAsync({ windowType: type });
+    }, [openWindowMutation, type]),
+    loading: openWindowMutation.isLoading,
+    error: openWindowMutation.error,
   };
 };

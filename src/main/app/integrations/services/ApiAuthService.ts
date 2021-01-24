@@ -2,21 +2,17 @@ import { ApiService } from '../types';
 import {
   ApiAuthorizedResult,
   ApiProvider,
-  IntegrationEvents,
   ProviderInfo,
 } from '../../../../shared/types/integrations/integrations';
-import { Typed } from 'emittery';
 import { ApiAuthStateService } from './ApiAuthStateService';
 import { getServiceByProvider } from './getServiceByProvider';
 import { shell } from 'electron';
-
-export interface ApiAuthServiceEventsMap {
-  [IntegrationEvents.ApiAuthorizationStarted]: ProviderInfo;
-  [IntegrationEvents.ApiAuthorized]: ApiAuthorizedResult;
-}
+import { Subject } from 'rxjs';
 
 export class ApiAuthService {
-  readonly events = new Typed<ApiAuthServiceEventsMap>();
+  readonly apiAuthStarted$ = new Subject<ProviderInfo>();
+  readonly apiAuthorized$ = new Subject<ApiAuthorizedResult>();
+  readonly apiUnauthorized$ = new Subject<ProviderInfo>();
 
   constructor(
     private readonly services: ApiService[],
@@ -24,9 +20,7 @@ export class ApiAuthService {
   ) {}
 
   async startAuth(provider: ApiProvider) {
-    await this.events.emit(IntegrationEvents.ApiAuthorizationStarted, {
-      provider,
-    });
+    this.apiAuthStarted$.next({ provider });
 
     this.apiAuthState.startApiAuth(provider);
 
@@ -38,6 +32,12 @@ export class ApiAuthService {
     await shell.openExternal(url);
   }
 
+  async unAuthorize(provider: ApiProvider) {
+    await getServiceByProvider(this.services, provider).unAuthorize();
+
+    this.apiUnauthorized$.next({ provider });
+  }
+
   async handleAuthProtocol(url: string) {
     await Promise.all(
       this.services
@@ -45,12 +45,12 @@ export class ApiAuthService {
           this.apiAuthState.isBeingAuthorized(service.provider)
         )
         .map(async (service) => {
-          this.apiAuthState.endApiAuth(service.provider);
-
           const result = await service.handleAuthProtocol(url);
 
           if (result) {
-            await this.events.emit(IntegrationEvents.ApiAuthorized, {
+            this.apiAuthState.endApiAuth(service.provider);
+
+            this.apiAuthorized$.next({
               provider: service.provider,
               token: result.token,
             });

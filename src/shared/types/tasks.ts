@@ -28,12 +28,10 @@ export interface CreateTaskInput<ProviderMeta = any>
   source?: TaskSource;
 }
 
-export enum TaskEvents {
+export enum TaskOperations {
   GetTasks = 'GetTasks',
   CreateTask = 'CreateTask',
   GetActiveTask = 'GetActiveTask',
-  TaskUpdated = 'TaskUpdated',
-  TasksDeleted = 'TasksDeleted',
   GetTasksByState = 'GetTasksByState',
   UpdateTask = 'UpdateTask',
   UpdateTasks = 'UpdateTasks',
@@ -42,6 +40,11 @@ export enum TaskEvents {
   DeleteCompletedTasks = 'DeleteCompletedTasks',
   SyncWithApis = 'SyncWithApis',
   IsSyncingWithApis = 'IsSyncingWithApis',
+}
+
+export enum TaskSubscriptionTopics {
+  ActiveTaskUpdated = 'ActiveTaskUpdated',
+  TasksDeleted = 'TasksDeleted',
 }
 
 export interface GetTasksPayload {
@@ -77,7 +80,7 @@ export interface TaskSynchronizerJson {
   };
 }
 
-export enum TaskSynchronizerEvents {
+export enum TaskSynchronizerSubscriptionTopics {
   SyncStarted = 'SyncStarted',
   SyncEnded = 'SyncEnded',
   SyncFailed = 'SyncFailed',
@@ -86,10 +89,4 @@ export enum TaskSynchronizerEvents {
 export interface TaskSynchronizerFailedPayload {
   error: Error;
   service: TaskSynchronizer;
-}
-
-export interface TaskSynchronizerEventsPayloadMap {
-  [TaskSynchronizerEvents.SyncStarted]: TaskSynchronizer;
-  [TaskSynchronizerEvents.SyncEnded]: TaskSynchronizer;
-  [TaskSynchronizerEvents.SyncFailed]: TaskSynchronizerFailedPayload;
 }

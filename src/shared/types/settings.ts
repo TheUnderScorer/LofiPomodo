@@ -11,7 +11,7 @@ export interface AppSettings {
   autoStart: boolean;
 }
 
-export enum SettingsEvents {
+export enum SettingsOperations {
   GetSettings = 'GetSettings',
   GetSetting = 'GetSetting',
   SetSettings = 'SetSettings',

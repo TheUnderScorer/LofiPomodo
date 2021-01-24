@@ -1,12 +1,13 @@
 import {
   ApiProvider,
   AuthState,
-  IntegrationEvents,
+  IntegrationOperations,
+  IntegrationSubscriptionTopics,
   ProviderInfo,
 } from '../../../../shared/types/integrations/integrations';
 import { useIpcQuery } from '../../../shared/ipc/useIpcQuery';
 import { useCallback, useState } from 'react';
-import { useIpcReceiver } from '../../../shared/ipc/useIpcReceiver';
+import { useIpcSubscriber } from '../../../shared/ipc/useIpcSubscriber';
 import { filterApiProvider } from '../ipcFilters/filterApiProvider';
 import { Nullable } from '../../../../shared/types';
 
@@ -14,8 +15,8 @@ export const useProviderAuthState = (provider: ApiProvider) => {
   const [isAuthorizing, setIsAuthorizing] = useState<boolean>(false);
   const [token, setToken] = useState<Nullable<string>>(null);
 
-  const { loading, refetch } = useIpcQuery<ProviderInfo, AuthState>(
-    IntegrationEvents.GetAuthState,
+  const { isLoading, refetch } = useIpcQuery<ProviderInfo, AuthState>(
+    IntegrationOperations.GetAuthState,
     {
       variables: {
         provider,
@@ -37,23 +38,23 @@ export const useProviderAuthState = (provider: ApiProvider) => {
     setIsAuthorizing(true);
   }, []);
 
-  useIpcReceiver(
-    IntegrationEvents.ApiAuthorizationStarted,
+  useIpcSubscriber(
+    IntegrationSubscriptionTopics.ApiAuthorizationStarted,
     filterApiProvider(provider, handleStart)
   );
 
-  useIpcReceiver(
-    IntegrationEvents.ApiAuthorized,
+  useIpcSubscriber(
+    IntegrationSubscriptionTopics.ApiAuthorized,
     filterApiProvider(provider, handleEnd)
   );
 
-  useIpcReceiver(
-    IntegrationEvents.ApiAuthorizationFailed,
+  useIpcSubscriber(
+    IntegrationSubscriptionTopics.ApiAuthorizationFailed,
     filterApiProvider(provider, handleEnd)
   );
 
   return {
-    loading,
+    loading: isLoading,
     isAuthorizing: isAuthorizing,
     token,
   };

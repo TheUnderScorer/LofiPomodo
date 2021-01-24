@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Container, useColorMode } from '@chakra-ui/core';
 import { Route, Switch } from 'react-router-dom';
 import { routes } from '../shared/routes/routes';
@@ -7,9 +7,18 @@ import { BreakView } from './app/pomodoro/views/breakView/BreakView';
 import { SettingsFormView } from './app/settings/views/SettingsFormView';
 import { ManageTrelloView } from './app/integrations/views/manageTrelloView/ManageTrelloView';
 import './styles/animations.css';
+import { useQueryClient } from 'react-query';
 
 const App = () => {
   const { colorMode } = useColorMode();
+
+  const queryClient = useQueryClient();
+
+  useEffect(() => {
+    console.log({
+      queryCache: queryClient.getQueryCache(),
+    });
+  });
 
   return (
     <Container

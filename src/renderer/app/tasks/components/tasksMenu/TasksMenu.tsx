@@ -5,15 +5,24 @@ import {
   MenuItem,
   MenuList,
   Spinner,
+  MenuIcon,
+  MenuDivider,
+  Portal,
 } from '@chakra-ui/core';
 import React, { FC, useCallback } from 'react';
 import { FaIcon } from '../../../../ui/atoms/faIcon/FaIcon';
-import { faEllipsisH } from '@fortawesome/free-solid-svg-icons';
+import {
+  faEllipsisH,
+  faSync,
+  faTrash,
+} from '@fortawesome/free-solid-svg-icons';
 import { useGroupedTasksCount } from '../../hooks/useGroupedTasksCount';
-import { useIpcInvoke } from '../../../../shared/ipc/useIpcInvoke';
-import { TaskEvents } from '../../../../../shared/types/tasks';
+import { useIpcMutation } from '../../../../shared/ipc/useIpcMutation';
+import { TaskOperations } from '../../../../../shared/types/tasks';
 import { useInlineConfirm } from '../../../../shared/hooks/useInlineConfirm';
-import { useTasksList } from '../../hooks/useTasksList';
+import { useTasksSync } from '../../hooks/useTasksSync';
+import { Text } from '../../../../ui/atoms/text/Text';
+import classNames from 'classnames';
 
 export interface TasksMenuProps {
   menuButtonProps?: MenuButtonProps;
@@ -21,44 +30,70 @@ export interface TasksMenuProps {
 }
 
 export const TasksMenu: FC<TasksMenuProps> = ({ menuButtonProps, loading }) => {
-  const { count, getCount } = useGroupedTasksCount();
-  const { getTasks } = useTasksList();
+  const { count } = useGroupedTasksCount();
 
-  const [
-    removeDeletedCompletedTasksMutation,
-    { loading: removingCompletedTasks },
-  ] = useIpcInvoke(TaskEvents.DeleteCompletedTasks);
+  const removeDeletedCompletedTasksMutation = useIpcMutation<void>(
+    TaskOperations.DeleteCompletedTasks,
+    {
+      invalidateQueries: [TaskOperations.CountByState, TaskOperations.GetTasks],
+    }
+  );
+
   const handleDeleteCompletedTasks = useCallback(async () => {
-    await removeDeletedCompletedTasksMutation();
+    await removeDeletedCompletedTasksMutation.mutateAsync();
+  }, [removeDeletedCompletedTasksMutation]);
 
-    await Promise.all([getCount(), getTasks()]);
-  }, [getCount, getTasks, removeDeletedCompletedTasksMutation]);
   const inlineDeleteCompletedTasks = useInlineConfirm({
     confirmText: 'Delete?',
-    actionText: 'Delete all completed tasks',
+    actionText: 'Delete completed tasks',
     onClick: handleDeleteCompletedTasks,
   });
 
+  const { isSyncing, sync } = useTasksSync();
+
   return (
     <Menu isLazy closeOnSelect={false} placement="left-end">
-      <MenuButton {...menuButtonProps}>
+      <MenuButton width="30px" {...menuButtonProps}>
         {loading ? (
           <Spinner color="brand.primary" />
         ) : (
           <FaIcon icon={faEllipsisH} />
         )}
       </MenuButton>
-      <MenuList>
-        <MenuItem
-          color="brand.danger"
-          isDisabled={!count.Completed || removingCompletedTasks}
-          onClick={inlineDeleteCompletedTasks.handleClick}
-        >
-          {removingCompletedTasks
-            ? 'Deleting...'
-            : inlineDeleteCompletedTasks.text}
-        </MenuItem>
-      </MenuList>
+      <Portal>
+        <MenuList width="40vh" minWidth="300px">
+          <MenuItem
+            leftIcon={<FaIcon icon={faSync} />}
+            isdisabled={isSyncing}
+            onClick={() => sync()}
+          >
+            <MenuIcon mr={2}>
+              <FaIcon
+                className={classNames({
+                  'animation-rotate': isSyncing,
+                })}
+                icon={faSync}
+              />
+            </MenuIcon>
+            <Text>{isSyncing ? 'Syncing tasks...' : 'Sync tasks'}</Text>
+          </MenuItem>
+          <MenuDivider />
+          <MenuItem
+            color="brand.danger"
+            isDisabled={
+              !count?.Completed || removeDeletedCompletedTasksMutation.isLoading
+            }
+            onClick={inlineDeleteCompletedTasks.handleClick}
+          >
+            <MenuIcon mr={2}>
+              <FaIcon color="danger" icon={faTrash} />
+            </MenuIcon>
+            {removeDeletedCompletedTasksMutation.isLoading
+              ? 'Deleting...'
+              : inlineDeleteCompletedTasks.text}
+          </MenuItem>
+        </MenuList>
+      </Portal>
     </Menu>
   );
 };

@@ -55,6 +55,8 @@ describe('Settings - as a user', () => {
     settingsBtn = await app.client.$('.settings-btn');
     await settingsBtn.click();
 
+    await wait(2000);
+
     for (const [name, checker] of Object.entries(fieldChecksMap)) {
       const field = await app.client.$(`[name="pomodoro.${name}"]`);
 

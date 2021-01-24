@@ -1,4 +1,4 @@
-export enum AppSystemEvents {
+export enum AppSystemOperations {
   CloseWindow = 'CloseWindow',
   ToggleWindowSize = 'ToggleWindowSize',
   MinimizeWindow = 'MinimizeWindow',
@@ -6,6 +6,7 @@ export enum AppSystemEvents {
   GetIs = 'GetIs',
   ResizeWindow = 'ResizeWindow',
   OpenWindow = 'OpenWindow',
+  QuitApp = 'QuitApp',
 }
 
 export interface ResizeWindowPayload {

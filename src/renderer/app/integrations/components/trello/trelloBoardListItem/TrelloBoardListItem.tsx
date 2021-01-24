@@ -21,14 +21,13 @@ import { FormControl } from '../../../../../ui/atoms/formControl/FormControl';
 import { Text } from '../../../../../ui/atoms/text/Text';
 import {
   GetTrelloBoardListsArgs,
-  IntegrationEvents,
+  IntegrationOperations,
 } from '../../../../../../shared/types/integrations/integrations';
-import { useIpcInvoke } from '../../../../../shared/ipc/useIpcInvoke';
-import { useMount, usePrevious } from 'react-use';
 import { OptionSeparator } from '../../../../../ui/atoms/optionSeparator/OptionSeparator';
 import { TrelloListsSelection } from './trelloListsSection/TrelloListsSection';
 import { get } from 'lodash';
 import { validateDuplicateTrelloBoards } from '../../../validators/validateDuplicateTrelloBoards';
+import { useIpcQuery } from '../../../../../shared/ipc/useIpcQuery';
 
 export interface TrelloBoardListItemProps extends ListItemProps {
   boards: TrelloBoard[];
@@ -61,18 +60,19 @@ export const TrelloBoardListItem: FC<TrelloBoardListItemProps> = ({
 
   const doneListId = form.watch(getName('doneListId')) as string | undefined;
   const board = form.watch(getName('boardId')) as string;
-  const prevBoard = usePrevious(board);
 
   const boardIdFieldError = useMemo(
     () => get(form.errors, getName('boardId')),
     [form.errors, getName]
   );
 
-  const [fetchLists, { result: fetchedLists, loading }] = useIpcInvoke<
+  const { data: fetchedLists, ...fetchListsQuery } = useIpcQuery<
     GetTrelloBoardListsArgs,
     TrelloList[]
-  >(IntegrationEvents.GetTrelloBoardLists, {
-    onComplete: () => form.setValue(getName('listIds'), []),
+  >(IntegrationOperations.GetTrelloBoardLists, {
+    variables: {
+      boardId: board,
+    },
   });
 
   const lists = useMemo(() => {
@@ -83,23 +83,15 @@ export const TrelloBoardListItem: FC<TrelloBoardListItemProps> = ({
     return fetchedLists?.filter((list) => list.id !== doneListId) ?? [];
   }, [doneListId, fetchedLists]);
 
-  useEffect(() => {
+  /*useEffect(() => {
     if (prevBoard && board && prevBoard !== board) {
-      fetchLists({
-        boardId: board,
-      }).catch(console.error);
+      fetchListsQuery
+
+        .catch(console.error);
 
       form.setValue(getName('listIds'), []);
     }
-  }, [board, fetchLists, prevBoard, index, form, getName]);
-
-  useMount(() => {
-    if (board) {
-      fetchLists({
-        boardId: board,
-      }).catch(console.error);
-    }
-  });
+  }, [board, fetchLists, prevBoard, index, form, getName]);*/
 
   useEffect(() => {
     if (doneListId) {
@@ -147,12 +139,12 @@ export const TrelloBoardListItem: FC<TrelloBoardListItemProps> = ({
             {selectAppend}
           </HStack>
         </FormControl>
-        {loading && (
+        {fetchListsQuery.isLoading && (
           <Center>
             <Spinner color="brand.primary" />
           </Center>
         )}
-        {!loading && (
+        {!fetchListsQuery.isLoading && (
           <Flex width="100%">
             {Boolean(lists?.length) && (
               <>

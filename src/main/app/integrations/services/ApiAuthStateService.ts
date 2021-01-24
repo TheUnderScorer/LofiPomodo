@@ -4,27 +4,19 @@ import {
 } from '../../../../shared/types/integrations/integrations';
 import { ApiService } from '../types';
 import { getServiceByProvider } from './getServiceByProvider';
-import { Typed } from 'emittery';
-
-export enum ApiAuthStateEvents {
-  AuthTimeout = 'AuthTimeout',
-}
-
-export interface ApiAuthStateEventsPayloadMap {
-  [ApiAuthStateEvents.AuthTimeout]: {
-    service: ApiAuthStateService;
-    provider: ApiProvider;
-  };
-}
+import { Subject } from 'rxjs';
 
 export class ApiAuthStateService {
-  readonly events = new Typed<ApiAuthStateEventsPayloadMap>();
-
   // Stores api providers that are being currently authorized
   readonly apisBeingAuthorized = new Set<ApiProvider>();
 
   // Map of timeouts related to certain api authorization
   readonly apisAuthTimeouts = new Map<ApiProvider, any>();
+
+  readonly authTimeout$ = new Subject<{
+    service: ApiAuthStateService;
+    provider: ApiProvider;
+  }>();
 
   constructor(private readonly services: ApiService[]) {}
 
@@ -64,9 +56,9 @@ export class ApiAuthStateService {
   private async handleAuthTimeout(provider: ApiProvider) {
     this.apisBeingAuthorized.delete(provider);
 
-    await this.events.emit(ApiAuthStateEvents.AuthTimeout, {
-      service: this,
+    this.authTimeout$.next({
       provider,
+      service: this,
     });
   }
 

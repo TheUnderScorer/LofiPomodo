@@ -5,33 +5,23 @@ import {
 } from '../../../shared/types/database';
 import Knex, { QueryBuilder } from 'knex';
 import { castAsArray } from '../../../shared/utils/array';
-import { Typed as EventEmitter } from 'emittery';
 import { EntityNotFound } from './errors/EntityNotFound';
 import { mapToId } from '../../../shared/mappers/mapToId';
 import { EntitiesNotFound } from './errors/EntitiesNotFound';
-
-export enum RepositoryEvents {
-  EntityUpdated = 'EntityUpdated',
-  EntitiesCreated = 'EntitiesCreated',
-  EntitiesDeleted = 'EntitiesDeleted',
-}
+import { Subject } from 'rxjs';
 
 export interface EntityUpdatedPayload<T> {
   prevEntity: T;
   entity: T;
 }
 
-export interface RepositoryEventsMap<T> {
-  [RepositoryEvents.EntityUpdated]: EntityUpdatedPayload<T>;
-  [RepositoryEvents.EntitiesCreated]: T[];
-  [RepositoryEvents.EntitiesDeleted]: T[];
-}
-
 export abstract class Repository<
   DbModel extends BaseModel,
   Model extends BaseModel = DbModel
 > implements BaseRepository<DbModel, Model> {
-  readonly events = new EventEmitter<RepositoryEventsMap<Model>>();
+  readonly entityUpdated$ = new Subject<EntityUpdatedPayload<Model>>();
+  readonly entitiesCreated$ = new Subject<Model[]>();
+  readonly entitiesDeleted$ = new Subject<Model[]>();
 
   constructor(
     protected readonly connection: Knex,
@@ -45,12 +35,12 @@ export abstract class Repository<
   protected abstract fromDb(entity: DbModel): Model;
   protected abstract toDb(entity: Model): DbModel;
 
+  // TODO Extract this to unit of work
   async transaction<T>(callback: (repository: this) => Promise<T>): Promise<T> {
     const trx = await this.connection.transaction();
 
     try {
       const repository = new (this as any).constructor(trx, this.table);
-      repository.events = this.events;
 
       const result = await callback(repository);
 
@@ -70,7 +60,7 @@ export abstract class Repository<
 
     const result = await this.getQueryBuilder().delete().whereIn('id', ids);
 
-    await this.events.emit(RepositoryEvents.EntitiesDeleted, records);
+    this.entitiesDeleted$.next(records);
 
     return result;
   }
@@ -126,7 +116,7 @@ export abstract class Repository<
 
     const result = await this.getQueryBuilder().insert(mappedEntities);
 
-    await this.events.emit(RepositoryEvents.EntitiesCreated, entitiesArray);
+    this.entitiesCreated$.next(entitiesArray);
 
     return Boolean(result);
   }
@@ -144,7 +134,7 @@ export abstract class Repository<
       .update(this.toDb(entity));
 
     if (result) {
-      await this.events.emit(RepositoryEvents.EntityUpdated, {
+      this.entityUpdated$.next({
         entity: updatedEntity,
         prevEntity,
       });
@@ -177,16 +167,14 @@ export abstract class Repository<
       return t.commit();
     });
 
-    await Promise.all(
-      mappedEntities.map((entity) => {
-        const prevEntity = prevEntities.find(({ id }) => entity.id === id);
+    mappedEntities.forEach((entity) => {
+      const prevEntity = prevEntities.find(({ id }) => entity.id === id);
 
-        return this.events.emit(RepositoryEvents.EntityUpdated, {
-          prevEntity: prevEntity!,
-          entity,
-        });
-      })
-    );
+      this.entityUpdated$.next({
+        prevEntity: prevEntity!,
+        entity,
+      });
+    });
 
     return mappedEntities;
   }

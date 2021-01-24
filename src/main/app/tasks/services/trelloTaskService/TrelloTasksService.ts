@@ -9,7 +9,7 @@ import {
   TrelloCard,
   TrelloTaskMeta,
 } from '../../../../../shared/types/integrations/trello';
-import { TaskCrudEvents, TaskCrudService } from '../TaskCrudService';
+import { TaskCrudService } from '../TaskCrudService';
 
 export class TrelloTasksService implements TaskApiService {
   readonly provider = TaskSource.Trello;
@@ -19,17 +19,26 @@ export class TrelloTasksService implements TaskApiService {
     private readonly taskRepository: TaskRepository,
     private readonly taskCrudService: TaskCrudService
   ) {
-    taskCrudService.events.on(TaskCrudEvents.Completed, (task) =>
-      this.moveTrelloCardToDoneList(task)
-    );
+    taskCrudService.tasksCompleted$.subscribe(async (tasks) => {
+      await Promise.all(
+        tasks.map((task) => this.moveTrelloCardToDoneList(task))
+      );
+    });
 
-    taskCrudService.events.on(TaskCrudEvents.UnCompleted, (task) =>
-      this.moveCardBackFromDoneList(task)
-    );
+    taskCrudService.tasksUncompleted$.subscribe(async (tasks) => {
+      await Promise.all(
+        tasks.map((task) => this.moveCardBackFromDoneList(task))
+      );
+    });
   }
 
   async syncTasks(): Promise<SyncTasksResult> {
     const cards = await this.trelloService.getCards();
+
+    if (!cards.length) {
+      return {};
+    }
+
     const cardIds = cards.map((list) => list.id);
 
     const trelloTasks = (await this.taskRepository.getBySource(

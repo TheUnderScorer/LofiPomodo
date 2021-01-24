@@ -1,35 +1,26 @@
 import debounce from 'lodash.debounce';
-import { CanSubscribe, Changable } from '../types';
+import { ChangeSubject, Changable } from '../types';
+import { Subject } from 'rxjs';
 
 export const reactive = <T extends Changable>(
   object: T
-): T & CanSubscribe<T> => {
-  const subscribers: Function[] = [];
+): T & ChangeSubject<T> => {
+  const subject = new Subject<T>();
 
-  const triggerSubscribers = async (target: T) => {
-    await Promise.all(subscribers.map((sub) => sub(target)));
-  };
-
-  const castedObject = object as T & CanSubscribe<T>;
+  const castedObject = object as T & ChangeSubject<T>;
   const orgOnChange = castedObject.onChange?.bind(castedObject) ?? (() => {});
 
-  const onChange = function (this: T & CanSubscribe<T>) {
+  const onChange = function (this: T & ChangeSubject<T>) {
     orgOnChange();
 
-    triggerSubscribers(this);
+    subject.next(this);
   };
 
   castedObject.onChange = debounce(onChange, 2);
 
-  castedObject.subscribe = function (handler) {
-    const index = subscribers.push(handler) - 1;
+  castedObject.changed$ = subject;
 
-    return () => {
-      subscribers.splice(index, 1);
-    };
-  };
-
-  return new Proxy<T & CanSubscribe<T>>(castedObject, {
+  return new Proxy<T & ChangeSubject<T>>(castedObject, {
     set(target: T, p: keyof T, value: any): boolean {
       target[p] = value;
 

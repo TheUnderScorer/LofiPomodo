@@ -18,20 +18,23 @@ import React, {
   useRef,
   useState,
 } from 'react';
-import { Task, TaskEvents, TaskState } from '../../../../../shared/types/tasks';
+import {
+  Task,
+  TaskOperations,
+  TaskState,
+} from '../../../../../shared/types/tasks';
 import { taskStateDictionary } from '../../../../../shared/dictionary/tasks';
 import { TasksList, TasksListProps } from '../tasksList/TasksList';
 import { Text } from '../../../../ui/atoms/text/Text';
 import { useTasksList } from '../../hooks/useTasksList';
 import { useGroupedTasksCount } from '../../hooks/useGroupedTasksCount';
 import { AddTaskInput } from '../addTaskInput/AddTaskInput';
-import { useIpcInvoke } from '../../../../shared/ipc/useIpcInvoke';
+import { useIpcMutation } from '../../../../shared/ipc/useIpcMutation';
 import { Heading } from '../../../../ui/atoms/heading/Heading';
-import { useActiveTask } from '../../hooks/useActiveTask';
 import { TaskContextMenu } from '../taskContextMenu/TaskContextMenu';
 import { TasksMenu } from '../tasksMenu/TasksMenu';
 import { useUpdateTask } from '../../hooks/useUpdateTask';
-import { SyncTasksBtn } from '../syncTasksBtn/SyncTasksBtn';
+import { isEqual } from 'lodash';
 
 export interface TabbedTasksListProps {
   listProps?: Omit<TasksListProps, 'tasks'>;
@@ -43,26 +46,23 @@ export const TabbedTasksList: FC<TabbedTasksListProps> = (props) => {
   const isDragRef = useRef(false);
 
   const { count: tasksCount } = useGroupedTasksCount();
-  const {
-    tasks,
-    loading,
-    setTaskState,
-    didFetch,
-    getTasks,
-    state,
-  } = useTasksList();
-  const { fetchActiveTask } = useActiveTask();
+  const { tasks, loading, setTaskState, didFetch, state } = useTasksList();
   const { updateTask } = useUpdateTask();
 
   const [activeIndex, setActiveIndex] = useState(0);
-  const [storedTasks, setStoredTasks] = useState<Task[]>(tasks);
+  const [storedTasks, setStoredTasks] = useState<Task[]>(tasks ?? []);
 
   const activeState = useMemo(() => states[activeIndex], [activeIndex]);
 
-  const [updateTasksMutation, { loading: isUpdating }] = useIpcInvoke<
-    Task[],
-    Task[]
-  >(TaskEvents.UpdateTasks);
+  const updateTasksMutation = useIpcMutation<Task[], Task[]>(
+    TaskOperations.UpdateTasks,
+    {
+      invalidateQueries: [
+        TaskOperations.GetTasks,
+        TaskOperations.GetActiveTask,
+      ],
+    }
+  );
 
   const { listProps } = props;
 
@@ -73,6 +73,12 @@ export const TabbedTasksList: FC<TabbedTasksListProps> = (props) => {
   const handleTaskChange = useCallback(
     async (task: Task) => {
       const index = storedTasks.findIndex(({ id }) => task.id === id);
+
+      if (isEqual(task, storedTasks[index])) {
+        return;
+      }
+
+      console.log('Task changed:', task);
 
       const newTasks = [...storedTasks];
 
@@ -94,7 +100,7 @@ export const TabbedTasksList: FC<TabbedTasksListProps> = (props) => {
       return;
     }
 
-    setStoredTasks(tasks);
+    setStoredTasks(tasks ?? []);
   }, [tasks]);
 
   const contextMenu = useCallback(
@@ -107,12 +113,11 @@ export const TabbedTasksList: FC<TabbedTasksListProps> = (props) => {
       isDragRef.current = true;
       setStoredTasks(tasks);
 
-      await updateTasksMutation(tasks);
-      await Promise.all([fetchActiveTask(), getTasks()]);
+      await updateTasksMutation.mutateAsync(tasks);
 
       isDragRef.current = false;
     },
-    [fetchActiveTask, getTasks, updateTasksMutation]
+    [updateTasksMutation]
   );
 
   return (
@@ -144,9 +149,7 @@ export const TabbedTasksList: FC<TabbedTasksListProps> = (props) => {
             right="20px"
             height="30px"
           >
-            <SyncTasksBtn variant="link" />
-
-            <TasksMenu loading={loading || isUpdating} />
+            <TasksMenu loading={loading || updateTasksMutation.isLoading} />
           </HStack>
         </Center>
         <TabPanels h="100%">

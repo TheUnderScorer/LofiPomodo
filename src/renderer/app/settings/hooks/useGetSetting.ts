@@ -1,7 +1,7 @@
 import {
   AppSettings,
   GetSettingPayload,
-  SettingsEvents,
+  SettingsOperations,
 } from '../../../../shared/types/settings';
 import { IpcQueryArgs, useIpcQuery } from '../../../shared/ipc/useIpcQuery';
 
@@ -12,7 +12,7 @@ export const useGetSetting = <Key extends keyof AppSettings>(
   args?: GetSettingHookParams
 ) => {
   return useIpcQuery<GetSettingPayload, AppSettings[Key]>(
-    SettingsEvents.GetSetting,
+    SettingsOperations.GetSetting,
     {
       variables: {
         key,

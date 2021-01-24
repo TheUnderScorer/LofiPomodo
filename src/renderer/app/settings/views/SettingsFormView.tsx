@@ -15,13 +15,17 @@ import { useHistory } from 'react-router-dom';
 import { usePlatform } from '../../system/hooks/usePlatform';
 import { Text } from '../../../ui/atoms/text/Text';
 import './SettingsFormView.styles.css';
-import { AppSettings, SettingsEvents } from '../../../../shared/types/settings';
-import { useIpcInvoke } from '../../../shared/ipc/useIpcInvoke';
+import {
+  AppSettings,
+  SettingsOperations,
+} from '../../../../shared/types/settings';
+import { useIpcMutation } from '../../../shared/ipc/useIpcMutation';
 import { PomodoroForm } from '../../pomodoro/components/pomodoroForm/PomodoroForm';
 import { useForm } from 'react-hook-form';
 import { IntegrationsForm } from '../../integrations/components/IntegrationsForm';
 import { SubmitButton } from '../../../ui/atoms/submitButton/SubmitButton';
 import { Alert } from '../../../ui/molecules/alert/Alert';
+import { useIpcQuery } from '../../../shared/ipc/useIpcQuery';
 
 type SettingTab = 'Pomodoro' | 'Integrations';
 
@@ -47,27 +51,32 @@ export const SettingsFormView: FC<SettingsFormViewProps> = () => {
     [form]
   );
 
-  const [, { result: settings, loading: queryLoading }] = useIpcInvoke<
+  const { isLoading: queryLoading, data: settings } = useIpcQuery<
     never,
     AppSettings
-  >(SettingsEvents.GetSettings, {
-    invokeAtMount: true,
+  >(SettingsOperations.GetSettings, {
     onComplete: fillForm,
   });
 
-  const [setSettings, { loading, error }] = useIpcInvoke<AppSettings, boolean>(
-    SettingsEvents.SetSettings
+  const setSettingsMutation = useIpcMutation<AppSettings, boolean>(
+    SettingsOperations.SetSettings,
+    {
+      invalidateQueries: [
+        SettingsOperations.GetSettings,
+        SettingsOperations.GetSetting,
+      ],
+    }
   );
 
   const handleSubmit = useCallback(
     async (values: AppSettings) => {
-      const result = await setSettings(values);
+      const result = await setSettingsMutation.mutateAsync(values);
 
       if (result) {
         history.goBack();
       }
     },
-    [setSettings, history]
+    [setSettingsMutation, history]
   );
 
   const { is } = usePlatform();
@@ -77,14 +86,14 @@ export const SettingsFormView: FC<SettingsFormViewProps> = () => {
       <TitleBar
         position="relative"
         justifyContent="flex-start"
-        pt={!is.windows ? '60px' : 2}
+        pt={!is?.windows ? '60px' : 2}
         pl={2}
       >
         <Flex w="100%" position="relative">
           <IconButton
             className="go-back-btn"
             left="0"
-            top={is.windows ? 1 : 0}
+            top={is?.windows ? 1 : 0}
             onClick={() => history.goBack()}
             aria-label="Go back"
           >
@@ -110,7 +119,7 @@ export const SettingsFormView: FC<SettingsFormViewProps> = () => {
         pt={12}
         pb={3}
         id="settings"
-        height={is.windows ? 'calc(100vh - 40px)' : 'calc(100vh - 60px)'}
+        height={is?.windows ? 'calc(100vh - 40px)' : 'calc(100vh - 60px)'}
         centerContent
         width="100%"
         maxW="100%"
@@ -137,16 +146,27 @@ export const SettingsFormView: FC<SettingsFormViewProps> = () => {
               width="100%"
               pt={2}
             >
-              {error && (
+              {setSettingsMutation.error && (
                 <Alert type="error" mb={6}>
-                  <Text>{error.message}</Text>
+                  <Text>{setSettingsMutation.error.message}</Text>
                 </Alert>
               )}
-              {tab === 'Pomodoro' && <PomodoroForm form={form} />}
+              {tab === 'Pomodoro' && (
+                <PomodoroForm
+                  settings={{
+                    ...settings?.pomodoro,
+                    autoStart: settings.autoStart,
+                  }}
+                  form={form}
+                />
+              )}
               {tab === 'Integrations' && <IntegrationsForm form={form} />}
             </Flex>
             {tab === 'Pomodoro' && (
-              <SubmitButton id="submit_settings" isLoading={loading} />
+              <SubmitButton
+                id="submit_settings"
+                isLoading={setSettingsMutation.isLoading}
+              />
             )}
           </Flex>
         )}
