@@ -208,5 +208,5 @@
     "start-m1-gh-runner": "arch -x86_64 ./actions-runner/run.sh",
     "clear-node-modules": "modclean -n default:safe -I @semantic-release/changelog,@csstools/normalize.css,electron-installer-dmg,@electron-forge/*,electron-winstaller,electron-installer-debian -r"
   },
-  "version": "1.8.0"
+  "version": "1.9.0"
 }

@@ -1,3 +1,21 @@
+# [1.9.0](https://github.com/TheUnderScorer/pixel-pomodo/compare/v1.8.0...v1.9.0) (2021-01-24)
+
+
+### Bug Fixes
+
+* **windows:** Draggable area causing buttons in title bar to being non clickable ([119a261](https://github.com/TheUnderScorer/pixel-pomodo/commit/119a261c9c9c4c7cb6c3e8856b48cc2966b992b0))
+* **windows:** Fix non-clickable title bar buttons ([a282ab6](https://github.com/TheUnderScorer/pixel-pomodo/commit/a282ab64d0962542efbd2294fa69ec33c574e6e1))
+* **windows:** Not working trello auth ([4b90b6c](https://github.com/TheUnderScorer/pixel-pomodo/commit/4b90b6c89bb3f14d3f90a641fc444be125085148))
+* Active task not being updated on pomodoro change ([6667301](https://github.com/TheUnderScorer/pixel-pomodo/commit/66673019f8f0c8cc328fde0a7741c8569a7c1ce7))
+* Tasks being removed on sync if no providers are set ([4b6bc98](https://github.com/TheUnderScorer/pixel-pomodo/commit/4b6bc98350b2271c6f92d15b80221288c5e8a9d0))
+
+
+### Features
+
+* **windows:** Close app when clicking "X" button ([db73ba5](https://github.com/TheUnderScorer/pixel-pomodo/commit/db73ba59cd99d442b5147267deb42e633acdddfd))
+* Handle unauthorization ([122d053](https://github.com/TheUnderScorer/pixel-pomodo/commit/122d053d11cadf26fdec889de4956b2f17192b01))
+* Move "Sync tasks" option to tasks menu ([87d4360](https://github.com/TheUnderScorer/pixel-pomodo/commit/87d4360752826ac87684488eb716c498ca63c6d5))
+
 # [1.8.0](https://github.com/TheUnderScorer/pixel-pomodo/compare/v1.7.2...v1.8.0) (2021-01-20)
 
 
