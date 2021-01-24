@@ -53,7 +53,7 @@ export const TasksMenu: FC<TasksMenuProps> = ({ menuButtonProps, loading }) => {
 
   return (
     <Menu isLazy closeOnSelect={false} placement="left-end">
-      <MenuButton {...menuButtonProps}>
+      <MenuButton width="30px" {...menuButtonProps}>
         {loading ? (
           <Spinner color="brand.primary" />
         ) : (

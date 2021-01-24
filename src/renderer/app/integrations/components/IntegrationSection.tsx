@@ -95,6 +95,7 @@ export const IntegrationSection: FC<IntegrationSectionProps> = ({
         {token && (
           <Menu isLazy>
             <MenuButton
+              width="20px"
               className={`${provider}-menu-btn`}
               isDisabled={unAuthorizeMutation.isLoading}
               type="button"
