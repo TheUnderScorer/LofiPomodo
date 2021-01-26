@@ -3,7 +3,6 @@ import { Pomodoro, PomodoroOperations, Trigger } from '../../../shared/types';
 import { setupTray } from './tray';
 import { breakWindow } from './services/breakWindow';
 import { sendUpdatesToWindows } from './services/rendererUpdates';
-import { handleTimerMenu } from './services/timerMenu';
 import { showTrayProgress } from './services/showTrayProgress';
 import { restartPomodoroOnNewDay } from './services/restartPomodoroOnNewDay';
 
@@ -12,21 +11,21 @@ export const setupPomodoro = (context: AppContext) => {
   breakWindow(context);
   setupTray(context);
   showTrayProgress(context);
-  restartPomodoroOnNewDay(context.pomodoro).catch(console.error);
+  restartPomodoroOnNewDay(context.pomodoroService).catch(console.error);
 
   context.ipcService.registerAsMap({
-    [PomodoroOperations.Update]: (_, payload: Pomodoro) => {
+    [PomodoroOperations.UpdatePomodoro]: (_, payload: Pomodoro) => {
       if (!payload) {
         return;
       }
 
-      context.pomodoro.fill(payload);
+      context.pomodoroService.fill(payload);
     },
-    [PomodoroOperations.GetState]: () => context.pomodoro.toJSON(),
-    [PomodoroOperations.ToggleTimerMenu]: handleTimerMenu(context),
+    [PomodoroOperations.GetPomodoroState]: () =>
+      context.pomodoroService.toJSON(),
     [PomodoroOperations.RestartCurrentState]: () =>
-      context.pomodoro.resetCurrentState(),
+      context.pomodoroService.resetCurrentState(),
     [PomodoroOperations.MoveToNextState]: () =>
-      context.pomodoro.moveToNextState(Trigger.Manual),
+      context.pomodoroService.moveToNextState(Trigger.Manual),
   });
 };

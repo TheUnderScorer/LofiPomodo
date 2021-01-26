@@ -1,6 +1,6 @@
-import { Pomodoro } from "./pomodoro";
+import { PomodoroSettings, PomodoroState } from "./pomodoro";
 import { WindowProps, WindowTypes } from "./system";
-import { TrelloSettings } from './integrations/trello';
+import { TrelloSettings } from "./integrations/trello";
 
 type WindowProperties = `${WindowTypes}Props`;
 
@@ -9,7 +9,8 @@ type WindowPropsStore = {
 }
 
 export interface AppStore extends WindowPropsStore {
-  pomodoroState?: Pomodoro;
+  pomodoroState?: PomodoroState;
+  pomodoroSettings?: PomodoroSettings;
   trello?: TrelloSettings;
   lastTasksSyncDate?: string;
 }

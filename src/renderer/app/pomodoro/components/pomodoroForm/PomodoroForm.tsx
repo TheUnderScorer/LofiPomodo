@@ -3,11 +3,12 @@ import { Controller, UseFormMethods } from 'react-hook-form';
 import {
   FormControl,
   FormControlProps,
-} from '../../../../ui/atoms/formControl/FormControl';
+} from '../../../../ui/molecules/formControl/FormControl';
 import { DurationField } from '../../../../form/fields/DurationField';
-import { Divider, Stack, Switch } from '@chakra-ui/core';
+import { Divider, Input, Stack, Switch } from '@chakra-ui/core';
 import { AppSettings } from '../../../../../shared/types/settings';
 import { PomodoroSettings } from '../../../../../shared/types';
+import { FormController } from '../../../../ui/molecules/formController/FormController';
 
 export interface PomodoroFormProps {
   form: UseFormMethods<AppSettings>;
@@ -19,67 +20,97 @@ const formControlProps: Partial<FormControlProps> = {
   justifyContent: 'space-between',
   d: 'flex',
   alignItems: 'baseline',
+  flexWrap: 'wrap',
 };
+
+const maxFieldWidth = '200px';
 
 export const PomodoroForm: FC<PomodoroFormProps> = ({ form, settings }) => {
   const { errors, control } = form;
 
   return (
     <Stack spacing={6}>
-      <FormControl
+      <FormController
         {...formControlProps}
-        error={errors.pomodoro?.workDurationSeconds?.message}
         label="Work duration"
+        name="pomodoroSettings.workDurationSeconds"
+        form={form}
+        rules={{
+          max: 9999,
+        }}
       >
-        <Controller
-          name="pomodoro.workDurationSeconds"
-          control={control}
-          defaultValue={settings.workDurationSeconds}
-          rules={{
-            max: 9999,
-          }}
-          render={(props) => <DurationField {...props} />}
-        />
-      </FormControl>
-      <FormControl
+        {(props) => <DurationField {...props} maxWidth={maxFieldWidth} />}
+      </FormController>
+      <FormController
         {...formControlProps}
-        error={errors.pomodoro?.shortBreakDurationSeconds?.message}
+        form={form}
         label="Break duration"
+        name="pomodoroSettings.shortBreakDurationSeconds"
+        rules={{
+          max: 9999,
+        }}
       >
-        <Controller
-          defaultValue={settings.shortBreakDurationSeconds}
-          name="pomodoro.shortBreakDurationSeconds"
-          control={control}
-          rules={{
-            max: 9999,
-          }}
-          render={(props) => <DurationField {...props} />}
-        />
-      </FormControl>
+        {(props) => <DurationField {...props} maxWidth={maxFieldWidth} />}
+      </FormController>
       <FormControl
         {...formControlProps}
-        error={errors.pomodoro?.longBreakDurationSeconds?.message}
+        contentBoxProps={{
+          flexDirection: 'column',
+        }}
+        error={errors.pomodoroSettings?.longBreakDurationSeconds?.message}
         label="Long break duration"
       >
         <Controller
           defaultValue={settings.longBreakDurationSeconds}
-          name="pomodoro.longBreakDurationSeconds"
+          name="pomodoroSettings.longBreakDurationSeconds"
           control={control}
           rules={{
             max: 9999,
           }}
-          render={(props) => <DurationField {...props} />}
+          render={(props) => (
+            <DurationField {...props} maxWidth={maxFieldWidth} />
+          )}
         />
       </FormControl>
       <FormControl
         {...formControlProps}
-        error={errors.pomodoro?.openFullWindowOnBreak?.message}
-        name="pomodoro.openFullWindowOnBreak"
+        error={errors.pomodoroSettings?.longBreakInterval?.message}
+        label="Short break interval"
+        helperInTooltip
+        helperText="Amount of short breaks before long break happens"
+      >
+        <Controller
+          name="pomodoroSettings.longBreakInterval"
+          defaultValue={settings.longBreakInterval}
+          control={control}
+          rules={{
+            max: {
+              value: 99,
+              message: 'Value cannot be larger than 99',
+            },
+            min: {
+              value: 2,
+              message: 'Value cannot be smaller than 2',
+            },
+          }}
+          render={(props) => (
+            <Input
+              {...props}
+              maxWidth={`calc(${maxFieldWidth} - 40px)`}
+              type="number"
+            />
+          )}
+        />
+      </FormControl>
+      <FormControl
+        {...formControlProps}
+        error={errors.pomodoroSettings?.openFullWindowOnBreak?.message}
+        name="pomodoroSettings.openFullWindowOnBreak"
         label="Open separate window on break"
       >
         <Controller
           defaultValue={settings.openFullWindowOnBreak}
-          name="pomodoro.openFullWindowOnBreak"
+          name="pomodoroSettings.openFullWindowOnBreak"
           control={control}
           render={(props) => (
             <Switch
@@ -93,13 +124,13 @@ export const PomodoroForm: FC<PomodoroFormProps> = ({ form, settings }) => {
       </FormControl>
       <FormControl
         {...formControlProps}
-        error={errors.pomodoro?.autoRunBreak?.message}
-        name="pomodoro.autoRunBreak"
+        error={errors.pomodoroSettings?.autoRunBreak?.message}
+        name="pomodoroSettings.autoRunBreak"
         label="Start break automatically"
       >
         <Controller
           defaultValue={settings.autoRunBreak}
-          name="pomodoro.autoRunBreak"
+          name="pomodoroSettings.autoRunBreak"
           control={control}
           render={(props) => (
             <Switch
@@ -113,13 +144,13 @@ export const PomodoroForm: FC<PomodoroFormProps> = ({ form, settings }) => {
       </FormControl>
       <FormControl
         {...formControlProps}
-        error={errors.pomodoro?.autoRunWork?.message}
-        name="pomodoro.autoRunWork"
+        error={errors.pomodoroSettings?.autoRunWork?.message}
+        name="pomodoroSettings.autoRunWork"
         label="Start work automatically"
       >
         <Controller
           defaultValue={settings.autoRunWork}
-          name="pomodoro.autoRunWork"
+          name="pomodoroSettings.autoRunWork"
           control={control}
           render={(props) => (
             <Switch

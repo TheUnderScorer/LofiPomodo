@@ -37,7 +37,7 @@ log.debug(`Dirname: ${__dirname}`);
 const setupAppMenu = (context: AppContext) => {
   Menu.setApplicationMenu(context.menuFactory.createAppMenu());
 
-  context.pomodoro.changed$.subscribe(() => {
+  context.pomodoroService.changed$.subscribe(() => {
     Menu.setApplicationMenu(context.menuFactory.createAppMenu());
   });
 };
@@ -69,6 +69,8 @@ app.whenReady().then(async () => {
       await context.windowFactory.createTimerWindow();
     });
   } catch (e) {
+    console.error(e);
+
     await createErrorDialog(e);
 
     app.quit();

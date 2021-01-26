@@ -22,11 +22,16 @@ import { ApiService } from './app/integrations/types';
 import { ContextMenuFactory } from './shared/menu/ContextMenuFactory';
 import { TrelloTasksService } from './app/tasks/services/trelloTaskService/TrelloTasksService';
 import { TaskSynchronizer } from './app/tasks/services/TaskSynchronizer';
+import { Pomodoro, PomodoroSettings, PomodoroState } from '../shared/types';
+import {
+  getInitialPomodoroSettings,
+  getInitialPomodoroState,
+} from './app/pomodoro/data';
 
 export interface AppContext {
   ipcService: IpcMainService;
   store: ElectronStore<AppStore>;
-  pomodoro: PomodoroService;
+  pomodoroService: PomodoroService;
   preloadPath: string;
   windowFactory: WindowFactory;
   menuFactory: MenuFactory;
@@ -59,6 +64,55 @@ const handleIntegrations = async (
   return { trelloService, apiAuthState, apiAuthService };
 };
 
+const createStore = () => {
+  const defaults = {
+    pomodoroSettings: getInitialPomodoroSettings(),
+    pomodoroState: getInitialPomodoroState(),
+  };
+  const store = new ElectronStore<AppStore>({
+    defaults,
+    migrations: {
+      '>1.9.0': (store) => {
+        const pomodoroState = store.get('pomodoroState') as Pomodoro;
+
+        console.log('>1.9.0 migration running');
+
+        if (!pomodoroState) {
+          return;
+        }
+
+        store.set('pomodoroSettings', {
+          autoRunWork: pomodoroState.autoRunWork,
+          autoRunBreak: pomodoroState.autoRunBreak,
+          workDurationSeconds: pomodoroState.workDurationSeconds,
+          longBreakDurationSeconds: pomodoroState.longBreakDurationSeconds,
+          longBreakInterval: pomodoroState.longBreakInterval,
+          openFullWindowOnBreak: pomodoroState.openFullWindowOnBreak,
+          shortBreakDurationSeconds: pomodoroState.shortBreakDurationSeconds,
+        } as PomodoroSettings);
+
+        store.set('pomodoroState', {
+          isRunning: pomodoroState.isRunning,
+          remainingPercentage: pomodoroState.remainingPercentage,
+          remainingSeconds: pomodoroState.remainingSeconds,
+          remainingTime: pomodoroState.remainingTime,
+          shortBreakCount: pomodoroState.shortBreakCount,
+          start: pomodoroState.start,
+          state: pomodoroState.state,
+        } as PomodoroState);
+      },
+    },
+  });
+
+  if (process.env.CLEAR_STORE_ON_APP_RUN === 'true') {
+    store.clear();
+
+    store.set(defaults);
+  }
+
+  return store;
+};
+
 export const createContext = async (): Promise<AppContext> => {
   if (process.env.CLEAR_DB_ON_RUN === 'true') {
     const dbPath = getDbPath();
@@ -76,21 +130,21 @@ export const createContext = async (): Promise<AppContext> => {
 
   const taskCrudService = new TaskCrudService(taskRepository);
 
-  const preload = path.join(__dirname, 'preload.js');
-  const store = new ElectronStore<AppStore>();
-  const pomodoro = new PomodoroService(store);
-
-  const menuFactory = new MenuFactory(pomodoro);
-  const windowFactory = new WindowFactory(preload, menuFactory, store);
-
-  if (process.env.CLEAR_STORE_ON_APP_RUN === 'true') {
-    store.clear();
-  }
-
   const autoLaunch = new AutoLaunch({
     isHidden: true,
     name: app.getName(),
   });
+
+  const store = createStore();
+
+  const settingsService = new SettingsService(autoLaunch, store);
+
+  const preload = path.join(__dirname, 'preload.js');
+
+  const pomodoro = new PomodoroService(store, settingsService);
+
+  const menuFactory = new MenuFactory(pomodoro, settingsService);
+  const windowFactory = new WindowFactory(preload, menuFactory, store);
 
   const trelloClient = new TrelloClient(
     process.env.TRELLO_API_KEY!,
@@ -113,18 +167,18 @@ export const createContext = async (): Promise<AppContext> => {
     ipcService: new IpcMainService(),
     taskRepository,
     store,
-    pomodoro,
+    pomodoroService: pomodoro,
     preloadPath: preload,
     windowFactory,
     menuFactory,
     taskCrudService,
     autoLaunch,
-    settingsService: new SettingsService(pomodoro, autoLaunch, store),
+    settingsService,
     trelloClient,
     trelloService,
     apiAuthService,
     apiAuthState,
-    contextMenuFactory: new ContextMenuFactory(pomodoro),
+    contextMenuFactory: new ContextMenuFactory(pomodoro, settingsService),
     taskSynchronizer,
   };
 };

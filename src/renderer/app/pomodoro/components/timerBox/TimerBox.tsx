@@ -8,7 +8,7 @@ import {
 } from '@chakra-ui/core';
 import React, { FC } from 'react';
 import { usePomodoro } from '../../hooks/usePomodoro';
-import { PomodoroState } from '../../../../../shared/types';
+import { PomodoroStateEnum } from '../../../../../shared/types';
 import { Text } from '../../../../ui/atoms/text/Text';
 import { pomodoroStateDictionary } from '../../../../../shared/dictionary/pomodoro';
 import { Heading } from '../../../../ui/atoms/heading/Heading';
@@ -19,6 +19,7 @@ import { ActiveTaskTitle } from '../../../tasks/components/activeTaskTitle/Activ
 import { NextStateBtn } from '../buttons/skipBreak/NextStateBtn';
 import { usePlatform } from '../../../system/hooks/usePlatform';
 import { PomodoroMenuBtn } from '../pomodoroMenu/PomodoroMenuBtn';
+import { useGetSetting } from '../../../settings/hooks/useGetSetting';
 
 export interface TimerProps {
   containerProps?: BoxProps;
@@ -31,19 +32,20 @@ export const TimerBox: FC<TimerProps> = ({
   stackProps = {},
   showSettingsBtnInFooterOnWindows,
 }) => {
+  const { data: pomodoroSettings } = useGetSetting('pomodoroSettings');
   const { pomodoro } = usePomodoro();
   const { is } = usePlatform();
 
   return (
     <Box
-      bg={`brand.${pomodoro?.state ?? PomodoroState.Work}`}
+      bg={`brand.${pomodoro?.state ?? PomodoroStateEnum.Work}`}
       className="timer-box"
       {...containerProps}
     >
       <Stack height="100%" spacing={4} {...stackProps}>
         <Flex mt="0 !important" pl={2} pr={2} justifyContent="space-between">
           <Text className="pomodoro-state-text" color="white">
-            {pomodoroStateDictionary[pomodoro?.state ?? PomodoroState.Work]}
+            {pomodoroStateDictionary[pomodoro?.state ?? PomodoroStateEnum.Work]}
           </Text>
         </Flex>
         <Stack
@@ -65,7 +67,7 @@ export const TimerBox: FC<TimerProps> = ({
               top="-20px"
               left="12px"
             >
-              {pomodoro?.shortBreakCount}/{pomodoro?.longBreakInterval}
+              {pomodoro?.shortBreakCount}/{pomodoroSettings?.longBreakInterval}
             </Text>
             <HourglassIcon width="16px" height="27px" variant="dark" />
             <Heading

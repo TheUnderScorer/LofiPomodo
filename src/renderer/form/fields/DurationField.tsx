@@ -104,8 +104,9 @@ export const DurationField = forwardRef<HTMLInputElement, DurationFieldProps>(
           onChange={handleChange}
           precision={2}
           max={9999}
+          ref={ref}
         >
-          <NumberInputField name={name} ref={ref} />
+          <NumberInputField name={name} />
           <NumberInputStepper>
             <NumberIncrementStepper />
             <NumberDecrementStepper />

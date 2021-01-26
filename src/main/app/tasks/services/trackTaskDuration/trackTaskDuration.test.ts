@@ -7,12 +7,16 @@ import { PomodoroService } from '../../../pomodoro/services/pomodoroService/Pomo
 import { TaskRepository } from '../../repositories/TaskRepository';
 import { trackTaskDuration } from './trackTaskDuration';
 import { Task } from '../../../../../shared/types/tasks';
-import { PomodoroState, Trigger } from '../../../../../shared/types';
+import { PomodoroStateEnum, Trigger } from '../../../../../shared/types';
+import { createMockSettings } from '../../../../../tests/mocks/settings';
 
 describe('Track task duration', () => {
+  const mockSettings = createMockSettings();
+
   const taskRepository = createMockProxy<TaskRepository>();
   const pomodoroService = new PomodoroService(
-    createMockProxy<ElectronStore<AppStore>>()
+    createMockProxy<ElectronStore<AppStore>>(),
+    mockSettings as any
   );
 
   beforeEach(async () => {
@@ -33,13 +37,14 @@ describe('Track task duration', () => {
     taskRepository.getActiveTask.mockResolvedValue(task);
 
     const unsub = trackTaskDuration({
-      pomodoro: pomodoroService,
+      pomodoroService: pomodoroService,
       taskRepository,
+      settingsService: mockSettings as any,
     });
 
     await pomodoroService.stateChanged$.next({
-      newState: PomodoroState.Work,
-      oldState: PomodoroState.LongBreak,
+      newState: PomodoroStateEnum.Work,
+      oldState: PomodoroStateEnum.LongBreak,
       pomodoro: pomodoroService,
       trigger: Trigger.Scheduled,
     });
@@ -65,13 +70,14 @@ describe('Track task duration', () => {
     taskRepository.getActiveTask.mockResolvedValue(task);
 
     trackTaskDuration({
-      pomodoro: pomodoroService,
+      pomodoroService: pomodoroService,
       taskRepository,
+      settingsService: mockSettings as any,
     });
 
     await pomodoroService.stateChanged$.next({
-      newState: PomodoroState.Break,
-      oldState: PomodoroState.LongBreak,
+      newState: PomodoroStateEnum.Break,
+      oldState: PomodoroStateEnum.LongBreak,
       pomodoro: pomodoroService,
       trigger: Trigger.Scheduled,
     });
@@ -83,7 +89,7 @@ describe('Track task duration', () => {
       ...task,
       pomodoroSpent: [
         {
-          durationInSeconds: pomodoroService.workDurationSeconds,
+          durationInSeconds: mockSettings.pomodoroSettings.workDurationSeconds,
           finishedAt: iso,
         },
       ],

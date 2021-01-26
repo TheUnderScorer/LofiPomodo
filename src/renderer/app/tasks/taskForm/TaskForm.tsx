@@ -13,7 +13,7 @@ import { useForm } from 'react-hook-form';
 import { CreateTaskInput, Task } from '../../../../shared/types/tasks';
 import { CommonField } from '../../../ui/molecules/commonField/CommonField';
 import { CommonTextarea } from '../../../ui/molecules/commonTextarea/CommonTextarea';
-import { FormControl } from '../../../ui/atoms/formControl/FormControl';
+import { FormControl } from '../../../ui/molecules/formControl/FormControl';
 import { useCreateTask } from '../hooks/useCreateTask';
 
 export interface TaskFormProps {

@@ -10,7 +10,7 @@ import { Box, Flex, HStack } from '@chakra-ui/core';
 import { Alert } from '../../../../ui/molecules/alert/Alert';
 import { Text } from '../../../../ui/atoms/text/Text';
 import { ManageTrelloBoards } from './ManageTrelloBoards';
-import { SubmitButton } from '../../../../ui/atoms/submitButton/SubmitButton';
+import { SubmitButton } from '../../../../ui/molecules/submitButton/SubmitButton';
 import { useDebounce } from 'react-use';
 import { uniqueArray } from '../../../../../shared/utils/array';
 

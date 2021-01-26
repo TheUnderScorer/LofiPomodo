@@ -1,13 +1,10 @@
-import { PomodoroSettings } from './pomodoro';
-import { TrelloSettings } from './integrations/trello';
+import { AppStore } from './store';
 
 export interface AutostartSettings {
   autoStart?: boolean;
 }
 
-export interface AppSettings {
-  trello?: TrelloSettings;
-  pomodoro: PomodoroSettings;
+export interface AppSettings extends AppStore {
   autoStart: boolean;
 }
 
@@ -15,6 +12,10 @@ export enum SettingsOperations {
   GetSettings = 'GetSettings',
   GetSetting = 'GetSetting',
   SetSettings = 'SetSettings',
+}
+
+export enum SettingsSubscriptionTopics {
+  SettingsUpdated = 'SettingsUpdated',
 }
 
 export interface GetSettingPayload {

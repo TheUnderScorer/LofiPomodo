@@ -17,7 +17,7 @@ import {
   TrelloSettings,
 } from '../../../../../../shared/types/integrations/trello';
 import { useFormContext } from 'react-hook-form';
-import { FormControl } from '../../../../../ui/atoms/formControl/FormControl';
+import { FormControl } from '../../../../../ui/molecules/formControl/FormControl';
 import { Text } from '../../../../../ui/atoms/text/Text';
 import {
   GetTrelloBoardListsArgs,

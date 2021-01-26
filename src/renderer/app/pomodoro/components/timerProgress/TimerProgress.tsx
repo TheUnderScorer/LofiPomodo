@@ -1,7 +1,7 @@
 import { CircularProgress, CircularProgressLabel } from '@chakra-ui/core';
 import React, { FC } from 'react';
 import { usePomodoro } from '../../hooks/usePomodoro';
-import { PomodoroState } from '../../../../../shared/types';
+import { PomodoroStateEnum } from '../../../../../shared/types';
 import { useBreakpointValue } from '@chakra-ui/media-query';
 import './TimerProgress.css';
 
@@ -38,7 +38,7 @@ export const TimerProgress: FC<TimerProgressProps> = ({ breakMode = true }) => {
         color="gray.100"
         trackColor={
           !breakMode
-            ? `brand.${pomodoro?.state ?? PomodoroState.Work}`
+            ? `brand.${pomodoro?.state ?? PomodoroStateEnum.Work}`
             : 'gray.400'
         }
       >

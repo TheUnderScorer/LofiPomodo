@@ -2,12 +2,14 @@ import { QueryKey, useMutation, useQueryClient } from 'react-query';
 import { useIpcRenderer } from '../../providers/IpcRendererProvider';
 import { useDialog } from '../../providers/dialogProvider/hooks/useDialog';
 import { errorDialog } from '../../providers/dialogProvider/factories/errorDialog';
+import { wait } from '../../../shared/utils/timeout';
 
 export interface IpcInvokeHookParams<T, Variables> {
   invokeAtMount?: boolean;
   variables?: Variables;
   onComplete?: (value: T | undefined) => any;
   invalidateQueries?: QueryKey[];
+  invalidateQueriesDelay?: number;
 }
 
 const defaultVariables = {};
@@ -18,6 +20,7 @@ export const useIpcMutation = <Arg = any, ReturnValue = any>(
     variables = defaultVariables as Arg,
     onComplete,
     invalidateQueries,
+    invalidateQueriesDelay,
   }: IpcInvokeHookParams<ReturnValue, Arg> = {}
 ) => {
   const { showDialog } = useDialog();
@@ -43,6 +46,10 @@ export const useIpcMutation = <Arg = any, ReturnValue = any>(
         });
 
         if (invalidateQueries?.length) {
+          if (invalidateQueriesDelay) {
+            await wait(invalidateQueriesDelay);
+          }
+
           console.info(
             `Invalidating queries after ${name} mutation:`,
             invalidateQueries

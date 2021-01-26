@@ -1,22 +1,35 @@
-import { Pomodoro, PomodoroState } from '../../../shared/types';
+import {
+  PomodoroSettings,
+  PomodoroState,
+  PomodoroStateEnum,
+} from '../../../shared/types';
 
 export const nextStateMap: Record<
-  PomodoroState,
-  (pomodoro: Pomodoro) => PomodoroState
+  PomodoroStateEnum,
+  (
+    pomodoroState: PomodoroState,
+    pomodoroSettings: PomodoroSettings
+  ) => PomodoroStateEnum
 > = {
-  [PomodoroState.LongBreak]: () => PomodoroState.Work,
-  [PomodoroState.Break]: () => PomodoroState.Work,
-  [PomodoroState.Work]: (pomodoro) => {
-    if (pomodoro.shortBreakCount >= pomodoro.longBreakInterval) {
-      return PomodoroState.LongBreak;
+  [PomodoroStateEnum.LongBreak]: () => PomodoroStateEnum.Work,
+  [PomodoroStateEnum.Break]: () => PomodoroStateEnum.Work,
+  [PomodoroStateEnum.Work]: (
+    pomodoroState: PomodoroState,
+    pomodoroSettings: PomodoroSettings
+  ) => {
+    if (pomodoroState.shortBreakCount >= pomodoroSettings.longBreakInterval) {
+      return PomodoroStateEnum.LongBreak;
     }
 
-    return PomodoroState.Break;
+    return PomodoroStateEnum.Break;
   },
 };
 
-export const stateDurationMap: Record<PomodoroState, keyof Pomodoro> = {
-  [PomodoroState.Break]: 'shortBreakDurationSeconds',
-  [PomodoroState.LongBreak]: 'longBreakDurationSeconds',
-  [PomodoroState.Work]: 'workDurationSeconds',
+export const stateDurationMap: Record<
+  PomodoroStateEnum,
+  keyof PomodoroSettings
+> = {
+  [PomodoroStateEnum.Break]: 'shortBreakDurationSeconds',
+  [PomodoroStateEnum.LongBreak]: 'longBreakDurationSeconds',
+  [PomodoroStateEnum.Work]: 'workDurationSeconds',
 };

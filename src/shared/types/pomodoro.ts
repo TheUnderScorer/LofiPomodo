@@ -2,7 +2,7 @@ import { PomodoroService } from '../../main/app/pomodoro/services/pomodoroServic
 
 export interface Pomodoro {
   start: Date;
-  state: PomodoroState;
+  state: PomodoroStateEnum;
   workDurationSeconds: number;
   shortBreakDurationSeconds: number;
   longBreakDurationSeconds: number;
@@ -17,35 +17,39 @@ export interface Pomodoro {
   openFullWindowOnBreak: boolean;
 }
 
-export enum PomodoroState {
+export enum PomodoroStateEnum {
   Work = 'Work',
   Break = 'Break',
   LongBreak = 'LongBreak',
 }
 
 export enum PomodoroOperations {
-  Update = 'Update',
-  GetState = 'GetState',
+  UpdatePomodoro = 'UpdatePomodoro',
+  GetPomodoroState = 'GetPomodoroState',
   ToggleTimerMenu = 'ToggleTimerMenu',
   RestartCurrentState = 'RestartCurrentState',
   MoveToNextState = 'MoveToNextState',
 }
 
 export enum PomodoroSubscriptionTopics {
-  Updated = 'Updated',
+  PomodoroUpdated = 'PomodoroUpdated',
 }
 
+export interface PomodoroState extends Omit<Pomodoro, PomodoroSettingsKeys> {}
+
+type PomodoroSettingsKeys = keyof Pick<
+  Pomodoro,
+  | 'longBreakInterval'
+  | 'openFullWindowOnBreak'
+  | 'autoRunBreak'
+  | 'autoRunWork'
+  | 'workDurationSeconds'
+  | 'longBreakDurationSeconds'
+  | 'shortBreakDurationSeconds'
+>;
+
 export interface PomodoroSettings
-  extends Pick<
-    Pomodoro,
-    | 'longBreakInterval'
-    | 'openFullWindowOnBreak'
-    | 'autoRunBreak'
-    | 'autoRunWork'
-    | 'workDurationSeconds'
-    | 'longBreakDurationSeconds'
-    | 'shortBreakDurationSeconds'
-  > {}
+  extends Pick<Pomodoro, PomodoroSettingsKeys> {}
 
 export interface ToggleMenuPayload {
   y: number;
@@ -53,8 +57,8 @@ export interface ToggleMenuPayload {
 }
 
 export interface PomodoroStateChanged {
-  newState: PomodoroState;
-  oldState: PomodoroState;
+  newState: PomodoroStateEnum;
+  oldState: PomodoroStateEnum;
   pomodoro: PomodoroService;
   trigger: Trigger;
 }

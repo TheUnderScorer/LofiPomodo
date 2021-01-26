@@ -22,34 +22,40 @@ const closeAllWindows = async (app: Application) => {
 };
 
 export const bootstrapTestApp = async (env: object = {}) => {
-  await waitForRenderer();
+  try {
+    const app = new Application({
+      path: Electron as any,
+      args: [resolve(__dirname, '..')],
+      quitTimeout: 20000,
+      waitTimeout: 20000,
+      startTimeout: 40000,
+      env: {
+        ...process.env,
+        ...env,
+        CLOSE_ON_ALL_WINDOW_CLOSE: 'true',
+        CLEAR_DB_ON_RUN: 'true',
+        CLEAR_STORE_ON_APP_RUN: 'true',
+        TEST: 'true',
+      },
+      chromeDriverArgs: [
+        '--remote-debugging-port=9222',
+        '--no-sandbox',
+        '--disable-dev-shm-usage',
+      ],
+      chromeDriverLogPath: __dirname,
+      webdriverLogPath: __dirname,
+    });
 
-  const app = new Application({
-    path: Electron as any,
-    args: [resolve(__dirname, '..')],
-    quitTimeout: 20000,
-    waitTimeout: 20000,
-    startTimeout: 10000,
-    env: {
-      ...process.env,
-      ...env,
-      CLOSE_ON_ALL_WINDOW_CLOSE: 'true',
-      CLEAR_DB_ON_RUN: 'true',
-      CLEAR_STORE_ON_APP_RUN: 'true',
-      TEST: 'true',
-    },
-    chromeDriverArgs: [
-      '--remote-debugging-port=9222',
-      '--no-sandbox',
-      '--disable-dev-shm-usage',
-    ],
-  });
+    await app.start();
 
-  await app.start();
+    runningApps.push(app);
 
-  runningApps.push(app);
+    return app;
+  } catch (e) {
+    console.error(`Failed to bootstrap test app`, e);
 
-  return app;
+    throw e;
+  }
 };
 
 export const closeApps = async () => {

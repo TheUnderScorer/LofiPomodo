@@ -5,7 +5,7 @@ import {
 import { Controller, useFormContext } from 'react-hook-form';
 import React, { FC, useMemo } from 'react';
 import { get } from 'lodash';
-import { FormControl } from '../../../../../../ui/atoms/formControl/FormControl';
+import { FormControl } from '../../../../../../ui/molecules/formControl/FormControl';
 import { minArrayLength } from '../../../../../../form/validators/minArrayLength';
 import { Box, Checkbox, CheckboxGroup, Tooltip, VStack } from '@chakra-ui/core';
 import { Text } from '../../../../../../ui/atoms/text/Text';

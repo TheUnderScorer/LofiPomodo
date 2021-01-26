@@ -1,12 +1,12 @@
 import { getDurationByState, getNextState } from './nextState';
-import { Pomodoro, PomodoroState } from '../../../../shared/types';
+import { Pomodoro, PomodoroStateEnum } from '../../../../shared/types';
 import { getInitialPomodoro } from '../data';
 
 describe('Next state', () => {
-  it.each<[PomodoroState, keyof Pomodoro]>([
-    [PomodoroState.Break, 'shortBreakDurationSeconds'],
-    [PomodoroState.LongBreak, 'longBreakDurationSeconds'],
-    [PomodoroState.Work, 'workDurationSeconds'],
+  it.each<[PomodoroStateEnum, keyof Pomodoro]>([
+    [PomodoroStateEnum.Break, 'shortBreakDurationSeconds'],
+    [PomodoroStateEnum.LongBreak, 'longBreakDurationSeconds'],
+    [PomodoroStateEnum.Work, 'workDurationSeconds'],
   ])('should return correct duration by state', (state, prop) => {
     const pomodoro: Pomodoro = {
       ...getInitialPomodoro(),
@@ -17,11 +17,11 @@ describe('Next state', () => {
     expect(duration).toEqual(pomodoro[prop]);
   });
 
-  it.each<[PomodoroState, PomodoroState, number | undefined]>([
-    [PomodoroState.LongBreak, PomodoroState.Work, undefined],
-    [PomodoroState.Break, PomodoroState.Work, undefined],
-    [PomodoroState.Work, PomodoroState.Break, undefined],
-    [PomodoroState.Work, PomodoroState.LongBreak, 4],
+  it.each<[PomodoroStateEnum, PomodoroStateEnum, number | undefined]>([
+    [PomodoroStateEnum.LongBreak, PomodoroStateEnum.Work, undefined],
+    [PomodoroStateEnum.Break, PomodoroStateEnum.Work, undefined],
+    [PomodoroStateEnum.Work, PomodoroStateEnum.Break, undefined],
+    [PomodoroStateEnum.Work, PomodoroStateEnum.LongBreak, 4],
   ])(
     'should return correct next state',
     (currentState, expectedNextState, shortBreakCount) => {
@@ -31,7 +31,7 @@ describe('Next state', () => {
         shortBreakCount: shortBreakCount ?? 0,
       };
 
-      const nextState = getNextState(pomodoro);
+      const nextState = getNextState(pomodoro, pomodoro);
       expect(nextState).toEqual(expectedNextState);
     }
   );

@@ -1,5 +1,5 @@
 import React, { FC } from 'react';
-import { Text } from '../text/Text';
+import { Text } from '../../atoms/text/Text';
 import { Button, ButtonProps } from '@chakra-ui/core';
 
 export interface SubmitButtonProps extends ButtonProps {

@@ -18,20 +18,20 @@ export const setupTray = (context: AppContext) => {
   if (!is.windows) {
     const setTitle = (pomodoro: Readonly<PomodoroService>) => {
       tray.setTitle(
-        `${pomodoroStateDictionary[context.pomodoro.state].toUpperCase()}: ${
-          pomodoro.remainingTime
-        }`
+        `${pomodoroStateDictionary[
+          context.pomodoroService.state
+        ].toUpperCase()}: ${pomodoro.remainingTime}`
       );
     };
 
-    setTitle(context.pomodoro);
+    setTitle(context.pomodoroService);
 
-    context.pomodoro.changed$.subscribe((state) => {
+    context.pomodoroService.changed$.subscribe((state) => {
       setTitle(state);
     });
 
     tray.on('right-click', () => {
-      context.pomodoro.isRunning = !context.pomodoro.isRunning;
+      context.pomodoroService.isRunning = !context.pomodoroService.isRunning;
     });
 
     return;

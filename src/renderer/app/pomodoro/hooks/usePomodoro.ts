@@ -1,33 +1,24 @@
-import { useRecoilState } from 'recoil';
-import { pomodoroState } from '../state/pomodoroState';
-import { useIpcRenderer } from '../../../providers/IpcRendererProvider';
-import { useCallback, useEffect, useState } from 'react';
-import { Pomodoro, PomodoroOperations } from '../../../../shared/types';
+import { useCallback } from 'react';
+import { PomodoroOperations, PomodoroState } from '../../../../shared/types';
+import { useIpcQuery } from '../../../shared/ipc/useIpcQuery';
+import { useIpcMutation } from '../../../shared/ipc/useIpcMutation';
 
 export const usePomodoro = () => {
-  const ipc = useIpcRenderer();
-
-  const [loading, setLoading] = useState(false);
-  const [pomodoro, setPomodoro] = useRecoilState(pomodoroState);
-
-  const update = useCallback(
-    (update: (prev: Pomodoro) => Pomodoro) => {
-      const payload = update(pomodoro!);
-
-      ipc.invoke(PomodoroOperations.Update, payload).catch(console.error);
-    },
-    [ipc, pomodoro]
+  const query = useIpcQuery<never, PomodoroState>(
+    PomodoroOperations.GetPomodoroState
+  );
+  const updateMutation = useIpcMutation<PomodoroState>(
+    PomodoroOperations.UpdatePomodoro
   );
 
-  useEffect(() => {
-    if (!pomodoro && !loading) {
-      setLoading(true);
-      ipc.invoke(PomodoroOperations.GetState).then((state: Pomodoro) => {
-        setPomodoro(state);
-        setLoading(false);
-      });
-    }
-  }, [ipc, loading, pomodoro, setPomodoro]);
+  const update = useCallback(
+    async (update: (prev: PomodoroState) => PomodoroState) => {
+      const payload = update(query.data!);
 
-  return { pomodoro, update, loading };
+      await updateMutation.mutateAsync(payload);
+    },
+    [query.data, updateMutation]
+  );
+
+  return { pomodoro: query.data ?? null, update, loading: query.isLoading };
 };

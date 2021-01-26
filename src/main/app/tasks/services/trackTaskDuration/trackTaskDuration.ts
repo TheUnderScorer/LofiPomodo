@@ -1,10 +1,19 @@
-import { AppContext } from '../../../../context';
+import { PomodoroService } from '../../../pomodoro/services/pomodoroService/PomodoroService';
+import { TaskRepository } from '../../repositories/TaskRepository';
+import { SettingsService } from '../../../settings/services/SettingsService';
+
+export interface TrackTaskDurationDependencies {
+  pomodoroService: PomodoroService;
+  taskRepository: TaskRepository;
+  settingsService: SettingsService;
+}
 
 export const trackTaskDuration = ({
-  pomodoro,
+  pomodoroService,
   taskRepository,
-}: Pick<AppContext, 'pomodoro' | 'taskRepository'>) => {
-  const subscription = pomodoro.anyBreakStarted$.subscribe(async () => {
+  settingsService,
+}: TrackTaskDurationDependencies) => {
+  const subscription = pomodoroService.anyBreakStarted$.subscribe(async () => {
     const activeTask = await taskRepository.getActiveTask();
 
     if (!activeTask) {
@@ -17,7 +26,7 @@ export const trackTaskDuration = ({
 
     activeTask.pomodoroSpent!.push({
       finishedAt: new Date().toISOString(),
-      durationInSeconds: pomodoro.workDurationSeconds,
+      durationInSeconds: settingsService.pomodoroSettings!.workDurationSeconds,
     });
 
     await taskRepository.update(activeTask);
