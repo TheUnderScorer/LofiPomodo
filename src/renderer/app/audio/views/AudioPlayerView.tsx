@@ -3,6 +3,7 @@ import { useIpcSubscriber } from '../../../shared/ipc/useIpcSubscriber';
 import { AudioSubscriptionTopics } from '../../../../shared/types/audio';
 import { useIpcMutation } from '../../../shared/ipc/useIpcMutation';
 import { AppSystemOperations } from '../../../../shared/types/system';
+import { wait } from '../../../../shared/utils/timeout';
 
 export const AudioPlayerView = () => {
   const audioRef = useRef<HTMLAudioElement | null>();
@@ -17,6 +18,13 @@ export const AudioPlayerView = () => {
 
       audioRef.current = new Audio(lazyAudio.default);
       audioRef.current!.volume = 0.2;
+
+      /**
+       * Delay to avoid "fade" effect
+       *
+       * @platform Windows
+       * */
+      await wait(1000);
 
       audioRef.current!.addEventListener('ended', async () => {
         await closeWindowMutation.mutateAsync();
