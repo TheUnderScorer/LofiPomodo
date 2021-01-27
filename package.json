@@ -3,6 +3,7 @@
     "email": "przemyslawzydek@gmail.com",
     "name": "Przemysław Żydek"
   },
+  "license": "MIT",
   "browserslist": {
     "production": [
       ">0.2%",
