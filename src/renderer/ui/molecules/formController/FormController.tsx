@@ -4,11 +4,12 @@ import { Controller, ControllerProps, UseFormMethods } from 'react-hook-form';
 import { get } from 'lodash';
 
 export interface FormControllerProps
-  extends FormControlProps,
+  extends Omit<FormControlProps, 'name'>,
     Pick<ControllerProps<any>, 'rules'> {
   children: ControllerProps<any>['render'];
   form: UseFormMethods<any>;
   defaultValue?: any;
+  name: string;
 }
 
 export const FormController = ({

@@ -22,6 +22,8 @@ const closeAllWindows = async (app: Application) => {
 };
 
 export const bootstrapTestApp = async (env: object = {}) => {
+  await waitForRenderer();
+
   try {
     const app = new Application({
       path: Electron as any,

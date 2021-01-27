@@ -4,49 +4,71 @@ import {
   assertFieldProperty,
   assertFieldValue,
   durationFieldCallback,
-  FieldCallback,
+  inputFieldCallback,
   switchFieldCallback,
 } from '../helpers/fields';
+import { FieldsTestCaseHandler } from '../helpers/FieldsTestCaseHandler';
 
 describe('Settings - as a user', () => {
   it('I should be able to fill settings', async () => {
-    const payloadNameMap: Record<string, FieldCallback> = {
-      workDurationSeconds: durationFieldCallback('25'),
-      shortBreakDurationSeconds: durationFieldCallback('5'),
-      longBreakDurationSeconds: durationFieldCallback('10'),
-      openFullWindowOnBreak: switchFieldCallback(),
-      autoRunBreak: switchFieldCallback(),
-      autoRunWork: switchFieldCallback(),
-    };
-
-    const fieldChecksMap: Record<string, FieldCallback> = {
-      workDurationSeconds: assertFieldValue('25'),
-      shortBreakDurationSeconds: assertFieldValue('5'),
-      longBreakDurationSeconds: assertFieldValue('10'),
-      openFullWindowOnBreak: assertFieldProperty('checked', true),
-      autoRunBreak: assertFieldProperty('checked', true),
-      autoRunWork: assertFieldProperty('checked', true),
-    };
-
     const app = await bootstrapTestApp({
       SHORT_BREAK_DURATION_SECONDS: 120,
       LONG_BREAK_DURATION_SECONDS: 120,
       WORK_DURATION_SECONDS: 120,
     });
 
+    const fieldHandler = new FieldsTestCaseHandler(
+      {
+        workDurationSeconds: {
+          selector: '[name="pomodoroSettings.workDurationSeconds"]',
+          setValueCallback: durationFieldCallback('25'),
+          checkValueCallback: assertFieldValue('25'),
+        },
+        shortBreakDurationSeconds: {
+          selector: '[name="pomodoroSettings.shortBreakDurationSeconds"]',
+          setValueCallback: durationFieldCallback('5'),
+          checkValueCallback: assertFieldValue('5'),
+        },
+        longBreakDurationSeconds: {
+          selector: '[name="pomodoroSettings.longBreakDurationSeconds"]',
+          setValueCallback: durationFieldCallback('10'),
+          checkValueCallback: assertFieldValue('10'),
+        },
+        longBreakInterval: {
+          selector: '[name="pomodoroSettings.longBreakInterval"] input',
+          setValueCallback: inputFieldCallback('5'),
+          checkValueCallback: assertFieldValue('5'),
+        },
+        openFullWindowOnBreak: {
+          selector: '[name="pomodoroSettings.openFullWindowOnBreak"]',
+          setValueCallback: switchFieldCallback(),
+          checkValueCallback: assertFieldProperty('checked', true),
+        },
+        autoRunBreak: {
+          selector: '[name="pomodoroSettings.autoRunBreak"]',
+          setValueCallback: switchFieldCallback(),
+          checkValueCallback: assertFieldProperty('checked', true),
+        },
+        autoRunWork: {
+          selector: '[name="pomodoroSettings.autoRunWork"]',
+          setValueCallback: switchFieldCallback(),
+          checkValueCallback: assertFieldProperty('checked', true),
+        },
+      },
+      app
+    );
+
     let settingsBtn = await app.client.$('.settings-btn');
 
     await settingsBtn.click();
 
-    for (const [name, handler] of Object.entries(payloadNameMap)) {
-      const field = await app.client.$(`[name="pomodoro.${name}"]`);
-
-      await handler(field, app.client);
-    }
+    await fieldHandler.waitForField('workDurationSeconds');
+    await fieldHandler.setAllFields();
 
     const submitBtn = await app.client.$('#submit_settings');
 
     await submitBtn.click();
+
     await wait(100);
 
     const timer = await app.client.$('#timer');
@@ -55,12 +77,10 @@ describe('Settings - as a user', () => {
     settingsBtn = await app.client.$('.settings-btn');
     await settingsBtn.click();
 
-    await wait(2000);
+    await fieldHandler.waitForField('workDurationSeconds');
 
-    for (const [name, checker] of Object.entries(fieldChecksMap)) {
-      const field = await app.client.$(`[name="pomodoro.${name}"]`);
+    await wait(1000);
 
-      await checker(field, app.client);
-    }
+    await fieldHandler.assertAllFields();
   });
 });

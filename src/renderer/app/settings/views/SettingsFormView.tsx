@@ -37,8 +37,7 @@ import {
 
 const tabIndexArray: SettingTab[] = ['Pomodoro', 'Integrations'];
 
-// @ts-ignore
-const formSchema = Yup.object().shape<SettingsFormInput>({
+const formSchema = Yup.object().shape<SettingsFormInput & any>({
   autoStart: Yup.boolean().required(),
   pomodoroSettings: Yup.object().shape(pomodoroSettingsSchemaShape),
 });

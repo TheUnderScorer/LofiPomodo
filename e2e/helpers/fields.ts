@@ -1,11 +1,5 @@
-import { Element } from 'webdriverio';
-import { SpectronClient } from 'spectron';
+import { FieldCallback } from './fields.types';
 
-export type FieldCallback = (
-  el: Element,
-  client: SpectronClient,
-  value?: any
-) => Promise<void>;
 export const durationFieldCallback = (
   value: number | string
 ): FieldCallback => async (field) => {
@@ -43,6 +37,22 @@ export const checkboxFieldCallback = (): FieldCallback => async (field) => {
   await label.click();
 };
 
+export const inputFieldCallback = (value: any): FieldCallback => async (
+  field,
+  client
+) => {
+  /**
+   * Overrwrite the field value with backpace, since .setValue() is not working correctly if field has defualt value set
+   *
+   * @see https://github.com/webdriverio/webdriverio/issues/1140#issuecomment-301532531
+   * */
+  await field.setValue('\uE003');
+
+  await client.pause(500);
+
+  await field.setValue(value);
+};
+
 export const selectFieldCallback = (value: string): FieldCallback => async (
   field
 ) => {
@@ -74,9 +84,3 @@ export const setSelectValue = async (
 
   await option.click();
 };
-
-export interface FieldTestCase {
-  setValueCallback: FieldCallback;
-  checkValueCallback: FieldCallback;
-  selector: string;
-}
