@@ -1,3 +1,10 @@
+# [1.10.0](https://github.com/TheUnderScorer/pixel-pomodo/compare/v1.9.0...v1.10.0) (2021-01-27)
+
+
+### Features
+
+* Play sounds on pomodoro state change ([b0531ef](https://github.com/TheUnderScorer/pixel-pomodo/commit/b0531ef3bd44c1966ea64b97b836ade07293e81c))
+
 # [1.9.0](https://github.com/TheUnderScorer/pixel-pomodo/compare/v1.8.0...v1.9.0) (2021-01-24)
 
 
