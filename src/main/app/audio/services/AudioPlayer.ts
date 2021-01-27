@@ -1,36 +1,30 @@
-import { app, BrowserWindow } from 'electron';
 import {
   AudioData,
   AudioSubscriptionTopics,
 } from '../../../../shared/types/audio';
+import { WindowFactory } from '../../../shared/windows/factories/WindowFactory';
 
 export class AudioPlayer {
   private readonly audioData = new Map<string, AudioData>();
 
   constructor(
     audios: AudioData[],
-    private readonly playerWindow: BrowserWindow
+    private readonly windowFactory: WindowFactory
   ) {
     audios.forEach((audio) => {
       this.audioData.set(audio.name, audio);
     });
-
-    app.on('before-quit', () => {
-      this.playerWindow.close();
-    });
   }
 
   async play(name: string) {
+    const window = await this.windowFactory.createAudioPlayerWindow();
     const audio = this.audioData.get(name);
 
     if (!audio) {
       throw new Error(`No audio found with name ${name}`);
     }
 
-    this.playerWindow.webContents.send(
-      AudioSubscriptionTopics.PlayAudio,
-      audio.fileName
-    );
+    window.webContents.send(AudioSubscriptionTopics.PlayAudio, audio.fileName);
   }
 
   get audios() {

@@ -149,10 +149,7 @@ export const createContext = async (): Promise<AppContext> => {
   const menuFactory = new MenuFactory(pomodoro, settingsService);
   const windowFactory = new WindowFactory(preload, menuFactory, store);
 
-  const audioPlayer = new AudioPlayer(
-    audios,
-    await windowFactory.createAudioPlayerWindow()
-  );
+  const audioPlayer = new AudioPlayer(audios, windowFactory);
 
   const trelloClient = new TrelloClient(
     process.env.TRELLO_API_KEY!,

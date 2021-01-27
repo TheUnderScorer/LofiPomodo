@@ -2,6 +2,7 @@ import { resolve } from 'path';
 import { Application } from 'spectron';
 import Electron from 'electron';
 import { waitForRenderer } from '../src/main/shared/utils/dev';
+import { wait } from '../src/shared/utils/timeout';
 
 let runningApps: Application[] = [];
 
@@ -47,6 +48,8 @@ export const bootstrapTestApp = async (env: object = {}) => {
     });
 
     await app.start();
+
+    await wait(1000);
 
     runningApps.push(app);
 

@@ -8,7 +8,7 @@ import { SettingsService } from '../../settings/services/SettingsService';
 import { filter } from 'rxjs/operators';
 import { AudioPlayer } from './AudioPlayer';
 
-const pomodoroStateSoundMap: Record<
+export const pomodoroStateSoundMap: Record<
   PomodoroStateEnum,
   keyof PomodoroSettings
 > = {

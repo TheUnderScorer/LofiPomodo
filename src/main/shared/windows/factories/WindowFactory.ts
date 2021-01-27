@@ -9,11 +9,7 @@ import { AppStore } from '../../../../shared/types/store';
 import ElectronStore from 'electron-store';
 import { windowTitles } from '../../../../shared/dictionary/system';
 
-type WindowKeys =
-  | 'timerWindow'
-  | 'breakWindow'
-  | 'manageTrelloWindow'
-  | 'audioPlayerWindow';
+type WindowKeys = 'timerWindow' | 'breakWindow' | 'manageTrelloWindow';
 
 export interface CreateWindowArgs {
   parent?: BrowserWindow;
@@ -28,7 +24,7 @@ export class WindowFactory {
 
   public manageTrelloWindow: Nullable<BrowserWindow> = null;
 
-  public audioPlayerWindow: Nullable<BrowserWindow> = null;
+  public audioPlayerWindows = new Set<BrowserWindow>();
 
   private windowKeyMethodMap: Record<
     WindowTypes,
@@ -112,12 +108,6 @@ export class WindowFactory {
   }
 
   async createAudioPlayerWindow() {
-    if (this.audioPlayerWindow) {
-      this.audioPlayerWindow.focus();
-
-      return this.audioPlayerWindow;
-    }
-
     const window = new BrowserWindow({
       show: false,
       height: 400,
@@ -129,7 +119,13 @@ export class WindowFactory {
 
     await setupWindow(window, routes.hiddenAudioPlayer());
 
-    this.registerWindow(window, 'audioPlayerWindow', WindowTypes.AudioPlayer);
+    this.audioPlayerWindows.add(window);
+
+    window.on('close', () => {
+      WindowFactory.logWindowClosed(window);
+
+      this.audioPlayerWindows.delete(window);
+    });
 
     return window;
   }
@@ -206,9 +202,13 @@ export class WindowFactory {
     this[key] = window;
 
     window.once('close', () => {
-      console.log(`Window ${window.id} closed.`);
+      WindowFactory.logWindowClosed(window);
 
       this[key] = null;
     });
+  }
+
+  private static logWindowClosed(window: Electron.BrowserWindow) {
+    console.log(`Window ${window.id} closed.`);
   }
 }
