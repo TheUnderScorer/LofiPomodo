@@ -15,6 +15,9 @@ export interface Pomodoro {
   remainingTime: string;
   remainingPercentage: number;
   openFullWindowOnBreak: boolean;
+  breakSound?: string;
+  workSound?: string;
+  longBreakSound?: string;
 }
 
 export enum PomodoroStateEnum {
@@ -46,6 +49,9 @@ type PomodoroSettingsKeys = keyof Pick<
   | 'workDurationSeconds'
   | 'longBreakDurationSeconds'
   | 'shortBreakDurationSeconds'
+  | 'breakSound'
+  | 'longBreakSound'
+  | 'workSound'
 >;
 
 export interface PomodoroSettings

@@ -2,6 +2,9 @@ import Yup from '../yup';
 import { PomodoroSettings } from '../../types';
 import { YupObjectSchema } from '../types';
 import { requiredMessage } from '../messages';
+import audios from '../../../assets/audio/audios.json';
+
+const audioNames = [...audios.map((audio) => audio.name), ''];
 
 export const pomodoroSettingsSchemaShape = {
   shortBreakDurationSeconds: Yup.number().duration(),
@@ -15,7 +18,10 @@ export const pomodoroSettingsSchemaShape = {
   workDurationSeconds: Yup.number().duration(),
   autoRunBreak: Yup.boolean().required(),
   autoRunWork: Yup.boolean().required(),
-} as YupObjectSchema<PomodoroSettings>;
+  workSound: Yup.string().oneOf(audioNames),
+  longBreakSound: Yup.string().oneOf(audioNames),
+  breakSound: Yup.string().oneOf(audioNames),
+} as YupObjectSchema<PomodoroSettings & any>;
 
 export const pomodoroSettingsSchema = Yup.object().shape(
   pomodoroSettingsSchemaShape

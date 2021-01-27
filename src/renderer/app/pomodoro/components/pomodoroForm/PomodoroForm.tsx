@@ -12,6 +12,7 @@ import {
 import { AppSettings } from '../../../../../shared/types/settings';
 import { PomodoroSettings } from '../../../../../shared/types';
 import { FormController } from '../../../../ui/molecules/formController/FormController';
+import { AudioSelect } from '../../../audio/components/AudioSelect';
 
 export interface PomodoroFormProps {
   form: UseFormMethods<AppSettings>;
@@ -19,7 +20,7 @@ export interface PomodoroFormProps {
 }
 
 const formControlProps: Partial<FormControlProps> = {
-  width: '450px',
+  minWidth: '450px',
   justifyContent: 'space-between',
   d: 'flex',
   alignItems: 'baseline',
@@ -30,7 +31,7 @@ const maxFieldWidth = '200px';
 
 export const PomodoroForm: FC<PomodoroFormProps> = ({ form, settings }) => {
   return (
-    <Stack spacing={6}>
+    <Stack spacing={6} width="100%" pr={6} pl={6}>
       <FormController
         {...formControlProps}
         label="Work duration"
@@ -124,6 +125,31 @@ export const PomodoroForm: FC<PomodoroFormProps> = ({ form, settings }) => {
             isChecked={props.value}
           />
         )}
+      </FormController>
+      <Divider />
+      <FormController
+        form={form}
+        name="pomodoroSettings.workSound"
+        label="Sound to play when work starts"
+        defaultValue={settings.workSound}
+      >
+        {(props) => <AudioSelect color="brand.textPrimary" {...props} />}
+      </FormController>
+      <FormController
+        form={form}
+        name="pomodoroSettings.breakSound"
+        label="Sound to play when break starts"
+        defaultValue={settings.breakSound}
+      >
+        {(props) => <AudioSelect color="brand.textPrimary" {...props} />}
+      </FormController>
+      <FormController
+        form={form}
+        name="pomodoroSettings.longBreakSound"
+        label="Sound to play when long break starts"
+        defaultValue={settings.longBreakSound}
+      >
+        {(props) => <AudioSelect color="brand.textPrimary" {...props} />}
       </FormController>
       <Divider />
       <FormController

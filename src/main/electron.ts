@@ -13,6 +13,7 @@ import path from 'path';
 import { setupSingleInstance } from './singleInstance';
 import { is } from 'electron-util';
 import { waitForRenderer } from './shared/utils/dev';
+import { setupAudio } from './app/audio/setup';
 
 if (require('electron-squirrel-startup')) {
   app.quit();
@@ -56,6 +57,7 @@ app.whenReady().then(async () => {
       ({ url }) => context.apiAuthService.handleAuthProtocol(url),
     ]);
 
+    setupAudio(context);
     setupAppMenu(context);
     setupPomodoro(context);
     setupTasks(context);

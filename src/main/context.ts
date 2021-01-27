@@ -27,6 +27,8 @@ import {
   getInitialPomodoroSettings,
   getInitialPomodoroState,
 } from './app/pomodoro/data';
+import { AudioPlayer } from './app/audio/services/AudioPlayer';
+import audios from '../assets/audio/audios.json';
 
 export interface AppContext {
   ipcService: IpcMainService;
@@ -45,6 +47,7 @@ export interface AppContext {
   apiAuthService: ApiAuthService;
   apiAuthState: ApiAuthStateService;
   taskSynchronizer: TaskSynchronizer;
+  audioPlayer: AudioPlayer;
 }
 
 const handleIntegrations = async (
@@ -122,6 +125,8 @@ export const createContext = async (): Promise<AppContext> => {
     }
   }
 
+  const preload = path.join(__dirname, 'preload.js');
+
   const connection = await setupConnection();
 
   const taskRepository = new TaskRepository(connection, Tables.Tasks);
@@ -139,12 +144,15 @@ export const createContext = async (): Promise<AppContext> => {
 
   const settingsService = new SettingsService(autoLaunch, store);
 
-  const preload = path.join(__dirname, 'preload.js');
-
   const pomodoro = new PomodoroService(store, settingsService);
 
   const menuFactory = new MenuFactory(pomodoro, settingsService);
   const windowFactory = new WindowFactory(preload, menuFactory, store);
+
+  const audioPlayer = new AudioPlayer(
+    audios,
+    await windowFactory.createAudioPlayerWindow()
+  );
 
   const trelloClient = new TrelloClient(
     process.env.TRELLO_API_KEY!,
@@ -180,5 +188,6 @@ export const createContext = async (): Promise<AppContext> => {
     apiAuthState,
     contextMenuFactory: new ContextMenuFactory(pomodoro, settingsService),
     taskSynchronizer,
+    audioPlayer,
   };
 };

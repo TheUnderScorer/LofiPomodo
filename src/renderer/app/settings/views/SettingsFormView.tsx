@@ -3,6 +3,7 @@ import { TitleBar } from '../../../ui/molecules/titleBar/TitleBar';
 import {
   Center,
   Container,
+  Divider,
   Flex,
   IconButton,
   Spinner,
@@ -131,7 +132,7 @@ export const SettingsFormView: FC<SettingsFormViewProps> = () => {
         pl={0}
         pr={0}
         pt={12}
-        pb={3}
+        pb={0}
         id="settings"
         height={is?.windows ? 'calc(100vh - 40px)' : 'calc(100vh - 60px)'}
         centerContent
@@ -177,10 +178,15 @@ export const SettingsFormView: FC<SettingsFormViewProps> = () => {
               {tab === 'Integrations' && <IntegrationsForm form={form} />}
             </Flex>
             {tab === 'Pomodoro' && (
-              <SubmitButton
-                id="submit_settings"
-                isLoading={setSettingsMutation.isLoading}
-              />
+              <>
+                <Divider />
+                <Center h="60px">
+                  <SubmitButton
+                    id="submit_settings"
+                    isLoading={setSettingsMutation.isLoading}
+                  />
+                </Center>
+              </>
             )}
           </Flex>
         )}

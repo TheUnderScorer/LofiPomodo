@@ -5,4 +5,5 @@ export const routes = {
   settings: () => '/settings',
   pomodoroSettings: () => '/settings/pomodoro',
   manageTrello: () => '/integrations/trello/manage',
+  hiddenAudioPlayer: () => '/hidden-audio-player',
 };

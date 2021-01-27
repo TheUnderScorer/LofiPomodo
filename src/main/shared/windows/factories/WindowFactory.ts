@@ -9,7 +9,11 @@ import { AppStore } from '../../../../shared/types/store';
 import ElectronStore from 'electron-store';
 import { windowTitles } from '../../../../shared/dictionary/system';
 
-type WindowKeys = 'timerWindow' | 'breakWindow' | 'manageTrelloWindow';
+type WindowKeys =
+  | 'timerWindow'
+  | 'breakWindow'
+  | 'manageTrelloWindow'
+  | 'audioPlayerWindow';
 
 export interface CreateWindowArgs {
   parent?: BrowserWindow;
@@ -24,6 +28,8 @@ export class WindowFactory {
 
   public manageTrelloWindow: Nullable<BrowserWindow> = null;
 
+  public audioPlayerWindow: Nullable<BrowserWindow> = null;
+
   private windowKeyMethodMap: Record<
     WindowTypes,
     (args?: CreateWindowArgs) => Promise<BrowserWindow>
@@ -31,6 +37,7 @@ export class WindowFactory {
     [WindowTypes.Break]: this.createBreakWindow.bind(this),
     [WindowTypes.Timer]: this.createTimerWindow.bind(this),
     [WindowTypes.ManageTrello]: this.createManageTrelloWindow.bind(this),
+    [WindowTypes.AudioPlayer]: this.createAudioPlayerWindow.bind(this),
   };
 
   constructor(
@@ -49,9 +56,9 @@ export class WindowFactory {
     return method(args);
   }
 
-  async createManageTrelloWindow({ parent }: CreateWindowArgs = {}): Promise<
-    BrowserWindow
-  > {
+  async createManageTrelloWindow({
+    parent,
+  }: CreateWindowArgs = {}): Promise<BrowserWindow> {
     if (this.manageTrelloWindow) {
       this.manageTrelloWindow.focus();
 
@@ -75,9 +82,9 @@ export class WindowFactory {
     return window;
   }
 
-  async createTimerWindow({ parent }: CreateWindowArgs = {}): Promise<
-    BrowserWindow
-  > {
+  async createTimerWindow({
+    parent,
+  }: CreateWindowArgs = {}): Promise<BrowserWindow> {
     if (this.timerWindow) {
       this.timerWindow.focus();
 
@@ -104,9 +111,32 @@ export class WindowFactory {
     return window;
   }
 
-  async createBreakWindow({ parent }: CreateWindowArgs = {}): Promise<
-    BrowserWindow
-  > {
+  async createAudioPlayerWindow() {
+    if (this.audioPlayerWindow) {
+      this.audioPlayerWindow.focus();
+
+      return this.audioPlayerWindow;
+    }
+
+    const window = new BrowserWindow({
+      show: false,
+      height: 400,
+      width: 400,
+      webPreferences: {
+        preload: this.preloadPath,
+      },
+    });
+
+    await setupWindow(window, routes.hiddenAudioPlayer());
+
+    this.registerWindow(window, 'audioPlayerWindow', WindowTypes.AudioPlayer);
+
+    return window;
+  }
+
+  async createBreakWindow({
+    parent,
+  }: CreateWindowArgs = {}): Promise<BrowserWindow> {
     if (this.breakWindow) {
       this.breakWindow.focus();
 
@@ -167,7 +197,7 @@ export class WindowFactory {
       | undefined;
 
     return {
-      ...windowProps[type],
+      ...(windowProps[type] as WindowProps),
       ...(storeProps ?? {}),
     };
   }
