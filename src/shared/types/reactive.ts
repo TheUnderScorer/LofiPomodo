@@ -1,4 +1,4 @@
-import { Observable } from 'rxjs';
+import { Subject } from 'rxjs';
 
 export interface Changable {
   onChange?: () => void | Promise<void>;
@@ -9,5 +9,5 @@ export type Subscriber<T> = (
 ) => () => void;
 
 export interface ChangeSubject<T> {
-  changed$: Observable<T>;
+  changed$: Subject<T>;
 }

@@ -1,9 +1,9 @@
 import {
   Changable,
   ChangeSubject,
-  Pomodoro,
   PomodoroState,
   PomodoroStateChanged,
+  PomodoroStateEnum,
   Trigger,
 } from '../../../../../shared/types';
 import { getInitialPomodoro } from '../../data';
@@ -16,55 +16,82 @@ import { percent } from '../../../../../shared/utils/math';
 import { shouldRun } from '../../logic/autorun';
 import { stateDurationMap } from '../../maps';
 import { Jsonable } from '../../../../../shared/types/json';
-import { Observable, Subject } from 'rxjs';
+import { Subject } from 'rxjs';
 import { filter } from 'rxjs/operators';
+import {
+  SettingsChangedPayload,
+  SettingsService,
+} from '../../../settings/services/SettingsService';
 
 @Reactive()
 export class PomodoroService
-  implements Changable, Pomodoro, ChangeSubject<PomodoroService>, Jsonable {
+  implements
+    Changable,
+    PomodoroState,
+    ChangeSubject<PomodoroService>,
+    ChangeSubject<PomodoroService>,
+    Jsonable {
   isRunning!: boolean;
-  longBreakDurationSeconds!: number;
-  longBreakInterval!: number;
   remainingSeconds!: number;
   shortBreakCount!: number;
-  shortBreakDurationSeconds!: number;
   start!: Date;
-  state!: PomodoroState;
-  workDurationSeconds!: number;
-  openFullWindowOnBreak!: boolean;
-  autoRunBreak!: boolean;
-  autoRunWork!: boolean;
+  state!: PomodoroStateEnum;
 
   timeoutId: any = null;
 
-  changed$!: Observable<PomodoroService>;
+  changed$!: Subject<PomodoroService>;
 
   readonly stateChanged$ = new Subject<PomodoroStateChanged>();
   readonly anyBreakStarted$ = this.stateChanged$.pipe(
-    filter((payload) => payload.newState !== PomodoroState.Work)
+    filter((payload) => payload.newState !== PomodoroStateEnum.Work)
   );
   readonly shortBreakStarted$ = this.stateChanged$.pipe(
-    filter((payload) => payload.newState === PomodoroState.Break)
+    filter((payload) => payload.newState === PomodoroStateEnum.Break)
   );
   readonly longBreakStarted$ = this.stateChanged$.pipe(
-    filter((payload) => payload.newState === PomodoroState.LongBreak)
+    filter((payload) => payload.newState === PomodoroStateEnum.LongBreak)
   );
   readonly workStarted$ = this.stateChanged$.pipe(
-    filter((payload) => payload.newState === PomodoroState.Work)
+    filter((payload) => payload.newState === PomodoroStateEnum.Work)
   );
 
   readonly timerTick$ = new Subject<this>();
 
   readonly timerStop$ = new Subject<this>();
 
-  constructor(private readonly store: ElectronStore<AppStore>) {
-    const storeValue = store.get('pomodoroState');
+  constructor(
+    private readonly store: ElectronStore<AppStore>,
+    private readonly settingsService: SettingsService
+  ) {
+    this.settingsService.settingsChanged$.subscribe((payload) =>
+      this.handleSettingsChange(payload)
+    );
 
-    this.fill(storeValue ?? getInitialPomodoro());
+    const state = store.get('pomodoroState');
+
+    this.fill(state ?? getInitialPomodoro());
     this.schedule();
   }
 
-  fill(pomodoro: Partial<Pomodoro>) {
+  private handleSettingsChange({
+    newSettings,
+    oldSettings,
+  }: SettingsChangedPayload) {
+    const durationKey = stateDurationMap[this.state];
+
+    const oldSettingsValue = oldSettings.pomodoroSettings![durationKey];
+
+    if (oldSettingsValue === this.remainingSeconds) {
+      this.remainingSeconds = newSettings.pomodoroSettings![
+        durationKey
+      ] as number;
+
+      this.onChange();
+      this.changed$.next(this);
+    }
+  }
+
+  fill(pomodoro: Partial<PomodoroState>) {
     const { remainingTime, remainingPercentage, ...payload } = pomodoro;
     Object.assign(this, payload);
   }
@@ -80,7 +107,10 @@ export class PomodoroService
   }
 
   get remainingPercentage(): number {
-    const duration = getDurationByState(this);
+    const duration = getDurationByState(
+      this.settingsService.pomodoroSettings!,
+      this.state
+    );
 
     return percent(this.remainingSeconds, duration);
   }
@@ -132,24 +162,26 @@ export class PomodoroService
 
   async moveToNextState(
     trigger: Trigger = Trigger.Scheduled,
-    nextState?: PomodoroState
+    nextState?: PomodoroStateEnum
   ) {
     const oldState = this.state;
 
     const newStart = new Date();
-    const newPomodoroState = nextState ?? getNextState(this);
-    const newRemainingSeconds = getDurationByState(this, newPomodoroState);
-    const newIsRunning = shouldRun({
-      ...this,
-      state: newPomodoroState,
-    });
+    const pomodoroSettings = this.settingsService.pomodoroSettings!;
+
+    const newPomodoroState = nextState ?? getNextState(this, pomodoroSettings);
+    const newRemainingSeconds = getDurationByState(
+      pomodoroSettings,
+      newPomodoroState
+    );
+    const newIsRunning = shouldRun(this.state, pomodoroSettings);
 
     let newBreakCount =
-      this.state === PomodoroState.Break
+      this.state === PomodoroStateEnum.Break
         ? this.shortBreakCount + 1
         : this.shortBreakCount;
 
-    if (this.state === PomodoroState.LongBreak) {
+    if (this.state === PomodoroStateEnum.LongBreak) {
       newBreakCount = 0;
     }
 
@@ -169,60 +201,36 @@ export class PomodoroService
     });
   }
 
-  setDuration(
-    seconds: number,
-    target: PomodoroState,
-    forceSet: boolean = false
-  ) {
-    const key = stateDurationMap[target];
-
-    const prevSeconds = this[key] as number;
-
-    this.fill({
-      [key]: seconds,
-      remainingSeconds:
-        this.state === target &&
-        (this.remainingSeconds === prevSeconds || forceSet)
-          ? seconds
-          : this.remainingSeconds,
-    });
-  }
-
   resetCurrentState() {
     const key = stateDurationMap[this.state];
 
-    this.remainingSeconds = this[key] as number;
+    this.remainingSeconds = this.settingsService.pomodoroSettings![
+      key
+    ] as number;
   }
 
   async skipBreak() {
-    if (this.state === PomodoroState.Work) {
+    if (this.state === PomodoroStateEnum.Work) {
       return;
     }
 
     await this.moveToNextState();
   }
 
-  toJSON(): Pomodoro {
+  toJSON(): PomodoroState {
     return {
-      autoRunWork: this.autoRunWork,
-      autoRunBreak: this.autoRunBreak,
       isRunning: this.isRunning,
-      longBreakDurationSeconds: this.longBreakDurationSeconds,
-      longBreakInterval: this.longBreakInterval,
       remainingSeconds: this.remainingSeconds,
       remainingTime: this.remainingTime,
       shortBreakCount: this.shortBreakCount,
-      shortBreakDurationSeconds: this.shortBreakDurationSeconds,
       start: this.start,
       state: this.state,
-      workDurationSeconds: this.workDurationSeconds,
       remainingPercentage: this.remainingPercentage,
-      openFullWindowOnBreak: this.openFullWindowOnBreak,
     };
   }
 
   async restart() {
-    await this.moveToNextState(Trigger.Manual, PomodoroState.Work);
+    await this.moveToNextState(Trigger.Manual, PomodoroStateEnum.Work);
 
     this.shortBreakCount = 0;
     this.isRunning = false;

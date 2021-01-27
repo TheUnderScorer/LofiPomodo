@@ -2,8 +2,8 @@ import { AppContext } from '../../../context';
 import { PomodoroSubscriptionTopics } from '../../../../shared/types';
 import { sendObservablesToWindows } from '../../../shared/windows/sendObservablesToAllWindows';
 
-export const sendUpdatesToWindows = ({ pomodoro }: AppContext) => {
+export const sendUpdatesToWindows = ({ pomodoroService }: AppContext) => {
   sendObservablesToWindows({
-    [PomodoroSubscriptionTopics.Updated]: pomodoro.changed$,
+    [PomodoroSubscriptionTopics.PomodoroUpdated]: pomodoroService.changed$,
   });
 };

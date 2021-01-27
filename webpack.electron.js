@@ -16,7 +16,7 @@ const migrationEntries = migrations.reduce((obj, migration) => {
 
 const isProduction = process.env.NODE_ENV === 'production';
 
-const devToolConfig = isProduction
+const devToolConfig = !isProduction
   ? {
       devtool: 'source-map',
     }

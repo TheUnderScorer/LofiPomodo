@@ -2,9 +2,13 @@ import { PomodoroService } from '../../app/pomodoro/services/pomodoroService/Pom
 import { Menu, MenuItemConstructorOptions } from 'electron';
 import { appMenu, is } from 'electron-util';
 import { getPomodoroMenuItems } from '../../app/pomodoro/menu/getPomodoroMenuItems';
+import { SettingsService } from '../../app/settings/services/SettingsService';
 
 export class MenuFactory {
-  constructor(private readonly pomodoroService: PomodoroService) {}
+  constructor(
+    private readonly pomodoroService: PomodoroService,
+    private readonly settingsService: SettingsService
+  ) {}
 
   createAppMenu() {
     const template: MenuItemConstructorOptions[] = [
@@ -15,7 +19,10 @@ export class MenuFactory {
       },
       {
         label: 'Pomodoro',
-        submenu: getPomodoroMenuItems(this.pomodoroService),
+        submenu: getPomodoroMenuItems(
+          this.pomodoroService,
+          this.settingsService
+        ),
       },
     ];
 

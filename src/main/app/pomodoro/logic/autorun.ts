@@ -1,9 +1,12 @@
-import { Pomodoro, PomodoroState } from '../../../../shared/types';
+import { PomodoroSettings, PomodoroStateEnum } from '../../../../shared/types';
 
-export const shouldRun = (pomodoro: Pomodoro) => {
-  if (pomodoro.state === PomodoroState.Work) {
-    return pomodoro.autoRunWork;
+export const shouldRun = (
+  pomodoroStateEnum: PomodoroStateEnum,
+  pomodoroSettings: PomodoroSettings
+) => {
+  if (pomodoroStateEnum === PomodoroStateEnum.Work) {
+    return pomodoroSettings.autoRunWork;
   }
 
-  return pomodoro.autoRunBreak;
+  return pomodoroSettings.autoRunBreak;
 };

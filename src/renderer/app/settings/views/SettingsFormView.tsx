@@ -3,6 +3,7 @@ import { TitleBar } from '../../../ui/molecules/titleBar/TitleBar';
 import {
   Center,
   Container,
+  Divider,
   Flex,
   IconButton,
   Spinner,
@@ -23,15 +24,24 @@ import { useIpcMutation } from '../../../shared/ipc/useIpcMutation';
 import { PomodoroForm } from '../../pomodoro/components/pomodoroForm/PomodoroForm';
 import { useForm } from 'react-hook-form';
 import { IntegrationsForm } from '../../integrations/components/IntegrationsForm';
-import { SubmitButton } from '../../../ui/atoms/submitButton/SubmitButton';
+import { SubmitButton } from '../../../ui/molecules/submitButton/SubmitButton';
 import { Alert } from '../../../ui/molecules/alert/Alert';
 import { useIpcQuery } from '../../../shared/ipc/useIpcQuery';
-
-type SettingTab = 'Pomodoro' | 'Integrations';
+import { useYupValidationResolver } from '../../../form/hooks/useYupValidationResolver';
+import Yup from '../../../../shared/schema/yup';
+import { pomodoroSettingsSchemaShape } from '../../../../shared/schema/pomodoro/pomodoroSettings';
+import {
+  SettingsFormInput,
+  SettingsFormViewProps,
+  SettingTab,
+} from './SettingsFormView.types';
 
 const tabIndexArray: SettingTab[] = ['Pomodoro', 'Integrations'];
 
-export interface SettingsFormViewProps {}
+const formSchema = Yup.object().shape<SettingsFormInput & any>({
+  autoStart: Yup.boolean().required(),
+  pomodoroSettings: Yup.object().shape(pomodoroSettingsSchemaShape),
+});
 
 export const SettingsFormView: FC<SettingsFormViewProps> = () => {
   const history = useHistory();
@@ -42,6 +52,7 @@ export const SettingsFormView: FC<SettingsFormViewProps> = () => {
 
   const form = useForm<AppSettings>({
     mode: 'all',
+    resolver: useYupValidationResolver(formSchema),
   });
 
   const fillForm = useCallback(
@@ -81,6 +92,10 @@ export const SettingsFormView: FC<SettingsFormViewProps> = () => {
 
   const { is } = usePlatform();
 
+  console.log({
+    errors: form.errors,
+  });
+
   return (
     <>
       <TitleBar
@@ -117,7 +132,7 @@ export const SettingsFormView: FC<SettingsFormViewProps> = () => {
         pl={0}
         pr={0}
         pt={12}
-        pb={3}
+        pb={0}
         id="settings"
         height={is?.windows ? 'calc(100vh - 40px)' : 'calc(100vh - 60px)'}
         centerContent
@@ -154,7 +169,7 @@ export const SettingsFormView: FC<SettingsFormViewProps> = () => {
               {tab === 'Pomodoro' && (
                 <PomodoroForm
                   settings={{
-                    ...settings?.pomodoro,
+                    ...settings?.pomodoroSettings!,
                     autoStart: settings.autoStart,
                   }}
                   form={form}
@@ -163,10 +178,15 @@ export const SettingsFormView: FC<SettingsFormViewProps> = () => {
               {tab === 'Integrations' && <IntegrationsForm form={form} />}
             </Flex>
             {tab === 'Pomodoro' && (
-              <SubmitButton
-                id="submit_settings"
-                isLoading={setSettingsMutation.isLoading}
-              />
+              <>
+                <Divider />
+                <Center h="60px">
+                  <SubmitButton
+                    id="submit_settings"
+                    isLoading={setSettingsMutation.isLoading}
+                  />
+                </Center>
+              </>
             )}
           </Flex>
         )}

@@ -1,28 +1,21 @@
-import { useEffect } from 'react';
-import { useIpcRenderer } from '../../../providers/IpcRendererProvider';
-import { useSetRecoilState } from 'recoil';
-import { pomodoroState } from '../state/pomodoroState';
-import { Pomodoro, PomodoroSubscriptionTopics } from '../../../../shared/types';
+import { useCallback } from 'react';
+import {
+  PomodoroOperations,
+  PomodoroState,
+  PomodoroSubscriptionTopics,
+} from '../../../../shared/types';
+import { useQueryClient } from 'react-query';
+import { useIpcSubscriber } from '../../../shared/ipc/useIpcSubscriber';
 
 export const usePomodoroListeners = () => {
-  const ipc = useIpcRenderer();
+  const queryClient = useQueryClient();
 
-  const setPomodoro = useSetRecoilState(pomodoroState);
+  const handleUpdate = useCallback(
+    (_: undefined, state: PomodoroState) => {
+      queryClient.setQueryData(PomodoroOperations.GetPomodoroState, state);
+    },
+    [queryClient]
+  );
 
-  useEffect(() => {
-    if (!ipc) {
-      return;
-    }
-
-    const unsub = ipc.subscribe(
-      PomodoroSubscriptionTopics.Updated,
-      (_, pomodoro: Pomodoro) => {
-        setPomodoro(pomodoro);
-      }
-    );
-
-    return () => {
-      unsub();
-    };
-  }, [ipc, setPomodoro]);
+  useIpcSubscriber(PomodoroSubscriptionTopics.PomodoroUpdated, handleUpdate);
 };

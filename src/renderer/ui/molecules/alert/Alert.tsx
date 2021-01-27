@@ -6,9 +6,10 @@ import {
   AlertIcon,
   AlertProps as BaseAlertProps,
 } from '@chakra-ui/core';
+import { OmitUnderscored } from '../../../../shared/types';
 
 export interface AlertProps
-  extends Omit<BaseAlertProps, 'status' | 'backgroundColor'> {
+  extends Omit<OmitUnderscored<BaseAlertProps>, 'status' | 'backgroundColor'> {
   type: AlertStatus;
   title?: string;
 }

@@ -1,13 +1,18 @@
 import React, { FC } from 'react';
-import { Controller, UseFormMethods } from 'react-hook-form';
-import {
-  FormControl,
-  FormControlProps,
-} from '../../../../ui/atoms/formControl/FormControl';
+import { UseFormMethods } from 'react-hook-form';
+import { FormControlProps } from '../../../../ui/molecules/formControl/FormControl';
 import { DurationField } from '../../../../form/fields/DurationField';
-import { Divider, Stack, Switch } from '@chakra-ui/core';
+import {
+  Divider,
+  NumberInput,
+  NumberInputField,
+  Stack,
+  Switch,
+} from '@chakra-ui/core';
 import { AppSettings } from '../../../../../shared/types/settings';
 import { PomodoroSettings } from '../../../../../shared/types';
+import { FormController } from '../../../../ui/molecules/formController/FormController';
+import { AudioSelect } from '../../../audio/components/AudioSelect';
 
 export interface PomodoroFormProps {
   form: UseFormMethods<AppSettings>;
@@ -15,143 +20,154 @@ export interface PomodoroFormProps {
 }
 
 const formControlProps: Partial<FormControlProps> = {
-  width: '450px',
+  minWidth: '450px',
   justifyContent: 'space-between',
   d: 'flex',
   alignItems: 'baseline',
+  flexWrap: 'wrap',
 };
 
-export const PomodoroForm: FC<PomodoroFormProps> = ({ form, settings }) => {
-  const { errors, control } = form;
+const maxFieldWidth = '200px';
 
+export const PomodoroForm: FC<PomodoroFormProps> = ({ form, settings }) => {
   return (
-    <Stack spacing={6}>
-      <FormControl
+    <Stack spacing={6} width="100%" pr={6} pl={6}>
+      <FormController
         {...formControlProps}
-        error={errors.pomodoro?.workDurationSeconds?.message}
         label="Work duration"
+        name="pomodoroSettings.workDurationSeconds"
+        form={form}
+        rules={{
+          max: 9999,
+        }}
       >
-        <Controller
-          name="pomodoro.workDurationSeconds"
-          control={control}
-          defaultValue={settings.workDurationSeconds}
-          rules={{
-            max: 9999,
-          }}
-          render={(props) => <DurationField {...props} />}
-        />
-      </FormControl>
-      <FormControl
+        {(props) => <DurationField {...props} maxWidth={maxFieldWidth} />}
+      </FormController>
+      <FormController
         {...formControlProps}
-        error={errors.pomodoro?.shortBreakDurationSeconds?.message}
+        form={form}
         label="Break duration"
+        name="pomodoroSettings.shortBreakDurationSeconds"
+        rules={{
+          max: 9999,
+        }}
       >
-        <Controller
-          defaultValue={settings.shortBreakDurationSeconds}
-          name="pomodoro.shortBreakDurationSeconds"
-          control={control}
-          rules={{
-            max: 9999,
-          }}
-          render={(props) => <DurationField {...props} />}
-        />
-      </FormControl>
-      <FormControl
-        {...formControlProps}
-        error={errors.pomodoro?.longBreakDurationSeconds?.message}
+        {(props) => <DurationField {...props} maxWidth={maxFieldWidth} />}
+      </FormController>
+      <FormController
         label="Long break duration"
-      >
-        <Controller
-          defaultValue={settings.longBreakDurationSeconds}
-          name="pomodoro.longBreakDurationSeconds"
-          control={control}
-          rules={{
-            max: 9999,
-          }}
-          render={(props) => <DurationField {...props} />}
-        />
-      </FormControl>
-      <FormControl
+        form={form}
+        name="pomodoroSettings.longBreakDurationSeconds"
         {...formControlProps}
-        error={errors.pomodoro?.openFullWindowOnBreak?.message}
-        name="pomodoro.openFullWindowOnBreak"
+        defaultValue={settings.longBreakDurationSeconds}
+      >
+        {(props) => <DurationField {...props} maxWidth={maxFieldWidth} />}
+      </FormController>
+      <FormController
+        form={form}
+        label="Short break interval"
+        helperInTooltip
+        helperText="Amount of short breaks before long break happens"
+        defaultValue={settings.longBreakInterval}
+        name="pomodoroSettings.longBreakInterval"
+        {...formControlProps}
+      >
+        {(props) => (
+          <NumberInput {...props} maxWidth={`calc(${maxFieldWidth} - 40px)`}>
+            <NumberInputField />
+          </NumberInput>
+        )}
+      </FormController>
+      <FormController
         label="Open separate window on break"
-      >
-        <Controller
-          defaultValue={settings.openFullWindowOnBreak}
-          name="pomodoro.openFullWindowOnBreak"
-          control={control}
-          render={(props) => (
-            <Switch
-              {...props}
-              id={props.name}
-              onChange={(event) => props.onChange(event.target.checked)}
-              isChecked={props.value}
-            />
-          )}
-        />
-      </FormControl>
-      <FormControl
+        form={form}
+        name="pomodoroSettings.openFullWindowOnBreak"
+        defaultValue={settings.openFullWindowOnBreak}
         {...formControlProps}
-        error={errors.pomodoro?.autoRunBreak?.message}
-        name="pomodoro.autoRunBreak"
+      >
+        {(props) => (
+          <Switch
+            {...props}
+            id={props.name}
+            onChange={(event) => props.onChange(event.target.checked)}
+            isChecked={props.value}
+          />
+        )}
+      </FormController>
+      <FormController
+        form={form}
+        name="pomodoroSettings.autoRunBreak"
         label="Start break automatically"
-      >
-        <Controller
-          defaultValue={settings.autoRunBreak}
-          name="pomodoro.autoRunBreak"
-          control={control}
-          render={(props) => (
-            <Switch
-              {...props}
-              id={props.name}
-              onChange={(event) => props.onChange(event.target.checked)}
-              isChecked={props.value}
-            />
-          )}
-        />
-      </FormControl>
-      <FormControl
+        defaultValue={settings.autoRunBreak}
         {...formControlProps}
-        error={errors.pomodoro?.autoRunWork?.message}
-        name="pomodoro.autoRunWork"
+      >
+        {(props) => (
+          <Switch
+            {...props}
+            id={props.name}
+            onChange={(event) => props.onChange(event.target.checked)}
+            isChecked={props.value}
+          />
+        )}
+      </FormController>
+      <FormController
+        form={form}
+        name="pomodoroSettings.autoRunWork"
         label="Start work automatically"
-      >
-        <Controller
-          defaultValue={settings.autoRunWork}
-          name="pomodoro.autoRunWork"
-          control={control}
-          render={(props) => (
-            <Switch
-              {...props}
-              id={props.name}
-              onChange={(event) => props.onChange(event.target.checked)}
-              isChecked={props.value}
-            />
-          )}
-        />
-      </FormControl>
-      <Divider />
-      <FormControl
+        defaultValue={settings.autoRunWork}
         {...formControlProps}
-        error={errors.autoStart?.message}
+      >
+        {(props) => (
+          <Switch
+            {...props}
+            id={props.name}
+            onChange={(event) => props.onChange(event.target.checked)}
+            isChecked={props.value}
+          />
+        )}
+      </FormController>
+      <Divider />
+      <FormController
+        form={form}
+        name="pomodoroSettings.workSound"
+        label="Sound to play when work starts"
+        defaultValue={settings.workSound}
+      >
+        {(props) => <AudioSelect color="brand.textPrimary" {...props} />}
+      </FormController>
+      <FormController
+        form={form}
+        name="pomodoroSettings.breakSound"
+        label="Sound to play when break starts"
+        defaultValue={settings.breakSound}
+      >
+        {(props) => <AudioSelect color="brand.textPrimary" {...props} />}
+      </FormController>
+      <FormController
+        form={form}
+        name="pomodoroSettings.longBreakSound"
+        label="Sound to play when long break starts"
+        defaultValue={settings.longBreakSound}
+      >
+        {(props) => <AudioSelect color="brand.textPrimary" {...props} />}
+      </FormController>
+      <Divider />
+      <FormController
+        form={form}
         name="autoStart"
         label="Start app on launch"
+        defaultValue={settings.autoStart}
+        {...formControlProps}
       >
-        <Controller
-          name="autoStart"
-          defaultValue={settings.autoStart}
-          control={control}
-          render={(props) => (
-            <Switch
-              {...props}
-              id={props.name}
-              onChange={(event) => props.onChange(event.target.checked)}
-              isChecked={props.value}
-            />
-          )}
-        />
-      </FormControl>
+        {(props) => (
+          <Switch
+            {...props}
+            id={props.name}
+            onChange={(event) => props.onChange(event.target.checked)}
+            isChecked={props.value}
+          />
+        )}
+      </FormController>
     </Stack>
   );
 };

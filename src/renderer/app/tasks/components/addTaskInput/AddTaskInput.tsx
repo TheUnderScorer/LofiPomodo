@@ -6,7 +6,7 @@ import {
 } from '@chakra-ui/core';
 import React, { FC, useCallback } from 'react';
 import { useForm } from 'react-hook-form';
-import { FormControl } from '../../../../ui/atoms/formControl/FormControl';
+import { FormControl } from '../../../../ui/molecules/formControl/FormControl';
 import { CreateTaskInput } from '../../../../../shared/types/tasks';
 import { FaIcon } from '../../../../ui/atoms/faIcon/FaIcon';
 import { faPlus } from '@fortawesome/free-solid-svg-icons';

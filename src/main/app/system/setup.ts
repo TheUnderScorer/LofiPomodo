@@ -14,8 +14,10 @@ export const setupSystem = (context: AppContext) => {
     [AppSystemOperations.QuitApp]: () => {
       app.quit();
     },
-    [AppSystemOperations.CloseWindow]: () => {
-      return BrowserWindow.getFocusedWindow()?.close();
+    [AppSystemOperations.CloseWindow]: (event) => {
+      const window = BrowserWindow.fromWebContents(event.sender);
+
+      window?.close();
     },
     [AppSystemOperations.ToggleWindowSize]: () => {
       const window = BrowserWindow.getFocusedWindow();

@@ -24,6 +24,7 @@ export enum WindowTypes {
   Timer = 'PixelPomodoro',
   Break = 'Break',
   ManageTrello = 'ManageTrello',
+  AudioPlayer = 'AudioPlayer',
 }
 
 export interface OpenWindowPayload {

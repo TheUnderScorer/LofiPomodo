@@ -10,11 +10,12 @@ import {
   IconButton,
   Tooltip,
 } from '@chakra-ui/core';
-import { FaIcon } from '../faIcon/FaIcon';
+import { FaIcon } from '../../atoms/faIcon/FaIcon';
 import { faInfo } from '@fortawesome/free-solid-svg-icons';
+import { OmitUnderscored } from '../../../../shared/types';
 
 export interface FormControlProps
-  extends Omit<BaseFormControlProps, 'helperText'> {
+  extends Omit<OmitUnderscored<BaseFormControlProps>, 'helperText'> {
   label?: string;
   helperText?: ReactNode;
   name?: string;
@@ -57,7 +58,7 @@ export const FormControl: FC<FormControlProps> = ({
       {helperText && !helperInTooltip && (
         <FormHelperText>{helperText}</FormHelperText>
       )}
-      {error && <FormErrorMessage>{error}</FormErrorMessage>}
+      {error && <FormErrorMessage width="100%">{error}</FormErrorMessage>}
     </BaseFormControl>
   );
 };

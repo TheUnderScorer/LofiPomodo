@@ -24,6 +24,8 @@ export class WindowFactory {
 
   public manageTrelloWindow: Nullable<BrowserWindow> = null;
 
+  public audioPlayerWindows = new Set<BrowserWindow>();
+
   private windowKeyMethodMap: Record<
     WindowTypes,
     (args?: CreateWindowArgs) => Promise<BrowserWindow>
@@ -31,6 +33,7 @@ export class WindowFactory {
     [WindowTypes.Break]: this.createBreakWindow.bind(this),
     [WindowTypes.Timer]: this.createTimerWindow.bind(this),
     [WindowTypes.ManageTrello]: this.createManageTrelloWindow.bind(this),
+    [WindowTypes.AudioPlayer]: this.createAudioPlayerWindow.bind(this),
   };
 
   constructor(
@@ -49,9 +52,9 @@ export class WindowFactory {
     return method(args);
   }
 
-  async createManageTrelloWindow({ parent }: CreateWindowArgs = {}): Promise<
-    BrowserWindow
-  > {
+  async createManageTrelloWindow({
+    parent,
+  }: CreateWindowArgs = {}): Promise<BrowserWindow> {
     if (this.manageTrelloWindow) {
       this.manageTrelloWindow.focus();
 
@@ -75,9 +78,9 @@ export class WindowFactory {
     return window;
   }
 
-  async createTimerWindow({ parent }: CreateWindowArgs = {}): Promise<
-    BrowserWindow
-  > {
+  async createTimerWindow({
+    parent,
+  }: CreateWindowArgs = {}): Promise<BrowserWindow> {
     if (this.timerWindow) {
       this.timerWindow.focus();
 
@@ -104,9 +107,32 @@ export class WindowFactory {
     return window;
   }
 
-  async createBreakWindow({ parent }: CreateWindowArgs = {}): Promise<
-    BrowserWindow
-  > {
+  async createAudioPlayerWindow() {
+    const window = new BrowserWindow({
+      show: false,
+      height: 400,
+      width: 400,
+      webPreferences: {
+        preload: this.preloadPath,
+      },
+    });
+
+    await setupWindow(window, routes.hiddenAudioPlayer());
+
+    this.audioPlayerWindows.add(window);
+
+    window.on('close', () => {
+      WindowFactory.logWindowClosed(window);
+
+      this.audioPlayerWindows.delete(window);
+    });
+
+    return window;
+  }
+
+  async createBreakWindow({
+    parent,
+  }: CreateWindowArgs = {}): Promise<BrowserWindow> {
     if (this.breakWindow) {
       this.breakWindow.focus();
 
@@ -167,7 +193,7 @@ export class WindowFactory {
       | undefined;
 
     return {
-      ...windowProps[type],
+      ...(windowProps[type] as WindowProps),
       ...(storeProps ?? {}),
     };
   }
@@ -176,9 +202,13 @@ export class WindowFactory {
     this[key] = window;
 
     window.once('close', () => {
-      console.log(`Window ${window.id} closed.`);
+      WindowFactory.logWindowClosed(window);
 
       this[key] = null;
     });
+  }
+
+  private static logWindowClosed(window: Electron.BrowserWindow) {
+    console.log(`Window ${window.id} closed.`);
   }
 }

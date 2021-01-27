@@ -19,7 +19,9 @@ const baseWindowProps = {
   frame: !is.windows,
 };
 
-export const windowProps: Readonly<Record<WindowTypes, WindowProps>> = {
+export const windowProps: Readonly<
+  Record<WindowTypes, Partial<WindowProps>>
+> = {
   [WindowTypes.Timer]: {
     ...baseWindowProps,
   },
@@ -34,4 +36,5 @@ export const windowProps: Readonly<Record<WindowTypes, WindowProps>> = {
     height: baseWindowProps.height + 200,
     width: baseWindowProps.height + 200,
   },
+  [WindowTypes.AudioPlayer]: {},
 };

@@ -1,0 +1,19 @@
+[
+  {
+    "name": "Achievment 1",
+    "fileName": "achievement-00.wav"
+  },
+  {
+    "name": "Achievment 2",
+    "fileName": "achievement-01.wav"
+  },
+  {
+    "name": "Lose",
+    "fileName": "lose-01.wav"
+  },
+  {
+    "name": "Victory",
+    "fileName": "win-00.wav"
+  }
+]
+

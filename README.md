@@ -67,3 +67,7 @@ To build and pack the app for your platform:
 Releases are handled via `semantic-release` and are triggered automatically via commits on `master` branch. In order to run release manually run `npm run semantic-release`
 
 > Note: Builds for Apple M1 are being done on my Macbook Pro via a custom github runner, so they are available only when I start the release.
+
+### License
+
+This project is under [MIT License](LICENSE.md).

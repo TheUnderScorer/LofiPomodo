@@ -1,9 +1,6 @@
 import { Input, InputGroup, InputProps } from '@chakra-ui/core';
 import React, { forwardRef } from 'react';
-import {
-  FormControl,
-  FormControlProps,
-} from '../../atoms/formControl/FormControl';
+import { FormControl, FormControlProps } from '../formControl/FormControl';
 
 export interface CommonFieldProps extends FormControlProps {
   inputProps?: InputProps;

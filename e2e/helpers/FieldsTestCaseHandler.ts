@@ -1,6 +1,6 @@
-import { FieldTestCase } from './fields';
 import { Application } from 'spectron';
 import { waitForElement } from './waitForElement';
+import { FieldTestCase } from './fields.types';
 
 export class FieldsTestCaseHandler<T extends Record<string, FieldTestCase>> {
   constructor(private readonly cases: T, private readonly app: Application) {}

@@ -13,6 +13,7 @@ import path from 'path';
 import { setupSingleInstance } from './singleInstance';
 import { is } from 'electron-util';
 import { waitForRenderer } from './shared/utils/dev';
+import { setupAudio } from './app/audio/setup';
 
 if (require('electron-squirrel-startup')) {
   app.quit();
@@ -37,7 +38,7 @@ log.debug(`Dirname: ${__dirname}`);
 const setupAppMenu = (context: AppContext) => {
   Menu.setApplicationMenu(context.menuFactory.createAppMenu());
 
-  context.pomodoro.changed$.subscribe(() => {
+  context.pomodoroService.changed$.subscribe(() => {
     Menu.setApplicationMenu(context.menuFactory.createAppMenu());
   });
 };
@@ -56,6 +57,7 @@ app.whenReady().then(async () => {
       ({ url }) => context.apiAuthService.handleAuthProtocol(url),
     ]);
 
+    setupAudio(context);
     setupAppMenu(context);
     setupPomodoro(context);
     setupTasks(context);
@@ -69,6 +71,8 @@ app.whenReady().then(async () => {
       await context.windowFactory.createTimerWindow();
     });
   } catch (e) {
+    console.error(e);
+
     await createErrorDialog(e);
 
     app.quit();
