@@ -8,3 +8,9 @@ export interface SettingsFormInput {
   autoStart: boolean;
   pomodoroSettings: PomodoroSettings;
 }
+
+export const settingsTabIndexArray: SettingTab[] = [
+  'General',
+  'Pomodoro',
+  'Integrations',
+];

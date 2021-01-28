@@ -33,13 +33,11 @@ import { pomodoroSettingsSchemaShape } from '../../../../shared/schema/pomodoro/
 import {
   SettingsFormInput,
   SettingsFormViewProps,
-  SettingTab,
+  settingsTabIndexArray,
 } from './SettingsFormView.types';
 import { GeneralSettings } from '../components/GeneralSettings';
 import { useWindowMinHeightOnMount } from '../../../shared/hooks/useWindowMinHeightOnMount';
 import { defaultWindowHeight } from '../../../../shared/windows/constants';
-
-const tabIndexArray: SettingTab[] = ['General', 'Pomodoro', 'Integrations'];
 
 const formSchema = Yup.object().shape<SettingsFormInput & any>({
   autoStart: Yup.boolean().required(),
@@ -51,7 +49,9 @@ export const SettingsFormView: FC<SettingsFormViewProps> = () => {
 
   const [activeTabIndex, setActiveTabIndex] = useState(0);
 
-  const tab = useMemo(() => tabIndexArray[activeTabIndex], [activeTabIndex]);
+  const tab = useMemo(() => settingsTabIndexArray[activeTabIndex], [
+    activeTabIndex,
+  ]);
 
   const form = useForm<AppSettings>({
     mode: 'all',

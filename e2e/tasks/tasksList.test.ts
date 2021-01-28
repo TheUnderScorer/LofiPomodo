@@ -6,6 +6,9 @@ import {
   defaultWindowHeight,
   getMinWindowHeight,
 } from '../../src/shared/windows/constants';
+import { FieldsTestCaseHandler } from '../helpers/FieldsTestCaseHandler';
+import { assertFieldProperty, switchFieldCallback } from '../helpers/fields';
+import { goToSettings, saveSettings } from '../integrations/utils';
 
 describe('Tasks list - as an user', () => {
   it('I should be able to add new task', async () => {
@@ -93,6 +96,24 @@ describe('Tasks list - as an user', () => {
 
   it('I should be able to toggle tasks list', async () => {
     const app = await bootstrapTestApp();
+
+    const testCaseHandler = new FieldsTestCaseHandler(
+      {
+        toggleTaskListSwitch: {
+          selector: '[name="taskSettings.showToggleTaskListBtn"]',
+          setValueCallback: switchFieldCallback(),
+          checkValueCallback: assertFieldProperty('checked', true),
+        },
+      },
+      app
+    );
+
+    await goToSettings(app, 'General');
+
+    await testCaseHandler.waitForField('toggleTaskListSwitch');
+    await testCaseHandler.setAllFields();
+
+    await saveSettings(app);
 
     const btn = await app.client.$('.toggle-tasks-list-btn');
 
