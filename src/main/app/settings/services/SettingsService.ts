@@ -5,6 +5,7 @@ import ElectronStore from 'electron-store';
 import { Subject } from 'rxjs';
 import { PomodoroSettings } from '../../../../shared/types';
 import { getInitialPomodoroSettings } from '../../pomodoro/data';
+import { isEmpty } from 'lodash';
 
 export interface SettingsChangedPayload {
   oldSettings: AppSettings;
@@ -18,7 +19,7 @@ export class SettingsService {
     private readonly autoLaunch: AutoLaunch,
     private readonly store: ElectronStore<AppStore>
   ) {
-    if (!this.pomodoroSettings) {
+    if (isEmpty(this.pomodoroSettings)) {
       this.pomodoroSettings = getInitialPomodoroSettings();
     }
   }
