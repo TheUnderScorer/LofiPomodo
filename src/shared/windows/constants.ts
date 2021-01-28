@@ -1,40 +1,7 @@
-import { WindowProps, WindowTypes } from '../types/system';
-import { is } from 'electron-util';
+export const timerWindowSize = 500;
+export const breakWindowSize = 600;
 
-const timerWindowSize = 500;
-const breakWindowSize = 600;
+export const getMinWindowHeight = (isWindows: boolean) =>
+  isWindows ? 190 : 216;
 
-const baseWindowProps = {
-  height: timerWindowSize + 100,
-  width: timerWindowSize,
-  minHeight: is.windows ? 190 : 216,
-  minWidth: timerWindowSize,
-  fullscreenable: false,
-  maximizable: false,
-  simpleFullscreen: false,
-  center: true,
-  fullscreen: false,
-  minimizable: false,
-  titleBarStyle: is.windows ? 'customButtonsOnHover' : 'hiddenInset',
-  frame: !is.windows,
-};
-
-export const windowProps: Readonly<
-  Record<WindowTypes, Partial<WindowProps>>
-> = {
-  [WindowTypes.Timer]: {
-    ...baseWindowProps,
-  },
-  [WindowTypes.Break]: {
-    height: breakWindowSize,
-    width: breakWindowSize,
-    minHeight: breakWindowSize,
-    minWidth: breakWindowSize,
-  },
-  [WindowTypes.ManageTrello]: {
-    ...baseWindowProps,
-    height: baseWindowProps.height + 200,
-    width: baseWindowProps.height + 200,
-  },
-  [WindowTypes.AudioPlayer]: {},
-};
+export const defaultWindowHeight = timerWindowSize + 100;

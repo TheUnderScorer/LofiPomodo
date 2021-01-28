@@ -1,7 +1,10 @@
 import { IconButton, IconButtonProps, Tooltip } from '@chakra-ui/core';
 import React, { FC, useMemo } from 'react';
 import { useIpcMutation } from '../../../../../shared/ipc/useIpcMutation';
-import { PomodoroOperations } from '../../../../../../shared/types';
+import {
+  OmitUnderscored,
+  PomodoroOperations,
+} from '../../../../../../shared/types';
 import { ArrowIcon } from '../../../../../ui/atoms/icons';
 import { usePomodoro } from '../../../hooks/usePomodoro';
 import { getNextState } from '../../../../../../main/app/pomodoro/logic/nextState';
@@ -9,7 +12,7 @@ import { pomodoroStateDictionary } from '../../../../../../shared/dictionary/pom
 import { useGetSetting } from '../../../../settings/hooks/useGetSetting';
 
 export interface NextStateBtnProps
-  extends Omit<IconButtonProps, 'aria-label'> {}
+  extends Omit<OmitUnderscored<IconButtonProps>, 'aria-label'> {}
 
 export const NextStateBtn: FC<NextStateBtnProps> = (props) => {
   const { pomodoro } = usePomodoro();

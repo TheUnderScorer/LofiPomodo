@@ -20,17 +20,20 @@ import { NextStateBtn } from '../buttons/skipBreak/NextStateBtn';
 import { usePlatform } from '../../../system/hooks/usePlatform';
 import { PomodoroMenuBtn } from '../pomodoroMenu/PomodoroMenuBtn';
 import { useGetSetting } from '../../../settings/hooks/useGetSetting';
+import { ToggleTasksListBtn } from '../../../tasks/components/toggleTasksListBtn/ToggleTasksListBtn';
 
 export interface TimerProps {
   containerProps?: BoxProps;
   stackProps?: StackProps;
   showSettingsBtnInFooterOnWindows?: boolean;
+  showToggleTasksListBtn?: boolean;
 }
 
 export const TimerBox: FC<TimerProps> = ({
   containerProps = {},
   stackProps = {},
   showSettingsBtnInFooterOnWindows,
+  showToggleTasksListBtn,
 }) => {
   const { data: pomodoroSettings } = useGetSetting('pomodoroSettings');
   const { pomodoro } = usePomodoro();
@@ -84,7 +87,8 @@ export const TimerBox: FC<TimerProps> = ({
         <Center>
           <ActiveTaskTitle color="white" />
         </Center>
-        <Center mt="1em !important">
+        <Center mt="1em !important" w="100%">
+          <ToggleTasksListBtn position="absolute" left={2} variant="outline" />
           <Stack direction="row" spacing={2}>
             <PomodoroControl color="white" />
             <ResetState iconProps={{ variant: 'light' }} />

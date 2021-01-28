@@ -2,6 +2,10 @@ import { bootstrapTestApp } from '../setup';
 import { wait } from '../../src/shared/utils/timeout';
 import { TaskState } from '../../src/shared/types/tasks';
 import { createTask } from '../helpers/tasks';
+import {
+  defaultWindowHeight,
+  getMinWindowHeight,
+} from '../../src/shared/windows/constants';
 
 describe('Tasks list - as an user', () => {
   it('I should be able to add new task', async () => {
@@ -85,5 +89,24 @@ describe('Tasks list - as an user', () => {
 
     const doneListItems = await app.client.$$('.task-list-item');
     expect(doneListItems).toHaveLength(1);
+  });
+
+  it('I should be able to toggle tasks list', async () => {
+    const app = await bootstrapTestApp();
+
+    const btn = await app.client.$('.toggle-tasks-list-btn');
+
+    await btn.click();
+
+    let html = await app.client.$('html');
+    let htmlSize = await html.getSize('height');
+
+    expect(htmlSize).toEqual(getMinWindowHeight(false));
+
+    await btn.click();
+
+    htmlSize = await html.getSize('height');
+
+    expect(htmlSize).toEqual(defaultWindowHeight);
   });
 });
