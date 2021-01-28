@@ -1,3 +1,15 @@
+# [1.11.0](https://github.com/TheUnderScorer/pixel-pomodo/compare/v1.10.0...v1.11.0) (2021-01-28)
+
+
+### Bug Fixes
+
+* Automatically resize window when entering settings ([682adec](https://github.com/TheUnderScorer/pixel-pomodo/commit/682adec535c7e6cc087770f2ad0ae39d3366b204))
+
+
+### Features
+
+* Add button for toggling tasks list ([e264ecd](https://github.com/TheUnderScorer/pixel-pomodo/commit/e264ecdfce1322a82bb7ff72b164fe7e017b6147))
+
 # [1.10.0](https://github.com/TheUnderScorer/pixel-pomodo/compare/v1.9.0...v1.10.0) (2021-01-27)
 
 
