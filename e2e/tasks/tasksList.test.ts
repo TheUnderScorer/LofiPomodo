@@ -2,6 +2,13 @@ import { bootstrapTestApp } from '../setup';
 import { wait } from '../../src/shared/utils/timeout';
 import { TaskState } from '../../src/shared/types/tasks';
 import { createTask } from '../helpers/tasks';
+import {
+  defaultWindowHeight,
+  getMinWindowHeight,
+} from '../../src/shared/windows/constants';
+import { FieldsTestCaseHandler } from '../helpers/FieldsTestCaseHandler';
+import { assertFieldProperty, switchFieldCallback } from '../helpers/fields';
+import { goToSettings, saveSettings } from '../integrations/utils';
 
 describe('Tasks list - as an user', () => {
   it('I should be able to add new task', async () => {
@@ -85,5 +92,44 @@ describe('Tasks list - as an user', () => {
 
     const doneListItems = await app.client.$$('.task-list-item');
     expect(doneListItems).toHaveLength(1);
+  });
+
+  it('I should be able to toggle tasks list', async () => {
+    const app = await bootstrapTestApp();
+
+    const testCaseHandler = new FieldsTestCaseHandler(
+      {
+        toggleTaskListSwitch: {
+          selector: '[name="taskSettings.showToggleTaskListBtn"]',
+          setValueCallback: switchFieldCallback(),
+          checkValueCallback: assertFieldProperty('checked', true),
+        },
+      },
+      app
+    );
+
+    await goToSettings(app, 'General');
+
+    await testCaseHandler.waitForField('toggleTaskListSwitch');
+    await testCaseHandler.setAllFields();
+
+    await saveSettings(app);
+
+    const btn = await app.client.$('.toggle-tasks-list-btn');
+
+    await btn.click();
+
+    let html = await app.client.$('html');
+    let htmlSize = await html.getSize('height');
+
+    expect(htmlSize).toBeLessThanOrEqual(getMinWindowHeight(false));
+    expect(htmlSize).toBeGreaterThanOrEqual(getMinWindowHeight(true));
+
+    await btn.click();
+
+    htmlSize = await html.getSize('height');
+
+    expect(htmlSize).toBeLessThanOrEqual(defaultWindowHeight);
+    expect(htmlSize).toBeGreaterThanOrEqual(defaultWindowHeight - 60);
   });
 });

@@ -4,6 +4,8 @@ import { useDialog } from '../../providers/dialogProvider/hooks/useDialog';
 import { errorDialog } from '../../providers/dialogProvider/factories/errorDialog';
 import { wait } from '../../../shared/utils/timeout';
 
+const logMutations = false;
+
 export interface IpcInvokeHookParams<T, Variables> {
   invokeAtMount?: boolean;
   variables?: Variables;
@@ -40,20 +42,25 @@ export const useIpcMutation = <Arg = any, ReturnValue = any>(
         showDialog(errorDialog(error));
       },
       onSuccess: async (data, variables) => {
-        console.info(`Mutation ${name} completed`, {
-          data,
-          variables,
-        });
+        if (logMutations) {
+          console.info(`Mutation ${name} completed`, {
+            data,
+            variables,
+          });
+        }
 
         if (invalidateQueries?.length) {
           if (invalidateQueriesDelay) {
             await wait(invalidateQueriesDelay);
           }
 
-          console.info(
-            `Invalidating queries after ${name} mutation:`,
-            invalidateQueries
-          );
+          if (logMutations) {
+            console.info(
+              `Invalidating queries after ${name} mutation:`,
+              invalidateQueries
+            );
+          }
+
           await Promise.all(
             invalidateQueries.map((query) => client.invalidateQueries(query))
           );

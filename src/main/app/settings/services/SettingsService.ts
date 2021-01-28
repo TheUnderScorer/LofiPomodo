@@ -5,6 +5,8 @@ import ElectronStore from 'electron-store';
 import { Subject } from 'rxjs';
 import { PomodoroSettings } from '../../../../shared/types';
 import { getInitialPomodoroSettings } from '../../pomodoro/data';
+import { isEmpty } from 'lodash';
+import { TaskSettings } from '../../../../shared/types/tasks';
 
 export interface SettingsChangedPayload {
   oldSettings: AppSettings;
@@ -18,7 +20,7 @@ export class SettingsService {
     private readonly autoLaunch: AutoLaunch,
     private readonly store: ElectronStore<AppStore>
   ) {
-    if (!this.pomodoroSettings) {
+    if (isEmpty(this.pomodoroSettings)) {
       this.pomodoroSettings = getInitialPomodoroSettings();
     }
   }
@@ -27,7 +29,7 @@ export class SettingsService {
     try {
       const oldSettings = await this.getSettings();
 
-      const { autoStart, pomodoroSettings } = settings;
+      const { autoStart, pomodoroSettings, taskSettings } = settings;
 
       const isAutoStart = await this.autoLaunch.isEnabled();
 
@@ -37,7 +39,8 @@ export class SettingsService {
         await this.autoLaunch.disable();
       }
 
-      this.store.set('pomodoroSettings', pomodoroSettings);
+      this.pomodoroSettings = pomodoroSettings;
+      this.taskSettings = taskSettings;
 
       this.settingsChanged$.next({
         oldSettings,
@@ -60,11 +63,20 @@ export class SettingsService {
     this.store.set('pomodoroSettings', settings);
   }
 
+  get taskSettings() {
+    return this.store.get('taskSettings');
+  }
+
+  set taskSettings(settings: TaskSettings | undefined) {
+    this.store.set('taskSettings', settings);
+  }
+
   async getSettings(): Promise<AppSettings> {
     return {
       autoStart: await this.autoLaunch.isEnabled(),
       pomodoroSettings: this.pomodoroSettings!,
       trello: this.store.get('trello'),
+      taskSettings: this.taskSettings,
     };
   }
 

@@ -42,6 +42,10 @@ export enum TaskOperations {
   IsSyncingWithApis = 'IsSyncingWithApis',
 }
 
+export interface TaskSettings {
+  showToggleTaskListBtn?: boolean;
+}
+
 export enum TaskSubscriptionTopics {
   ActiveTaskUpdated = 'ActiveTaskUpdated',
   TasksDeleted = 'TasksDeleted',

@@ -3,11 +3,11 @@ import { setupWindow } from './setup';
 import { routes } from '../../../../shared/routes/routes';
 import { MenuFactory } from '../../menu/MenuFactory';
 import { Nullable } from '../../../../shared/types';
-import { windowProps } from '../../../../shared/windows/constants';
 import { WindowProps, WindowTypes } from '../../../../shared/types/system';
 import { AppStore } from '../../../../shared/types/store';
 import ElectronStore from 'electron-store';
 import { windowTitles } from '../../../../shared/dictionary/system';
+import { windowProps } from '../../constants/windowProps';
 
 type WindowKeys = 'timerWindow' | 'breakWindow' | 'manageTrelloWindow';
 
