@@ -35,8 +35,11 @@ import {
   SettingsFormViewProps,
   SettingTab,
 } from './SettingsFormView.types';
+import { GeneralSettings } from '../components/GeneralSettings';
+import { useWindowMinHeightOnMount } from '../../../shared/hooks/useWindowMinHeightOnMount';
+import { defaultWindowHeight } from '../../../../shared/windows/constants';
 
-const tabIndexArray: SettingTab[] = ['Pomodoro', 'Integrations'];
+const tabIndexArray: SettingTab[] = ['General', 'Pomodoro', 'Integrations'];
 
 const formSchema = Yup.object().shape<SettingsFormInput & any>({
   autoStart: Yup.boolean().required(),
@@ -53,6 +56,7 @@ export const SettingsFormView: FC<SettingsFormViewProps> = () => {
   const form = useForm<AppSettings>({
     mode: 'all',
     resolver: useYupValidationResolver(formSchema),
+    shouldUnregister: false,
   });
 
   const fillForm = useCallback(
@@ -92,9 +96,7 @@ export const SettingsFormView: FC<SettingsFormViewProps> = () => {
 
   const { is } = usePlatform();
 
-  console.log({
-    errors: form.errors,
-  });
+  useWindowMinHeightOnMount(defaultWindowHeight);
 
   return (
     <>
@@ -117,6 +119,9 @@ export const SettingsFormView: FC<SettingsFormViewProps> = () => {
           <Center flex="1">
             <Tabs index={activeTabIndex} onChange={setActiveTabIndex}>
               <TabList>
+                <Tab id="general_tab">
+                  <Text>General</Text>
+                </Tab>
                 <Tab id="pomodoro_tab">
                   <Text>Pomodoro</Text>
                 </Tab>
@@ -160,24 +165,27 @@ export const SettingsFormView: FC<SettingsFormViewProps> = () => {
               flex={1}
               width="100%"
               pt={2}
+              pb={4}
+              pr={6}
+              pl={6}
             >
               {setSettingsMutation.error && (
                 <Alert type="error" mb={6}>
                   <Text>{setSettingsMutation.error.message}</Text>
                 </Alert>
               )}
+              {tab === 'General' && (
+                <GeneralSettings settings={settings} form={form} />
+              )}
               {tab === 'Pomodoro' && (
                 <PomodoroForm
-                  settings={{
-                    ...settings?.pomodoroSettings!,
-                    autoStart: settings.autoStart,
-                  }}
+                  settings={settings?.pomodoroSettings!}
                   form={form}
                 />
               )}
               {tab === 'Integrations' && <IntegrationsForm form={form} />}
             </Flex>
-            {tab === 'Pomodoro' && (
+            {tab !== 'Integrations' && (
               <>
                 <Divider />
                 <Center h="60px">

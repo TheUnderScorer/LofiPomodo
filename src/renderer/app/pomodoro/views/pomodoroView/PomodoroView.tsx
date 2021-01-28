@@ -9,12 +9,15 @@ import { usePlatform } from '../../../system/hooks/usePlatform';
 import { CenterContainer } from '../../../../ui/templates/centerContainer/CenterContainer';
 import { usePomodoroListeners } from '../../hooks/usePomodoroListeners';
 import { useTasksListeners } from '../../../tasks/hooks/useTaskListeners';
+import { useGetSetting } from '../../../settings/hooks/useGetSetting';
 
 export interface PomodoroViewProps {}
 
 export const PomodoroView: FC<PomodoroViewProps> = () => {
   usePomodoroListeners();
   useTasksListeners();
+
+  const { data: taskSettings } = useGetSetting('taskSettings');
 
   const { pomodoro } = usePomodoro();
 
@@ -37,6 +40,9 @@ export const PomodoroView: FC<PomodoroViewProps> = () => {
             <>
               <TimerBox
                 showSettingsBtnInFooterOnWindows
+                showToggleTasksListBtn={Boolean(
+                  taskSettings?.showToggleTaskListBtn
+                )}
                 containerProps={{
                   pt: is?.windows ? 3 : 10,
                   pb: 5,

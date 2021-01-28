@@ -1,8 +1,6 @@
 import React, { useCallback, useMemo, useState } from 'react';
 import { OmitUnderscored } from '../../../../../shared/types';
 import { IconButton, IconButtonProps, Tooltip } from '@chakra-ui/core';
-import { FaIcon } from '../../../../ui/atoms/faIcon/FaIcon';
-import { faArrowDown, faArrowUp } from '@fortawesome/free-solid-svg-icons';
 import {
   defaultWindowHeight,
   getMinWindowHeight,
@@ -10,6 +8,7 @@ import {
 import { usePlatform } from '../../../system/hooks/usePlatform';
 import { useEvent, useMount } from 'react-use';
 import classNames from 'classnames';
+import { ArrowIcon } from '../../../../ui/atoms/icons';
 
 export interface ToggleTasksListBtnProps
   extends Omit<OmitUnderscored<IconButtonProps>, 'aria-label' | 'onClick'> {}
@@ -56,7 +55,10 @@ export const ToggleTasksListBtn = (props: ToggleTasksListBtnProps) => {
         aria-label="Toggle tasks list"
         onClick={resizeWindow}
       >
-        <FaIcon icon={taskListVisible ? faArrowUp : faArrowDown} />
+        <ArrowIcon
+          height="30px"
+          iconDirection={taskListVisible ? 'up' : 'down'}
+        />
       </IconButton>
     </Tooltip>
   );

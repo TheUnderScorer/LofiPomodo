@@ -29,6 +29,7 @@ import {
 } from './app/pomodoro/data';
 import { AudioPlayer } from './app/audio/services/AudioPlayer';
 import audios from '../assets/audio/audios.json';
+import { AppSettings } from '../shared/types/settings';
 
 export interface AppContext {
   ipcService: IpcMainService;
@@ -68,10 +69,15 @@ const handleIntegrations = async (
 };
 
 const createStore = () => {
-  const defaults = {
+  const defaults: AppSettings = {
     pomodoroSettings: getInitialPomodoroSettings(),
     pomodoroState: getInitialPomodoroState(),
+    autoStart: false,
+    taskSettings: {
+      showToggleTaskListBtn: false,
+    },
   };
+
   const store = new ElectronStore<AppStore>({
     defaults,
     migrations: {

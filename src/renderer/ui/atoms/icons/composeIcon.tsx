@@ -2,6 +2,8 @@ import { BaseIconProps, ColorIconMap } from './types';
 import React, { FC, useMemo } from 'react';
 import { BoxProps, Image, useColorMode, useTheme } from '@chakra-ui/core';
 import { Theme } from '../../../types/theme';
+import classNames from 'classnames';
+import './styles.css';
 
 export interface ComposeIconParams<AdditionalProps extends object> {
   iconMap: ColorIconMap;
@@ -37,6 +39,7 @@ export const composeIcon = <Props extends BaseIconProps>(
               alt={params.alt!}
               {...(props as any)}
               {...(additionalProps as any)}
+              className={classNames(props.className, 'app-icon-img')}
             />
           )}
         </span>

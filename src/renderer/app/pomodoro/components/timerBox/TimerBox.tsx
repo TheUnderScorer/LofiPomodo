@@ -88,7 +88,13 @@ export const TimerBox: FC<TimerProps> = ({
           <ActiveTaskTitle color="white" />
         </Center>
         <Center mt="1em !important" w="100%">
-          <ToggleTasksListBtn position="absolute" left={2} variant="outline" />
+          {showToggleTasksListBtn && (
+            <ToggleTasksListBtn
+              position="absolute"
+              left={2}
+              variant="outline"
+            />
+          )}
           <Stack direction="row" spacing={2}>
             <PomodoroControl color="white" />
             <ResetState iconProps={{ variant: 'light' }} />
