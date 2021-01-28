@@ -11,9 +11,14 @@ import classNames from 'classnames';
 import { ArrowIcon } from '../../../../ui/atoms/icons';
 
 export interface ToggleTasksListBtnProps
-  extends Omit<OmitUnderscored<IconButtonProps>, 'aria-label' | 'onClick'> {}
+  extends Omit<OmitUnderscored<IconButtonProps>, 'aria-label' | 'onClick'> {
+  offset?: number;
+}
 
-export const ToggleTasksListBtn = (props: ToggleTasksListBtnProps) => {
+export const ToggleTasksListBtn = ({
+  offset = 70,
+  ...props
+}: ToggleTasksListBtnProps) => {
   const { is } = usePlatform();
 
   const minWindowHeight = useMemo(
@@ -21,9 +26,12 @@ export const ToggleTasksListBtn = (props: ToggleTasksListBtnProps) => {
     [is]
   );
 
-  const [taskListVisible, setTaskListVisible] = useState(
-    window.innerWidth !== minWindowHeight
+  const shouldShowTaskList = useCallback(
+    () => window.innerHeight - minWindowHeight! >= offset!,
+    [minWindowHeight, offset]
   );
+
+  const [taskListVisible, setTaskListVisible] = useState(shouldShowTaskList());
 
   const resizeWindow = useCallback(() => {
     if (!taskListVisible) {
@@ -36,8 +44,8 @@ export const ToggleTasksListBtn = (props: ToggleTasksListBtnProps) => {
   }, [minWindowHeight, taskListVisible]);
 
   const handleWindowResize = useCallback(() => {
-    setTaskListVisible(window.innerHeight !== minWindowHeight);
-  }, [minWindowHeight]);
+    setTaskListVisible(shouldShowTaskList());
+  }, [shouldShowTaskList]);
 
   useEvent('resize', handleWindowResize, window);
 
