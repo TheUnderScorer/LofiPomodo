@@ -2,6 +2,8 @@ import { IpcInvokeHookParams } from './useIpcMutation';
 import { useQuery } from 'react-query';
 import { useIpcRenderer } from '../../providers/IpcRendererProvider';
 
+const logQueries = false;
+
 export type IpcQueryArgs<ReturnValue = any, Arg = any> = Omit<
   IpcInvokeHookParams<ReturnValue, Arg>,
   'invokeAtMount'
@@ -15,13 +17,15 @@ export const useIpcQuery = <Arg = any, ReturnValue = any>(
 
   return useQuery<ReturnValue>(
     args?.variables ? [name, args?.variables] : name,
-    (ó) => ipc.invoke(name, args?.variables ?? {}),
+    () => ipc.invoke(name, args?.variables ?? {}),
     {
       onSuccess: (result) => {
-        console.info(`Query ${name} completed:`, {
-          args,
-          result,
-        });
+        if (logQueries) {
+          console.info(`Query ${name} completed:`, {
+            args,
+            result,
+          });
+        }
 
         if (args?.onComplete) {
           args.onComplete(result);
