@@ -129,6 +129,7 @@ describe('Tasks list - as an user', () => {
 
     htmlSize = await html.getSize('height');
 
-    expect(htmlSize).toEqual(defaultWindowHeight);
+    expect(htmlSize).toBeLessThanOrEqual(defaultWindowHeight);
+    expect(htmlSize).toBeGreaterThanOrEqual(defaultWindowHeight - 60);
   });
 });
