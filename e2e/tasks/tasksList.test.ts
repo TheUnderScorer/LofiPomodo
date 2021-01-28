@@ -122,7 +122,8 @@ describe('Tasks list - as an user', () => {
     let html = await app.client.$('html');
     let htmlSize = await html.getSize('height');
 
-    expect(htmlSize).toEqual(getMinWindowHeight(false));
+    expect(htmlSize).toBeLessThanOrEqual(getMinWindowHeight(false));
+    expect(htmlSize).toBeGreaterThanOrEqual(getMinWindowHeight(true));
 
     await btn.click();
 
