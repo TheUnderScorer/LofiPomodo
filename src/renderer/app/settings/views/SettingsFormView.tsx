@@ -36,8 +36,11 @@ import {
   settingsTabIndexArray,
 } from './SettingsFormView.types';
 import { GeneralSettings } from '../components/GeneralSettings';
-import { useWindowMinHeightOnMount } from '../../../shared/hooks/useWindowMinHeightOnMount';
-import { defaultWindowHeight } from '../../../../shared/windows/constants';
+import { useWindowMinSizeOnMount } from '../../../shared/hooks/useWindowMinSizeOnMount';
+import {
+  defaultWindowHeight,
+  timerWindowSize,
+} from '../../../../shared/windows/constants';
 import { ObjectShape } from 'yup/lib/object';
 
 const formSchema = Yup.object().shape<SettingsFormInput & any>({
@@ -99,7 +102,10 @@ export const SettingsFormView: FC<SettingsFormViewProps> = () => {
 
   const { is } = usePlatform();
 
-  useWindowMinHeightOnMount(defaultWindowHeight);
+  useWindowMinSizeOnMount({
+    minHeight: defaultWindowHeight,
+    minWidth: is?.windows ? timerWindowSize + 100 : undefined,
+  });
 
   return (
     <>
