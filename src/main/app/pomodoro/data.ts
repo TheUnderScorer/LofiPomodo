@@ -1,16 +1,10 @@
 import {
-  Pomodoro,
   PomodoroSettings,
   PomodoroState,
   PomodoroStates,
 } from '../../../shared/types';
 import { getBoolEnv, getIntEnv } from '../../../shared/env';
 import { durations } from './const/durations';
-
-export const getInitialPomodoro = (): Pomodoro => ({
-  ...getInitialPomodoroState(),
-  ...getInitialPomodoroSettings(),
-});
 
 export const getInitialPomodoroState = (): PomodoroState => ({
   remainingSeconds: getIntEnv('WORK_DURATION_SECONDS', durations[6].seconds),

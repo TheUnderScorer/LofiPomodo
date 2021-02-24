@@ -22,7 +22,7 @@ import { ApiService } from './app/integrations/types';
 import { ContextMenuFactory } from './shared/menu/ContextMenuFactory';
 import { TrelloTasksService } from './app/tasks/services/trelloTaskService/TrelloTasksService';
 import { TaskSynchronizer } from './app/tasks/services/TaskSynchronizer';
-import { Pomodoro, PomodoroSettings, PomodoroState } from '../shared/types';
+import { PomodoroSettings, PomodoroState } from '../shared/types';
 import {
   getInitialPomodoroSettings,
   getInitialPomodoroState,
@@ -84,7 +84,8 @@ const createStore = () => {
     defaults,
     migrations: {
       '>1.9.0': (store) => {
-        const pomodoroState = store.get('pomodoroState') as Pomodoro;
+        const pomodoroState = store.get('pomodoroState') as PomodoroState &
+          PomodoroSettings;
 
         console.log('>1.9.0 migration running');
 

@@ -6,7 +6,7 @@ import {
   PomodoroStates,
   Trigger,
 } from '../../../../../shared/types';
-import { getInitialPomodoro } from '../../data';
+import { getInitialPomodoroState } from '../../data';
 import ElectronStore from 'electron-store';
 import { AppStore } from '../../../../../shared/types/store';
 import { getDurationByState, getNextState } from '../../logic/nextState';
@@ -69,7 +69,7 @@ export class PomodoroService
 
     const state = store.get('pomodoroState');
 
-    this.fill(state ?? getInitialPomodoro());
+    this.fill(state ?? getInitialPomodoroState());
     this.schedule();
   }
 

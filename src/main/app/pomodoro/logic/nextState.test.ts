@@ -1,20 +1,21 @@
 import { getDurationByState, getNextState } from './nextState';
-import { Pomodoro, PomodoroStates } from '../../../../shared/types';
-import { getInitialPomodoro } from '../data';
+import {
+  PomodoroSettings,
+  PomodoroState,
+  PomodoroStates,
+} from '../../../../shared/types';
+import { getInitialPomodoroSettings, getInitialPomodoroState } from '../data';
 
 describe('Next state', () => {
-  it.each<[PomodoroStates, keyof Pomodoro]>([
+  it.each<[PomodoroStates, keyof PomodoroSettings]>([
     [PomodoroStates.Break, 'shortBreakDurationSeconds'],
     [PomodoroStates.LongBreak, 'longBreakDurationSeconds'],
     [PomodoroStates.Work, 'workDurationSeconds'],
   ])('should return correct duration by state', (state, prop) => {
-    const pomodoro: Pomodoro = {
-      ...getInitialPomodoro(),
-      state,
-    };
+    const pomodoroSettings = getInitialPomodoroSettings();
 
-    const duration = getDurationByState(pomodoro, state);
-    expect(duration).toEqual(pomodoro[prop]);
+    const duration = getDurationByState(pomodoroSettings, state);
+    expect(duration).toEqual(pomodoroSettings[prop]);
   });
 
   it.each<[PomodoroStates, PomodoroStates, number | undefined]>([
@@ -25,13 +26,15 @@ describe('Next state', () => {
   ])(
     'should return correct next state',
     (currentState, expectedNextState, shortBreakCount) => {
-      const pomodoro: Pomodoro = {
-        ...getInitialPomodoro(),
+      const pomodoroState: PomodoroState = {
+        ...getInitialPomodoroState(),
         state: currentState,
         shortBreakCount: shortBreakCount ?? 0,
       };
 
-      const nextState = getNextState(pomodoro, pomodoro);
+      const pomodoroSettings = getInitialPomodoroSettings();
+
+      const nextState = getNextState(pomodoroState, pomodoroSettings);
       expect(nextState).toEqual(expectedNextState);
     }
   );
