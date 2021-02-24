@@ -9,11 +9,7 @@ import ElectronStore from 'electron-store';
 import { windowTitles } from '../../../../shared/dictionary/system';
 import { windowProps } from '../../constants/windowProps';
 
-type WindowKeys =
-  | 'timerWindow'
-  | 'breakWindow'
-  | 'manageTrelloWindow'
-  | 'notificationsWindow';
+type WindowKeys = 'timerWindow' | 'breakWindow' | 'manageTrelloWindow';
 
 export interface CreateWindowArgs {
   parent?: BrowserWindow;
@@ -30,8 +26,6 @@ export class WindowFactory {
 
   public audioPlayerWindows = new Set<BrowserWindow>();
 
-  public notificationsWindow: Nullable<BrowserWindow> = null;
-
   private windowKeyMethodMap: Record<
     WindowTypes,
     (args?: CreateWindowArgs) => Promise<BrowserWindow>
@@ -40,7 +34,6 @@ export class WindowFactory {
     [WindowTypes.Timer]: this.createTimerWindow.bind(this),
     [WindowTypes.ManageTrello]: this.createManageTrelloWindow.bind(this),
     [WindowTypes.AudioPlayer]: this.createAudioPlayerWindow.bind(this),
-    [WindowTypes.Notifications]: this.createNotificationsWindow.bind(this),
   };
 
   constructor(
@@ -111,31 +104,6 @@ export class WindowFactory {
     window.setMenu(menu);
 
     this.registerWindow(window, 'timerWindow', WindowTypes.Timer);
-
-    return window;
-  }
-
-  async createNotificationsWindow() {
-    if (this.notificationsWindow) {
-      return this.notificationsWindow;
-    }
-
-    const window = new BrowserWindow({
-      show: false,
-      height: 400,
-      width: 400,
-      webPreferences: {
-        preload: this.preloadPath,
-      },
-    });
-
-    await setupWindow(window, routes.notifications());
-
-    this.registerWindow(
-      window,
-      'notificationsWindow',
-      WindowTypes.Notifications
-    );
 
     return window;
   }
