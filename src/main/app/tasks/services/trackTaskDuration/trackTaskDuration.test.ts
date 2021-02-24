@@ -7,7 +7,7 @@ import { PomodoroService } from '../../../pomodoro/services/pomodoroService/Pomo
 import { TaskRepository } from '../../repositories/TaskRepository';
 import { trackTaskDuration } from './trackTaskDuration';
 import { Task } from '../../../../../shared/types/tasks';
-import { PomodoroStateEnum, Trigger } from '../../../../../shared/types';
+import { PomodoroStates, Trigger } from '../../../../../shared/types';
 import { createMockSettings } from '../../../../../tests/mocks/settings';
 
 describe('Track task duration', () => {
@@ -43,8 +43,8 @@ describe('Track task duration', () => {
     });
 
     await pomodoroService.stateChanged$.next({
-      newState: PomodoroStateEnum.Work,
-      oldState: PomodoroStateEnum.LongBreak,
+      newState: PomodoroStates.Work,
+      oldState: PomodoroStates.LongBreak,
       pomodoro: pomodoroService,
       trigger: Trigger.Scheduled,
     });
@@ -76,8 +76,8 @@ describe('Track task duration', () => {
     });
 
     await pomodoroService.stateChanged$.next({
-      newState: PomodoroStateEnum.Break,
-      oldState: PomodoroStateEnum.LongBreak,
+      newState: PomodoroStates.Break,
+      oldState: PomodoroStates.LongBreak,
       pomodoro: pomodoroService,
       trigger: Trigger.Scheduled,
     });

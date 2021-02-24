@@ -6,4 +6,5 @@ export const routes = {
   pomodoroSettings: () => '/settings/pomodoro',
   manageTrello: () => '/integrations/trello/manage',
   hiddenAudioPlayer: () => '/hidden-audio-player',
+  notifications: () => '/hidden-notifications',
 };

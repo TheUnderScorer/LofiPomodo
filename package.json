@@ -20,7 +20,9 @@
     "forge": "./forge.config.js"
   },
   "dependencies": {
+    "@theunderscorer/when": "^1.0.1",
     "auto-launch": "^5.0.5",
+    "date-fns": "^2.17.0",
     "dotenv": "^8.2.0",
     "electron-debug": "^3.1.0",
     "electron-is-dev": "^1.2.0",

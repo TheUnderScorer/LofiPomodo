@@ -25,6 +25,7 @@ export enum WindowTypes {
   Break = 'Break',
   ManageTrello = 'ManageTrello',
   AudioPlayer = 'AudioPlayer',
+  Notifications = 'Notifications',
 }
 
 export interface OpenWindowPayload {

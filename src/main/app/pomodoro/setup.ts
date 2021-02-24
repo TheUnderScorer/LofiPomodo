@@ -5,6 +5,7 @@ import { breakWindow } from './services/breakWindow';
 import { sendUpdatesToWindows } from './services/rendererUpdates';
 import { showTrayProgress } from './services/showTrayProgress';
 import { restartPomodoroOnNewDay } from './services/restartPomodoroOnNewDay';
+import { breakSoonNotification } from './services/breakSoonNotification';
 
 export const setupPomodoro = (context: AppContext) => {
   sendUpdatesToWindows(context);
@@ -12,6 +13,7 @@ export const setupPomodoro = (context: AppContext) => {
   setupTray(context);
   showTrayProgress(context);
   restartPomodoroOnNewDay(context.pomodoroService).catch(console.error);
+  breakSoonNotification(context);
 
   context.ipcService.registerAsMap({
     [PomodoroOperations.UpdatePomodoro]: (_, payload: Pomodoro) => {

@@ -39,4 +39,5 @@ export const windowProps: Readonly<
     width: baseWindowProps.height + 200,
   },
   [WindowTypes.AudioPlayer]: {},
+  [WindowTypes.Notifications]: {},
 };

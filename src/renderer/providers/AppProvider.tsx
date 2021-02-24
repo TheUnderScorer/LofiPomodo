@@ -11,7 +11,7 @@ import {
 } from '@chakra-ui/core';
 import { MemoryRouter } from 'react-router-dom';
 import History from 'history';
-import { PomodoroStateEnum } from '../../shared/types';
+import { PomodoroStates } from '../../shared/types';
 import { Theme } from '../types/theme';
 import { usePrefersColorScheme } from '../shared/hooks/usePrefersColorScheme';
 import { ModalProvider } from './modalProvider/ModalProvider';
@@ -36,9 +36,9 @@ export const AppProvider: FC<AppProviderProps> = ({ children }) => {
     return extendTheme({
       colors: {
         brand: {
-          [PomodoroStateEnum.Work]: chakraTheme.colors.blue['300'],
-          [PomodoroStateEnum.Break]: chakraTheme.colors.green['300'],
-          [PomodoroStateEnum.LongBreak]: chakraTheme.colors.green['600'],
+          [PomodoroStates.Work]: chakraTheme.colors.blue['300'],
+          [PomodoroStates.Break]: chakraTheme.colors.green['300'],
+          [PomodoroStates.LongBreak]: chakraTheme.colors.green['600'],
           paper: '#eee6e6',
           success: chakraTheme.colors.green['500'],
           primary: chakraTheme.colors.blue['300'],

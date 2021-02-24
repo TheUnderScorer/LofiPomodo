@@ -111,6 +111,20 @@ export const PomodoroForm: FC<PomodoroFormProps> = ({ form, settings }) => {
           />
         )}
       </SettingsFormController>
+      <SettingsFormController
+        label="Show notification before break"
+        form={form}
+        name="pomodoroSettings.showNotificationBeforeBreak"
+      >
+        {(props) => (
+          <Switch
+            {...props}
+            id={props.name}
+            onChange={(event) => props.onChange(event.target.checked)}
+            isChecked={props.value}
+          />
+        )}
+      </SettingsFormController>
       <Divider />
       <FormController
         form={form}

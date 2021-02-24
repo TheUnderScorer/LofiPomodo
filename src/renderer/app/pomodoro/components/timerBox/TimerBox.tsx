@@ -8,7 +8,7 @@ import {
 } from '@chakra-ui/core';
 import React, { FC } from 'react';
 import { usePomodoro } from '../../hooks/usePomodoro';
-import { PomodoroStateEnum } from '../../../../../shared/types';
+import { PomodoroStates } from '../../../../../shared/types';
 import { Text } from '../../../../ui/atoms/text/Text';
 import { pomodoroStateDictionary } from '../../../../../shared/dictionary/pomodoro';
 import { Heading } from '../../../../ui/atoms/heading/Heading';
@@ -41,14 +41,14 @@ export const TimerBox: FC<TimerProps> = ({
 
   return (
     <Box
-      bg={`brand.${pomodoro?.state ?? PomodoroStateEnum.Work}`}
+      bg={`brand.${pomodoro?.state ?? PomodoroStates.Work}`}
       className="timer-box"
       {...containerProps}
     >
       <Stack height="100%" spacing={4} {...stackProps}>
         <Flex mt="0 !important" pl={2} pr={2} justifyContent="space-between">
           <Text className="pomodoro-state-text" color="white">
-            {pomodoroStateDictionary[pomodoro?.state ?? PomodoroStateEnum.Work]}
+            {pomodoroStateDictionary[pomodoro?.state ?? PomodoroStates.Work]}
           </Text>
         </Flex>
         <Stack

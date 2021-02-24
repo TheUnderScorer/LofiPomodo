@@ -38,10 +38,13 @@ import {
 import { GeneralSettings } from '../components/GeneralSettings';
 import { useWindowMinHeightOnMount } from '../../../shared/hooks/useWindowMinHeightOnMount';
 import { defaultWindowHeight } from '../../../../shared/windows/constants';
+import { ObjectShape } from 'yup/lib/object';
 
 const formSchema = Yup.object().shape<SettingsFormInput & any>({
   autoStart: Yup.boolean().required(),
-  pomodoroSettings: Yup.object().shape(pomodoroSettingsSchemaShape),
+  pomodoroSettings: Yup.object().shape(
+    pomodoroSettingsSchemaShape as ObjectShape
+  ),
 });
 
 export const SettingsFormView: FC<SettingsFormViewProps> = () => {

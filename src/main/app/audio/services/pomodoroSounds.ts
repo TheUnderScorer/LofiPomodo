@@ -1,7 +1,7 @@
 import { PomodoroService } from '../../pomodoro/services/pomodoroService/PomodoroService';
 import {
   PomodoroSettings,
-  PomodoroStateEnum,
+  PomodoroStates,
   Trigger,
 } from '../../../../shared/types';
 import { SettingsService } from '../../settings/services/SettingsService';
@@ -9,12 +9,12 @@ import { filter } from 'rxjs/operators';
 import { AudioPlayer } from './AudioPlayer';
 
 export const pomodoroStateSoundMap: Record<
-  PomodoroStateEnum,
+  PomodoroStates,
   keyof PomodoroSettings
 > = {
-  [PomodoroStateEnum.Break]: 'breakSound',
-  [PomodoroStateEnum.Work]: 'workSound',
-  [PomodoroStateEnum.LongBreak]: 'longBreakSound',
+  [PomodoroStates.Break]: 'breakSound',
+  [PomodoroStates.Work]: 'workSound',
+  [PomodoroStates.LongBreak]: 'longBreakSound',
 };
 
 interface PomodoroSoundsDependencies {

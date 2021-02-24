@@ -30,6 +30,7 @@ import {
 import { AudioPlayer } from './app/audio/services/AudioPlayer';
 import audios from '../assets/audio/audios.json';
 import { AppSettings } from '../shared/types/settings';
+import { NotificationsService } from './shared/notifications/NotificationsService';
 
 export interface AppContext {
   ipcService: IpcMainService;
@@ -49,6 +50,7 @@ export interface AppContext {
   apiAuthState: ApiAuthStateService;
   taskSynchronizer: TaskSynchronizer;
   audioPlayer: AudioPlayer;
+  notificationService: NotificationsService;
 }
 
 const handleIntegrations = async (
@@ -192,5 +194,6 @@ export const createContext = async (): Promise<AppContext> => {
     contextMenuFactory: new ContextMenuFactory(pomodoro, settingsService),
     taskSynchronizer,
     audioPlayer,
+    notificationService: new NotificationsService(),
   };
 };

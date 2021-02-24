@@ -65,7 +65,10 @@ app.whenReady().then(async () => {
     setupSettings(context);
     setupIntegrations(context);
 
-    await context.windowFactory.createTimerWindow();
+    await Promise.all([
+      context.windowFactory.createTimerWindow(),
+      context.windowFactory.createNotificationsWindow(),
+    ]);
 
     app.on('activate', async () => {
       await context.windowFactory.createTimerWindow();

@@ -9,6 +9,7 @@ import { ManageTrelloView } from './app/integrations/views/manageTrelloView/Mana
 import './styles/animations.css';
 import { useQueryClient } from 'react-query';
 import { AudioPlayerView } from './app/audio/views/AudioPlayerView';
+import { NotificationsView } from './app/notifications/views/NotificationsView';
 
 const App = () => {
   const { colorMode } = useColorMode();
@@ -44,6 +45,9 @@ const App = () => {
         </Route>
         <Route path={routes.hiddenAudioPlayer()}>
           <AudioPlayerView />
+        </Route>
+        <Route path={routes.notifications()}>
+          <NotificationsView />
         </Route>
       </Switch>
     </Container>

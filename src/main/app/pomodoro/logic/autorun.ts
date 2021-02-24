@@ -1,10 +1,10 @@
-import { PomodoroSettings, PomodoroStateEnum } from '../../../../shared/types';
+import { PomodoroSettings, PomodoroStates } from '../../../../shared/types';
 
 export const shouldRun = (
-  pomodoroStateEnum: PomodoroStateEnum,
+  pomodoroStateEnum: PomodoroStates,
   pomodoroSettings: PomodoroSettings
 ) => {
-  if (pomodoroStateEnum === PomodoroStateEnum.Work) {
+  if (pomodoroStateEnum === PomodoroStates.Work) {
     return pomodoroSettings.autoRunWork;
   }
 

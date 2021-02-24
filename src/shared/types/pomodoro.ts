@@ -2,7 +2,7 @@ import { PomodoroService } from '../../main/app/pomodoro/services/pomodoroServic
 
 export interface Pomodoro {
   start: Date;
-  state: PomodoroStateEnum;
+  state: PomodoroStates;
   workDurationSeconds: number;
   shortBreakDurationSeconds: number;
   longBreakDurationSeconds: number;
@@ -18,9 +18,10 @@ export interface Pomodoro {
   breakSound?: string;
   workSound?: string;
   longBreakSound?: string;
+  showNotificationBeforeBreak?: boolean;
 }
 
-export enum PomodoroStateEnum {
+export enum PomodoroStates {
   Work = 'Work',
   Break = 'Break',
   LongBreak = 'LongBreak',
@@ -32,6 +33,7 @@ export enum PomodoroOperations {
   ToggleTimerMenu = 'ToggleTimerMenu',
   RestartCurrentState = 'RestartCurrentState',
   MoveToNextState = 'MoveToNextState',
+  BreakSoon = 'BreakSoon',
 }
 
 export enum PomodoroSubscriptionTopics {
@@ -52,6 +54,7 @@ type PomodoroSettingsKeys = keyof Pick<
   | 'breakSound'
   | 'longBreakSound'
   | 'workSound'
+  | 'showNotificationBeforeBreak'
 >;
 
 export interface PomodoroSettings
@@ -63,8 +66,8 @@ export interface ToggleMenuPayload {
 }
 
 export interface PomodoroStateChanged {
-  newState: PomodoroStateEnum;
-  oldState: PomodoroStateEnum;
+  newState: PomodoroStates;
+  oldState: PomodoroStates;
   pomodoro: PomodoroService;
   trigger: Trigger;
 }

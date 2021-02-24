@@ -1,7 +1,7 @@
-import { PomodoroStateEnum } from '../types';
+import { PomodoroStates } from '../types';
 
 export const pomodoroStateDictionary = {
-  [PomodoroStateEnum.Work]: 'Work',
-  [PomodoroStateEnum.LongBreak]: 'Long Break',
-  [PomodoroStateEnum.Break]: 'Break',
+  [PomodoroStates.Work]: 'Work',
+  [PomodoroStates.LongBreak]: 'Long Break',
+  [PomodoroStates.Break]: 'Break',
 };

@@ -1,9 +1,9 @@
 import { Theme as BaseTheme, theme } from '@chakra-ui/core';
-import { PomodoroStateEnum } from '../../shared/types';
+import { PomodoroStates } from '../../shared/types';
 
 type Colors = typeof theme.colors;
 
-export type BrandColors = Record<PomodoroStateEnum, string> & {
+export type BrandColors = Record<PomodoroStates, string> & {
   primary: string;
   textPrimary: string;
   textSecondary: string;
