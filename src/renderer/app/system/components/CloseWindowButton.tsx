@@ -1,5 +1,5 @@
 import React, { FC, useCallback } from 'react';
-import { Button, ButtonProps } from '@chakra-ui/core';
+import { Button, ButtonProps } from '@chakra-ui/react';
 import { Text } from '../../../ui/atoms/text/Text';
 import { useIpcMutation } from '../../../shared/ipc/useIpcMutation';
 import { AppSystemOperations } from '../../../../shared/types/system';

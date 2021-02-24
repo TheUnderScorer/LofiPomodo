@@ -1,4 +1,4 @@
-import { CircularProgress, CircularProgressLabel } from '@chakra-ui/core';
+import { CircularProgress, CircularProgressLabel } from '@chakra-ui/react';
 import React, { FC } from 'react';
 import { usePomodoro } from '../../hooks/usePomodoro';
 import { PomodoroStates } from '../../../../../shared/types';

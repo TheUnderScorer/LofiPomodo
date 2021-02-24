@@ -1,5 +1,5 @@
 import React, { FC } from 'react';
-import { IconButton, IconButtonProps, Tooltip } from '@chakra-ui/core';
+import { IconButton, IconButtonProps, Tooltip } from '@chakra-ui/react';
 import { routes } from '../../../../../shared/routes/routes';
 import { useHistory } from 'react-router-dom';
 import { CogIcon } from '../../../../ui/atoms/icons/CogIcon';

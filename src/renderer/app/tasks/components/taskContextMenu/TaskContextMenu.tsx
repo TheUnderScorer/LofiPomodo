@@ -1,4 +1,4 @@
-import { MenuDivider, MenuItem } from '@chakra-ui/core';
+import { MenuDivider, MenuItem } from '@chakra-ui/react';
 import React, { FC, useCallback } from 'react';
 import { Task } from '../../../../../shared/types/tasks';
 import { Text } from '../../../../ui/atoms/text/Text';

@@ -1,7 +1,7 @@
 import { FC } from 'react';
 import { UseFormMethods } from 'react-hook-form';
 import { AppSettings } from '../../../../shared/types/settings';
-import { Stack } from '@chakra-ui/core';
+import { Stack } from '@chakra-ui/react';
 import { TrelloSection } from './trello/TrelloSection';
 
 export interface IntegrationsFormProps {

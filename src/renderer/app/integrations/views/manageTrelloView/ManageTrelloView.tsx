@@ -3,7 +3,7 @@ import { CenterContainer } from '../../../../ui/templates/centerContainer/Center
 import { TitleBar } from '../../../../ui/molecules/titleBar/TitleBar';
 import { TrelloBoard } from '../../../../../shared/types/integrations/trello';
 import { IntegrationOperations } from '../../../../../shared/types/integrations/integrations';
-import { Center, Spinner } from '@chakra-ui/core';
+import { Center, Spinner } from '@chakra-ui/react';
 import { useIpcQuery } from '../../../../shared/ipc/useIpcQuery';
 import { Alert } from '../../../../ui/molecules/alert/Alert';
 import { Text } from '../../../../ui/atoms/text/Text';
@@ -35,7 +35,7 @@ export const ManageTrelloView: FC<ManageTrelloViewProps> = () => {
       <CenterContainer>
         {loading && (
           <Center h="100%">
-            <Spinner color="brand.primary" />
+            <Spinner color="brand.primary.300" />
           </Center>
         )}
         {!data?.length && !queryLoading && (

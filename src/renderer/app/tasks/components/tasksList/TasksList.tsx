@@ -1,13 +1,13 @@
-import { Box, Center, List, ListProps } from '@chakra-ui/core';
+import { Box, Center, List, ListProps } from '@chakra-ui/react';
 import React, { FC, ReactNode, useCallback } from 'react';
 import { Task } from '../../../../../shared/types/tasks';
 import { Heading } from '../../../../ui/atoms/heading/Heading';
 import { TaskListItem, TaskListItemProps } from './taskListItem/TaskListItem';
 import { DragDropContext, Droppable, DropResult } from 'react-beautiful-dnd';
 
-export interface TasksListProps extends ListProps {
+export interface TasksListProps extends Omit<ListProps, 'arrIndex'> {
   tasks: Task[];
-  itemProps?: Omit<TaskListItemProps, 'task'>;
+  itemProps?: Omit<TaskListItemProps, 'task' | 'arrIndex'>;
   emptyContent?: ReactNode;
   loading?: boolean;
   onListDragEnd?: (tasks: Task[]) => any;

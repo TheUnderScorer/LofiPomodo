@@ -6,7 +6,7 @@ import {
 import { FormProvider, useForm, UseFormMethods } from 'react-hook-form';
 import { IntegrationOperations } from '../../../../../shared/types/integrations/integrations';
 import { useIpcMutation } from '../../../../shared/ipc/useIpcMutation';
-import { Box, Flex, HStack } from '@chakra-ui/core';
+import { Box, Flex, HStack } from '@chakra-ui/react';
 import { Alert } from '../../../../ui/molecules/alert/Alert';
 import { Text } from '../../../../ui/atoms/text/Text';
 import { ManageTrelloBoards } from './ManageTrelloBoards';

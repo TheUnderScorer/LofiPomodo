@@ -1,7 +1,7 @@
 import React from 'react';
 import { AppSettings } from '../../../../shared/types/settings';
 import { UseFormMethods } from 'react-hook-form';
-import { Stack, Switch } from '@chakra-ui/core';
+import { Stack, Switch } from '@chakra-ui/react';
 import { SettingsFormController } from '../../../ui/molecules/settingsFormController/SettingsFormController';
 
 export interface GeneralSettingsProps {

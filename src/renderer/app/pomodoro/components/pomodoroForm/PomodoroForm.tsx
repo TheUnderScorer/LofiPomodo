@@ -7,7 +7,7 @@ import {
   NumberInputField,
   Stack,
   Switch,
-} from '@chakra-ui/core';
+} from '@chakra-ui/react';
 import { AppSettings } from '../../../../../shared/types/settings';
 import { PomodoroSettings } from '../../../../../shared/types';
 import { AudioSelect } from '../../../audio/components/AudioSelect';

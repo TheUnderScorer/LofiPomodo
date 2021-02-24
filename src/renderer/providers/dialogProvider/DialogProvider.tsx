@@ -6,7 +6,7 @@ import {
   AlertDialogHeader,
   AlertDialogOverlay,
   HStack,
-} from '@chakra-ui/core';
+} from '@chakra-ui/react';
 import React, { FC, MutableRefObject, useCallback, useRef } from 'react';
 import { useRecoilState, useRecoilValue } from 'recoil';
 import { currentDialogPropsAtom, dialogOpenAtom } from './state';
@@ -41,9 +41,7 @@ export const DialogProvider: FC<DialogProviderProps> = ({ children }) => {
               <AlertDialogFooter>
                 <HStack spacing={2}>
                   {dialogProps.footer({
-                    leastDestructiveRef: cancelRef as MutableRefObject<
-                      HTMLButtonElement
-                    >,
+                    leastDestructiveRef: cancelRef as MutableRefObject<HTMLButtonElement>,
                     onClose: closeDialog,
                   })}
                 </HStack>

@@ -1,4 +1,4 @@
-import { Box, Menu, MenuList, Portal } from '@chakra-ui/core';
+import { Box, Menu, MenuList, Portal } from '@chakra-ui/react';
 import React, {
   FC,
   MouseEventHandler,

@@ -9,7 +9,7 @@ import {
   NumberInput,
   NumberInputField,
   Stack,
-} from '@chakra-ui/core';
+} from '@chakra-ui/react';
 import React, { FC, ReactNode, useCallback, useEffect, useState } from 'react';
 import { Task, TaskState } from '../../../../../../shared/types/tasks';
 import { Draggable } from 'react-beautiful-dnd';
@@ -18,7 +18,7 @@ import { faGripLines } from '@fortawesome/free-solid-svg-icons';
 import { ContextMenu } from '../../../../../ui/molecules/contextMenu/ContextMenu';
 import { useDebounce, usePrevious } from 'react-use';
 
-export interface TaskListItemProps extends ListItemProps {
+export interface TaskListItemProps extends Omit<ListItemProps, 'contextMenu'> {
   task: Task;
   onTaskChange?: (task: Task) => any;
   arrIndex: number;

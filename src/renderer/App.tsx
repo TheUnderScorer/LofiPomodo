@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { Container, useColorMode } from '@chakra-ui/core';
+import { Container, useColorMode } from '@chakra-ui/react';
 import { Route, Switch } from 'react-router-dom';
 import { routes } from '../shared/routes/routes';
 import { PomodoroView } from './app/pomodoro/views/pomodoroView/PomodoroView';

@@ -2,7 +2,7 @@ import React, { FC } from 'react';
 import {
   Heading as BaseHeading,
   HeadingProps as BaseHeadingProps,
-} from '@chakra-ui/core';
+} from '@chakra-ui/react';
 
 export interface HeadingProps extends BaseHeadingProps {}
 

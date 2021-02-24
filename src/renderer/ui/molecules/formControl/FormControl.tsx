@@ -9,7 +9,7 @@ import {
   FormLabel,
   IconButton,
   Tooltip,
-} from '@chakra-ui/core';
+} from '@chakra-ui/react';
 import { FaIcon } from '../../atoms/faIcon/FaIcon';
 import { faInfo } from '@fortawesome/free-solid-svg-icons';
 import { OmitUnderscored } from '../../../../shared/types';

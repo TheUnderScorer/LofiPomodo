@@ -2,13 +2,10 @@ import React, { FC, useMemo } from 'react';
 import { RecoilRoot } from 'recoil';
 import { IpcRendererProvider } from './IpcRendererProvider';
 import {
-  ColorModeProvider,
-  CSSReset,
+  ChakraProvider,
   extendTheme,
-  GlobalStyle,
   theme as chakraTheme,
-  ThemeProvider,
-} from '@chakra-ui/core';
+} from '@chakra-ui/react';
 import { MemoryRouter } from 'react-router-dom';
 import History from 'history';
 import { PomodoroStates } from '../../shared/types';
@@ -41,7 +38,7 @@ export const AppProvider: FC<AppProviderProps> = ({ children }) => {
           [PomodoroStates.LongBreak]: chakraTheme.colors.green['600'],
           paper: '#eee6e6',
           success: chakraTheme.colors.green['500'],
-          primary: chakraTheme.colors.blue['300'],
+          primary: chakraTheme.colors.blue,
           colorModeContrast:
             colorMode === 'dark' ? '#FFFCFC' : chakraTheme.colors.white,
           textPrimary: color,
@@ -57,6 +54,13 @@ export const AppProvider: FC<AppProviderProps> = ({ children }) => {
         body: 'PixelFont',
         heading: 'PixelFont',
         mono: 'PixelFont',
+      },
+      components: {
+        Checkbox: {
+          defaultProps: {
+            colorScheme: 'brand.primary',
+          },
+        },
       },
       styles: {
         global: {
@@ -97,26 +101,29 @@ export const AppProvider: FC<AppProviderProps> = ({ children }) => {
   return (
     <RecoilRoot>
       <IpcRendererProvider>
-        <ThemeProvider theme={theme}>
+        <ChakraProvider
+          colorModeManager={{
+            type: 'localStorage',
+            get: () => colorMode,
+            set: () => {
+              throw new Error(
+                'Color mode is used via user preference, it cannot be set directly.'
+              );
+            },
+          }}
+          resetCSS
+          theme={theme}
+        >
           <QueryClientProvider client={queryClient}>
             <ModalProvider>
-              <GlobalStyle />
-              <ColorModeProvider
-                options={{
-                  initialColorMode: colorMode,
-                }}
-                value={colorMode}
-              >
-                <CSSReset />
-                <DialogProvider>
-                  <MemoryRouter initialEntries={initialEntries}>
-                    {children}
-                  </MemoryRouter>
-                </DialogProvider>
-              </ColorModeProvider>
+              <DialogProvider>
+                <MemoryRouter initialEntries={initialEntries}>
+                  {children}
+                </MemoryRouter>
+              </DialogProvider>
             </ModalProvider>
           </QueryClientProvider>
-        </ThemeProvider>
+        </ChakraProvider>
       </IpcRendererProvider>
     </RecoilRoot>
   );

@@ -9,7 +9,7 @@ import {
   TabPanel,
   TabPanels,
   Tabs,
-} from '@chakra-ui/core';
+} from '@chakra-ui/react';
 import React, {
   FC,
   useCallback,
@@ -122,11 +122,6 @@ export const TabbedTasksList: FC<TabbedTasksListProps> = (props) => {
 
   return (
     <Box h="100%" position="relative">
-      {loading && !didFetch && (
-        <Center>
-          <Text>Loading...</Text>
-        </Center>
-      )}
       <Tabs isLazy h="100%" index={activeIndex} onChange={setActiveIndex}>
         <Center>
           <TabList>

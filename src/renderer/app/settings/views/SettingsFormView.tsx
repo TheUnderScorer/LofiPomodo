@@ -10,8 +10,7 @@ import {
   Tab,
   TabList,
   Tabs,
-} from '@chakra-ui/core';
-import { ArrowIcon } from '../../../ui/atoms/icons';
+} from '@chakra-ui/react';
 import { useHistory } from 'react-router-dom';
 import { usePlatform } from '../../system/hooks/usePlatform';
 import { Text } from '../../../ui/atoms/text/Text';
@@ -123,7 +122,7 @@ export const SettingsFormView: FC<SettingsFormViewProps> = () => {
             onClick={() => history.goBack()}
             aria-label="Go back"
           >
-            <ArrowIcon height="20px" width="20px" iconDirection="right" />
+            <Text>X</Text>
           </IconButton>
           <Center flex="1">
             <Tabs index={activeTabIndex} onChange={setActiveTabIndex}>
@@ -155,7 +154,7 @@ export const SettingsFormView: FC<SettingsFormViewProps> = () => {
       >
         {queryLoading && (
           <Center height="100%" width="100%">
-            <Spinner color="brand.primary" />
+            <Spinner color="brand.primary.300" />
           </Center>
         )}
         {settings && !queryLoading && (

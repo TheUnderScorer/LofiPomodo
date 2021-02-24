@@ -1,4 +1,4 @@
-import { Button, ButtonProps } from '@chakra-ui/core';
+import { Button, ButtonProps } from '@chakra-ui/react';
 import React, { FC, useCallback } from 'react';
 import { usePomodoro } from '../../../hooks/usePomodoro';
 

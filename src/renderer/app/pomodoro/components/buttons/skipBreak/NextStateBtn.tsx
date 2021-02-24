@@ -1,4 +1,4 @@
-import { IconButton, IconButtonProps, Tooltip } from '@chakra-ui/core';
+import { IconButton, IconButtonProps, Tooltip } from '@chakra-ui/react';
 import React, { FC, useMemo } from 'react';
 import { useIpcMutation } from '../../../../../shared/ipc/useIpcMutation';
 import {

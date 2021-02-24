@@ -3,7 +3,7 @@ import {
   Input,
   InputGroup,
   InputRightElement,
-} from '@chakra-ui/core';
+} from '@chakra-ui/react';
 import React, { FC, useCallback } from 'react';
 import { useForm } from 'react-hook-form';
 import { FormControl } from '../../../../ui/molecules/formControl/FormControl';

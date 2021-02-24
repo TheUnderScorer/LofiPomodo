@@ -11,7 +11,7 @@ import {
   NumberInputProps,
   NumberInputStepper,
   Select,
-} from '@chakra-ui/core';
+} from '@chakra-ui/react';
 import { TimeUnits } from '../../../shared/types/units';
 import { timeUnitsDictionaryShort } from '../../../shared/dictionary/units';
 

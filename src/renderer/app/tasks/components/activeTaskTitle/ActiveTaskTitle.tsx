@@ -1,4 +1,4 @@
-import { Center, Spinner, Tooltip } from '@chakra-ui/core';
+import { Center, Spinner, Tooltip } from '@chakra-ui/react';
 import React, { FC } from 'react';
 import { useActiveTask } from '../../hooks/useActiveTask';
 import { Text } from '../../../../ui/atoms/text/Text';
@@ -13,7 +13,7 @@ export const ActiveTaskTitle: FC<ActiveTaskTitleProps> = ({ color }) => {
 
   return (
     <>
-      {loading && <Spinner color="brand.primary" />}
+      {loading && <Spinner color="brand.primary.300" />}
       {!loading && (
         <Center maxWidth="70%" minWidth="400px" className="active-task-title">
           <Text isTruncated color={color}>

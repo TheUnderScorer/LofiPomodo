@@ -5,7 +5,7 @@ import {
   Select,
   SelectProps,
   Spinner,
-} from '@chakra-ui/core';
+} from '@chakra-ui/react';
 import React from 'react';
 import { useIpcQuery } from '../../../shared/ipc/useIpcQuery';
 import {
@@ -33,7 +33,7 @@ export const AudioSelect = (props: AudioSelectProps) => {
   if (isLoading) {
     return (
       <Center>
-        <Spinner color="brand.primary" />
+        <Spinner color="brand.primary.300" />
       </Center>
     );
   }

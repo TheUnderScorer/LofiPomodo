@@ -8,7 +8,7 @@ import {
   Select,
   Spinner,
   Stack,
-} from '@chakra-ui/core';
+} from '@chakra-ui/react';
 import React, { FC, ReactNode, useCallback, useEffect, useMemo } from 'react';
 import {
   TrelloBoard,
@@ -29,7 +29,8 @@ import { get } from 'lodash';
 import { validateDuplicateTrelloBoards } from '../../../validators/validateDuplicateTrelloBoards';
 import { useIpcQuery } from '../../../../../shared/ipc/useIpcQuery';
 
-export interface TrelloBoardListItemProps extends ListItemProps {
+export interface TrelloBoardListItemProps
+  extends Omit<ListItemProps, 'defaultValue'> {
   boards: TrelloBoard[];
   index: number;
   isLast?: boolean;
@@ -141,7 +142,7 @@ export const TrelloBoardListItem: FC<TrelloBoardListItemProps> = ({
         </FormControl>
         {fetchListsQuery.isLoading && (
           <Center>
-            <Spinner color="brand.primary" />
+            <Spinner color="brand.primary.300" />
           </Center>
         )}
         {!fetchListsQuery.isLoading && (

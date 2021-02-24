@@ -1,5 +1,5 @@
 import React, { FC } from 'react';
-import { Box, useColorMode } from '@chakra-ui/core';
+import { Box, useColorMode } from '@chakra-ui/react';
 import { usePomodoro } from '../../hooks/usePomodoro';
 import { TitleBar } from '../../../../ui/molecules/titleBar/TitleBar';
 import { PomodoroMenuBtn } from '../../components/pomodoroMenu/PomodoroMenuBtn';

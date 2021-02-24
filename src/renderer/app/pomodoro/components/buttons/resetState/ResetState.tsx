@@ -1,4 +1,4 @@
-import { IconButton } from '@chakra-ui/core';
+import { IconButton } from '@chakra-ui/react';
 import React, { FC } from 'react';
 import { useIpcMutation } from '../../../../../shared/ipc/useIpcMutation';
 import { PomodoroOperations } from '../../../../../../shared/types';

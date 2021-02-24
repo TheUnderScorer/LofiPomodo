@@ -8,7 +8,7 @@ import {
   PopoverFooter,
   PopoverHeader,
   PopoverTrigger,
-} from '@chakra-ui/core';
+} from '@chakra-ui/react';
 import React, { FC } from 'react';
 import { FaIcon } from '../../../../ui/atoms/faIcon/FaIcon';
 import { faPlus } from '@fortawesome/free-solid-svg-icons';

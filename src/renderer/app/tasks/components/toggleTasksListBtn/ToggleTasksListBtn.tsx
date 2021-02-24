@@ -1,6 +1,6 @@
 import React, { useCallback, useMemo, useState } from 'react';
 import { OmitUnderscored } from '../../../../../shared/types';
-import { IconButton, IconButtonProps, Tooltip } from '@chakra-ui/core';
+import { IconButton, IconButtonProps, Tooltip } from '@chakra-ui/react';
 import {
   defaultWindowHeight,
   getMinWindowHeight,

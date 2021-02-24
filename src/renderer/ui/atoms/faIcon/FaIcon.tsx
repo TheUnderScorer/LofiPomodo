@@ -2,40 +2,23 @@ import {
   FontAwesomeIcon,
   FontAwesomeIconProps,
 } from '@fortawesome/react-fontawesome';
-import React, { FC, useMemo } from 'react';
+import React, { FC } from 'react';
 import { IconProp } from '@fortawesome/fontawesome-svg-core';
-import { BrandColors, Theme, ThemeColors } from '../../../types/theme';
-import { useTheme } from '@chakra-ui/core';
+import { chakra, ChakraProps } from '@chakra-ui/system';
 
-export interface FaIconProps extends FontAwesomeIconProps {
+export interface FaIconProps
+  extends Pick<FontAwesomeIconProps, 'icon'>,
+    ChakraProps {
   icon: IconProp;
-  color?: keyof BrandColors | keyof ThemeColors;
+  className?: string;
 }
+
+const ChakraFaIcon = chakra(FontAwesomeIcon);
 
 export const FaIcon: FC<FaIconProps> = ({
   icon,
   color = 'iconPrimary',
   ...props
 }) => {
-  const theme = useTheme() as Theme;
-  const iconColor = useMemo(() => {
-    if (
-      theme?.colors?.brand &&
-      theme.colors.brand[color as keyof BrandColors]
-    ) {
-      return theme.colors.brand[color as keyof BrandColors];
-    }
-
-    if (theme?.colors && theme.colors[color as keyof ThemeColors]) {
-      const themeColor = theme.colors[color as keyof ThemeColors];
-
-      if (typeof themeColor === 'string') {
-        return themeColor;
-      }
-
-      return (themeColor as Record<string, string>)['500'];
-    }
-  }, [theme, color]);
-
-  return <FontAwesomeIcon color={iconColor} icon={icon} {...props} />;
+  return <ChakraFaIcon color={color} icon={icon} {...props} />;
 };

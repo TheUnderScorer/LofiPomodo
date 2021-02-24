@@ -8,7 +8,7 @@ import {
   MenuIcon,
   MenuDivider,
   Portal,
-} from '@chakra-ui/core';
+} from '@chakra-ui/react';
 import React, { FC, useCallback } from 'react';
 import { FaIcon } from '../../../../ui/atoms/faIcon/FaIcon';
 import {
@@ -55,7 +55,7 @@ export const TasksMenu: FC<TasksMenuProps> = ({ menuButtonProps, loading }) => {
     <Menu isLazy closeOnSelect={false} placement="left-end">
       <MenuButton width="30px" {...menuButtonProps}>
         {loading ? (
-          <Spinner color="brand.primary" />
+          <Spinner color="brand.primary.300" />
         ) : (
           <FaIcon icon={faEllipsisH} />
         )}

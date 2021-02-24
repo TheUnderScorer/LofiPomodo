@@ -1,7 +1,7 @@
 import { DialogProps } from '../types';
 import { AppError } from '../../../../shared/errors/AppError';
 import React from 'react';
-import { Button } from '@chakra-ui/core';
+import { Button } from '@chakra-ui/react';
 import { Text } from '../../../ui/atoms/text/Text';
 
 export const errorDialog = <T extends Error>(error: T): DialogProps => ({

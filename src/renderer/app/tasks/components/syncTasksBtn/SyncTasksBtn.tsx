@@ -1,5 +1,5 @@
 import React, { FC } from 'react';
-import { IconButton, IconButtonProps, Tooltip } from '@chakra-ui/core';
+import { IconButton, IconButtonProps, Tooltip } from '@chakra-ui/react';
 import { useTasksSync } from '../../hooks/useTasksSync';
 import { FaIcon } from '../../../../ui/atoms/faIcon/FaIcon';
 import { faSync } from '@fortawesome/free-solid-svg-icons';

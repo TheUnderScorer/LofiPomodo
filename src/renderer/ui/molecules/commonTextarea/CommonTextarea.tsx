@@ -1,4 +1,4 @@
-import { Textarea, TextareaProps } from '@chakra-ui/core';
+import { Textarea, TextareaProps } from '@chakra-ui/react';
 import React, { forwardRef } from 'react';
 import { FormControl, FormControlProps } from '../formControl/FormControl';
 

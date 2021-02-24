@@ -14,7 +14,7 @@ import {
   MenuItem,
   MenuList,
   Stack,
-} from '@chakra-ui/core';
+} from '@chakra-ui/react';
 import { apiProviderIconDictionary } from '../dictionaries/apiProviderIconDictionary';
 import { apiProviderLabelDictionary } from '../../../../shared/dictionary/integration';
 import { useIpcMutation } from '../../../shared/ipc/useIpcMutation';
@@ -88,7 +88,7 @@ export const IntegrationSection: FC<IntegrationSectionProps> = ({
           variant="solid"
           isLoading={authStateLoading}
           onClick={handleBtnClick}
-          backgroundColor="brand.primary"
+          backgroundColor="brand.primary.300"
         >
           <Text>{token ? 'Manage' : 'Authorize'}</Text>
         </Button>

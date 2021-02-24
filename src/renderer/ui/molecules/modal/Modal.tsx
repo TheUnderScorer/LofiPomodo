@@ -11,7 +11,7 @@ import {
   ModalOverlay,
   ModalProps as BaseModalProps,
   Spinner,
-} from '@chakra-ui/core';
+} from '@chakra-ui/react';
 import { Text } from '../../atoms/text/Text';
 import { useModalState } from '../../../providers/modalProvider/hooks/useModalState';
 
@@ -45,7 +45,7 @@ export const Modal: FC<ModalProps> = ({
         <ModalBody>
           {loading && (
             <Center>
-              <Spinner color="brand.primary" />
+              <Spinner color="brand.primary.300" />
             </Center>
           )}
           {!loading && <>{children}</>}

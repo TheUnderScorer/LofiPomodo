@@ -1,10 +1,10 @@
-import { Theme as BaseTheme, theme } from '@chakra-ui/core';
+import { Theme as BaseTheme, theme } from '@chakra-ui/react';
 import { PomodoroStates } from '../../shared/types';
 
 type Colors = typeof theme.colors;
 
 export type BrandColors = Record<PomodoroStates, string> & {
-  primary: string;
+  primary: Colors['blue'];
   textPrimary: string;
   textSecondary: string;
   iconPrimary: string;

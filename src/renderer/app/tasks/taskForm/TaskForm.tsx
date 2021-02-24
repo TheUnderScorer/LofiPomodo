@@ -7,7 +7,7 @@ import {
   NumberInputField,
   NumberInputStepper,
   Stack,
-} from '@chakra-ui/core';
+} from '@chakra-ui/react';
 import React, { FC, useCallback } from 'react';
 import { useForm } from 'react-hook-form';
 import { CreateTaskInput, Task } from '../../../../shared/types/tasks';
@@ -87,7 +87,7 @@ export const TaskForm: FC<TaskFormProps> = ({
         </Stack>
       </Wrapper>
       <Footer border="0" d="flex" justifyContent="flex-end" {...footerProps}>
-        <Button type="submit" bg="brand.primary" color="brand.textPrimary">
+        <Button type="submit" bg="brand.primary.300" color="brand.textPrimary">
           Save
         </Button>
       </Footer>

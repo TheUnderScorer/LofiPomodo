@@ -5,7 +5,7 @@ import {
   Flex,
   Stack,
   StackProps,
-} from '@chakra-ui/core';
+} from '@chakra-ui/react';
 import React, { FC } from 'react';
 import { usePomodoro } from '../../hooks/usePomodoro';
 import { PomodoroStates } from '../../../../../shared/types';

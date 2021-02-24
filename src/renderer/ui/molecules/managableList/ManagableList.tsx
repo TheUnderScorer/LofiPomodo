@@ -1,4 +1,10 @@
-import { Button, IconButton, List, ListItem, ListProps } from '@chakra-ui/core';
+import {
+  Button,
+  IconButton,
+  List,
+  ListItem,
+  ListProps,
+} from '@chakra-ui/react';
 import React, { ReactNode, useCallback } from 'react';
 import { Text } from '../../atoms/text/Text';
 import { FaIcon } from '../../atoms/faIcon/FaIcon';

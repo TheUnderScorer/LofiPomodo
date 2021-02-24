@@ -1,5 +1,5 @@
 import React, { FC } from 'react';
-import { Container, ContainerProps } from '@chakra-ui/core';
+import { Container, ContainerProps } from '@chakra-ui/react';
 
 export interface CenterContainerProps extends ContainerProps {
   className?: string;

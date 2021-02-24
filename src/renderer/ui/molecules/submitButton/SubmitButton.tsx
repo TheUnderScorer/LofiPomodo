@@ -1,6 +1,6 @@
 import React, { FC } from 'react';
 import { Text } from '../../atoms/text/Text';
-import { Button, ButtonProps } from '@chakra-ui/core';
+import { Button, ButtonProps } from '@chakra-ui/react';
 
 export interface SubmitButtonProps extends ButtonProps {
   isLoading?: boolean;
@@ -24,7 +24,7 @@ export const SubmitButton: FC<SubmitButtonProps> = ({
       minWidth="150px"
       width="auto"
       isLoading={isLoading}
-      backgroundColor={didSubmit ? 'brand.success' : 'brand.primary'}
+      backgroundColor={didSubmit ? 'brand.success' : 'brand.primary.300'}
       {...props}
     >
       <Text>{didSubmit ? 'Saved!' : children ?? 'Save'}</Text>
