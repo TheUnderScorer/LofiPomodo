@@ -89,6 +89,7 @@ export class WindowFactory {
     parent,
   }: CreateWindowArgs = {}): Promise<BrowserWindow> {
     if (this.timerWindow) {
+      this.timerWindow.show();
       this.timerWindow.focus();
 
       return this.timerWindow;
