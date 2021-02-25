@@ -46,7 +46,7 @@ export const TabbedTasksList: FC<TabbedTasksListProps> = (props) => {
   const isDragRef = useRef(false);
 
   const { count: tasksCount } = useGroupedTasksCount();
-  const { tasks, loading, setTaskState, didFetch, state } = useTasksList();
+  const { tasks, loading, setTaskState, state } = useTasksList();
   const { updateTask } = useUpdateTask();
 
   const [activeIndex, setActiveIndex] = useState(0);

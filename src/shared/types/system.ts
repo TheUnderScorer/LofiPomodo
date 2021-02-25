@@ -1,3 +1,5 @@
+import { BrowserWindowConstructorOptions } from 'electron';
+
 export enum AppSystemOperations {
   CloseWindow = 'CloseWindow',
   ToggleWindowSize = 'ToggleWindowSize',
@@ -9,16 +11,12 @@ export enum AppSystemOperations {
   QuitApp = 'QuitApp',
 }
 
-export interface ResizeWindowPayload {
-  width: number;
-  height: number;
+export interface ResizeWindowPayload
+  extends Pick<BrowserWindowConstructorOptions, 'width' | 'height'> {
   animate?: boolean;
 }
 
-export interface WindowProps extends ResizeWindowPayload {
-  minHeight?: number;
-  minWidth?: number;
-}
+export interface WindowProps extends Partial<BrowserWindowConstructorOptions> {}
 
 export enum WindowTypes {
   Timer = 'PixelPomodoro',

@@ -6,8 +6,9 @@ import {
   getMinWindowHeight,
   timerWindowSize,
 } from '../../../shared/windows/constants';
+import { BrowserWindowConstructorOptions } from 'electron';
 
-const baseWindowProps = {
+const baseWindowProps: BrowserWindowConstructorOptions = {
   height: defaultWindowHeight,
   width: timerWindowSize,
   minHeight: getMinWindowHeight(is.windows),
@@ -21,6 +22,7 @@ const baseWindowProps = {
   titleBarStyle: is.windows ? 'customButtonsOnHover' : 'hiddenInset',
   frame: !is.windows,
 };
+
 export const windowProps: Readonly<
   Record<WindowTypes, Partial<WindowProps>>
 > = {
@@ -35,8 +37,9 @@ export const windowProps: Readonly<
   },
   [WindowTypes.ManageTrello]: {
     ...baseWindowProps,
-    height: baseWindowProps.height + 200,
-    width: baseWindowProps.height + 200,
+    height: baseWindowProps.height! + 200,
+    width: baseWindowProps.height! + 200,
+    titleBarStyle: 'hidden',
   },
   [WindowTypes.AudioPlayer]: {},
 };

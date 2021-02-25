@@ -30,17 +30,18 @@
     "electron-squirrel-startup": "^1.0.0",
     "electron-store": "^6.0.0",
     "electron-util": "^0.14.2",
+    "joiful": "^3.0.0",
     "knex": "^0.21.16",
     "lodash.debounce": "^4.0.8",
     "lodash.isplainobject": "^4.0.6",
     "modclean": "^3.0.0-beta.1",
     "node-fetch": "^2.6.1",
     "p-limit": "^2.3.0",
+    "reflect-metadata": "^0.1.13",
     "rxjs": "^6.6.3",
     "sqlite3": "5.0.0",
     "typescript": "^4.1.3",
-    "uuid": "^8.3.1",
-    "yup": "^0.32.8"
+    "uuid": "^8.3.1"
   },
   "description": "Pomodoro app made with pixel-art like ui.",
   "devDependencies": {
@@ -70,6 +71,7 @@
     "@semantic-release/npm": "^7.0.5",
     "@testing-library/jest-dom": "^4.2.4",
     "@testing-library/react": "^9.3.2",
+    "@testing-library/react-hooks": "^5.0.3",
     "@testing-library/user-event": "^7.1.2",
     "@types/auto-launch": "^5.0.1",
     "@types/classnames": "^2.2.11",

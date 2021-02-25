@@ -4,7 +4,8 @@ export interface AutostartSettings {
   autoStart?: boolean;
 }
 
-export interface AppSettings extends AppStore {
+export interface AppSettings
+  extends Pick<AppStore, 'taskSettings' | 'pomodoroSettings' | 'trello'> {
   autoStart: boolean;
 }
 

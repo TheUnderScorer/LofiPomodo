@@ -24,12 +24,6 @@ export const FormController = ({
     [form.errors, rest.name]
   );
 
-  console.log({
-    error,
-    formErrors: form.errors,
-    name: rest.name,
-  });
-
   return (
     <FormControl {...rest} error={rest.error ?? error}>
       <Controller
