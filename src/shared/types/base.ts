@@ -8,6 +8,10 @@ export type OmitUnderscored<T> = {
   [K in keyof T as K extends `_${string}` ? never : K]: T[K];
 };
 
+export type PartialUnderscored<T> = {
+  [K in keyof T as K]: K extends `_${string}` ? Partial<T[K]> : T[K];
+};
+
 export type PrefixProperties<
   T extends Record<string, any>,
   Prefix extends string

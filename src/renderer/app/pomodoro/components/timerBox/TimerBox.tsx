@@ -12,7 +12,6 @@ import { PomodoroStates } from '../../../../../shared/types';
 import { Text } from '../../../../ui/atoms/text/Text';
 import { pomodoroStateDictionary } from '../../../../../shared/dictionary/pomodoro';
 import { Heading } from '../../../../ui/atoms/heading/Heading';
-import { HourglassIcon } from '../../../../ui/atoms/icons';
 import { PomodoroControl } from '../buttons/pomodoroControl/PomodoroControl';
 import { ResetState } from '../buttons/resetState/ResetState';
 import { ActiveTaskTitle } from '../../../tasks/components/activeTaskTitle/ActiveTaskTitle';
@@ -21,6 +20,7 @@ import { usePlatform } from '../../../system/hooks/usePlatform';
 import { PomodoroMenuBtn } from '../pomodoroMenu/PomodoroMenuBtn';
 import { useGetSetting } from '../../../settings/hooks/useGetSetting';
 import { ToggleTasksListBtn } from '../../../tasks/components/toggleTasksListBtn/ToggleTasksListBtn';
+import { Icon } from '../../../../ui/atoms/icons/Icon';
 
 export interface TimerProps {
   containerProps?: BoxProps;
@@ -67,12 +67,12 @@ export const TimerBox: FC<TimerProps> = ({
               fontSize="xs"
               color="white"
               position="absolute"
-              top="-20px"
-              left="12px"
+              top="-15px"
+              left="8px"
             >
               {pomodoro?.shortBreakCount}/{pomodoroSettings?.longBreakInterval}
             </Text>
-            <HourglassIcon width="16px" height="27px" variant="dark" />
+            <Icon name="Clock" boxSize={6} />
             <Heading
               className="remaining-time"
               as="h1"
@@ -81,7 +81,7 @@ export const TimerBox: FC<TimerProps> = ({
             >
               {pomodoro!.remainingTime}
             </Heading>
-            <NextStateBtn size="xs" variant="outline" />
+            <NextStateBtn size="xs" />
           </Stack>
         </Stack>
         <Center>
@@ -95,11 +95,11 @@ export const TimerBox: FC<TimerProps> = ({
               variant="outline"
             />
           )}
-          <Stack direction="row" spacing={2}>
-            <PomodoroControl color="white" />
-            <ResetState iconProps={{ variant: 'light' }} />
+          <Stack direction="row" spacing={4}>
+            <PomodoroControl />
+            <ResetState />
             {is?.windows && showSettingsBtnInFooterOnWindows && (
-              <PomodoroMenuBtn variant="outline" />
+              <PomodoroMenuBtn variant="nes" />
             )}
           </Stack>
         </Center>

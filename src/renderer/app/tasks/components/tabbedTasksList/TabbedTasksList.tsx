@@ -4,7 +4,6 @@ import {
   Center,
   HStack,
   Stack,
-  Tab,
   TabList,
   TabPanel,
   TabPanels,
@@ -35,6 +34,7 @@ import { TaskContextMenu } from '../taskContextMenu/TaskContextMenu';
 import { TasksMenu } from '../tasksMenu/TasksMenu';
 import { useUpdateTask } from '../../hooks/useUpdateTask';
 import { isEqual } from 'lodash';
+import { Tab } from '../../../../ui/atoms/tab/Tab';
 
 export interface TabbedTasksListProps {
   listProps?: Omit<TasksListProps, 'tasks'>;
@@ -77,8 +77,6 @@ export const TabbedTasksList: FC<TabbedTasksListProps> = (props) => {
       if (isEqual(task, storedTasks[index])) {
         return;
       }
-
-      console.log('Task changed:', task);
 
       const newTasks = [...storedTasks];
 
@@ -129,9 +127,13 @@ export const TabbedTasksList: FC<TabbedTasksListProps> = (props) => {
               const count = tasksCount ? tasksCount[state] : 0;
 
               return (
-                <Tab className={`tabbed-task-state-${state}`} key={state}>
+                <Tab
+                  ml={2}
+                  className={`tabbed-task-state-${state}`}
+                  key={state}
+                >
                   <Text mr={1}>{taskStateDictionary[state]}</Text>
-                  <Badge>{count}</Badge>
+                  <Badge ml={2}>{count}</Badge>
                 </Tab>
               );
             })}

@@ -18,11 +18,11 @@ export const ResetState: FC<ResetStateProps> = ({ iconProps }) => {
 
   return (
     <IconButton
+      variant="nes"
       onClick={() => restartStateMutation.mutate()}
-      variant="outline"
       aria-label="Restart current state"
     >
-      <RetryIcon width="20px" height="20px" {...iconProps} />
+      <RetryIcon variant="dark" width="20px" height="20px" {...iconProps} />
     </IconButton>
   );
 };

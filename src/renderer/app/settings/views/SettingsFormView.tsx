@@ -99,6 +99,7 @@ export const SettingsFormView: FC<SettingsFormViewProps> = () => {
   return (
     <>
       <TitleBar
+        backgroundColor="brand.bg"
         position="relative"
         justifyContent="flex-start"
         pt={!is?.windows ? '60px' : 2}

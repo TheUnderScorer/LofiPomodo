@@ -14,6 +14,7 @@ import {
 } from '@chakra-ui/react';
 import { Text } from '../../../../../../ui/atoms/text/Text';
 import { FormController } from '../../../../../../ui/molecules/formController/FormController';
+import { PixelCheckbox } from '../../../../../../ui/atoms/pixelCheckbox/PixelCheckbox';
 
 export interface TrelloListsSelectionProps {
   name: string;
@@ -53,11 +54,11 @@ export const TrelloListsSelection: FC<TrelloListsSelectionProps> = ({
             {lists?.map((list) => (
               <Tooltip label={list.name} key={list.id}>
                 <Box>
-                  <Checkbox value={list.id}>
+                  <PixelCheckbox value={list.id}>
                     <Text maxWidth="30vw" isTruncated>
                       {list.name}
                     </Text>
-                  </Checkbox>
+                  </PixelCheckbox>
                 </Box>
               </Tooltip>
             ))}

@@ -95,6 +95,8 @@ export class WindowFactory {
       webPreferences: {
         preload: this.preloadPath,
         nodeIntegration: false,
+        contextIsolation: false,
+        worldSafeExecuteJavaScript: false,
       },
     });
 

@@ -23,15 +23,15 @@ export const AppProvider = ({
   return (
     <RecoilRoot>
       <IpcRendererProvider>
-        <ThemeProvider>
-          <QueryClientProvider client={queryClient}>
+        <QueryClientProvider client={queryClient}>
+          <ThemeProvider>
             <ModalProvider>
               <DialogProvider>
                 <RouterProvider>{children}</RouterProvider>
               </DialogProvider>
             </ModalProvider>
-          </QueryClientProvider>
-        </ThemeProvider>
+          </ThemeProvider>
+        </QueryClientProvider>
       </IpcRendererProvider>
     </RecoilRoot>
   );

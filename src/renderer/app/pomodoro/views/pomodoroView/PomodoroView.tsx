@@ -48,7 +48,7 @@ export const PomodoroView: FC<PomodoroViewProps> = () => {
                   pb: 5,
                 }}
               />
-              <Box flex={1} overflow="hidden">
+              <Box pt={2} flex={1} overflow="hidden">
                 <TabbedTasksList
                   listProps={{
                     pb: '100px',

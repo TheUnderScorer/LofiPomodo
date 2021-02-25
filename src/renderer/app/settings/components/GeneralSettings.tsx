@@ -3,6 +3,7 @@ import { AppSettings } from '../../../../shared/types/settings';
 import { UseFormMethods } from 'react-hook-form';
 import { Stack, Switch } from '@chakra-ui/react';
 import { SettingsFormController } from '../../../ui/molecules/settingsFormController/SettingsFormController';
+import { PixelSwitch } from '../../../ui/molecules/pixelSwitch/PixelSwitch';
 
 export interface GeneralSettingsProps {
   settings: AppSettings;
@@ -19,10 +20,10 @@ export const GeneralSettings = ({ form, settings }: GeneralSettingsProps) => {
         defaultValue={settings.autoStart}
       >
         {(props) => (
-          <Switch
+          <PixelSwitch
             {...props}
             id={props.name}
-            onChange={(event) => props.onChange(event.target.checked)}
+            onChange={(checked) => props.onChange(checked)}
             isChecked={props.value}
           />
         )}
@@ -30,14 +31,14 @@ export const GeneralSettings = ({ form, settings }: GeneralSettingsProps) => {
       <SettingsFormController
         form={form}
         name="taskSettings.showToggleTaskListBtn"
-        label="Show button for toggling task list"
+        label="Show toggle tasks list button"
         defaultValue={Boolean(settings.taskSettings?.showToggleTaskListBtn)}
       >
         {(props) => (
-          <Switch
+          <PixelSwitch
             {...props}
             id={props.name}
-            onChange={(event) => props.onChange(event.target.checked)}
+            onChange={(checked) => props.onChange(checked)}
             isChecked={props.value}
           />
         )}

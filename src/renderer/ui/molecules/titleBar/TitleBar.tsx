@@ -39,7 +39,6 @@ export const TitleBar: FC<TitleBarProps> = ({
       as="header"
       {...props}
     >
-      <Box className="draggable" />
       <Flex
         height="100%"
         alignItems="center"

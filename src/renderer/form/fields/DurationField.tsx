@@ -116,7 +116,6 @@ export const DurationField = forwardRef<HTMLInputElement, DurationFieldProps>(
           <Select
             onChange={(event) => setUnit(event.target.value as TimeUnits)}
             borderRadius={0}
-            variant="filled"
             color="brand.textPrimary"
             value={unit}
           >

@@ -52,7 +52,7 @@ export const TasksMenu: FC<TasksMenuProps> = ({ menuButtonProps, loading }) => {
   const { isSyncing, sync } = useTasksSync();
 
   return (
-    <Menu isLazy closeOnSelect={false} placement="left-end">
+    <Menu variant="nes" isLazy closeOnSelect={false} placement="left-end">
       <MenuButton width="30px" {...menuButtonProps}>
         {loading ? (
           <Spinner color="brand.primary.300" />

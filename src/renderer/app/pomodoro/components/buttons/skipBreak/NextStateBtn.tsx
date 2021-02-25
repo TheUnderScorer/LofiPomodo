@@ -33,17 +33,13 @@ export const NextStateBtn: FC<NextStateBtnProps> = (props) => {
   return (
     <Tooltip label={`Skip to ${nextState}`}>
       <IconButton
+        variant="nes-outlined"
         className="move-to-next-state"
         onClick={() => moveToNextStateMutation.mutate()}
         aria-label="Move to next state"
         {...props}
       >
-        <ArrowIcon
-          variant="dark"
-          width="auto"
-          height="20px"
-          iconDirection="left"
-        />
+        <ArrowIcon width="auto" height="20px" iconDirection="left" />
       </IconButton>
     </Tooltip>
   );

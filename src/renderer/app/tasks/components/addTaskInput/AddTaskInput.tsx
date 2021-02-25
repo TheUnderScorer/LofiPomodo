@@ -1,9 +1,4 @@
-import {
-  IconButton,
-  Input,
-  InputGroup,
-  InputRightElement,
-} from '@chakra-ui/react';
+import { IconButton, InputGroup, InputRightElement } from '@chakra-ui/react';
 import React, { FC, useCallback } from 'react';
 import { useForm } from 'react-hook-form';
 import { FormControl } from '../../../../ui/molecules/formControl/FormControl';
@@ -11,6 +6,7 @@ import { CreateTaskInput } from '../../../../../shared/types/tasks';
 import { FaIcon } from '../../../../ui/atoms/faIcon/FaIcon';
 import { faPlus } from '@fortawesome/free-solid-svg-icons';
 import { useCreateTask } from '../../hooks/useCreateTask';
+import { Input } from '../../../../ui/atoms/input/Input';
 
 export interface AddTaskInputProps {}
 
@@ -28,7 +24,7 @@ export const AddTaskInput: FC<AddTaskInputProps> = () => {
   return (
     <form onSubmit={handleSubmit(createTask)}>
       <FormControl error={errors.title?.message}>
-        <InputGroup>
+        <InputGroup d="flex">
           <Input
             id="task_title"
             ref={register({
@@ -36,9 +32,11 @@ export const AddTaskInput: FC<AddTaskInputProps> = () => {
             })}
             placeholder="Add task..."
             name="title"
+            py={6}
           />
-          <InputRightElement>
+          <InputRightElement top={1} right={1}>
             <IconButton
+              variant="nes-outlined"
               id="create_task"
               type="submit"
               size="sm"

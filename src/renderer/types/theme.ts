@@ -3,6 +3,10 @@ import { PomodoroStates } from '../../shared/types';
 
 type Colors = typeof theme.colors;
 
+type Borders = typeof theme.borders;
+
+type Shadows = typeof theme.shadows;
+
 export type BrandColors = Record<PomodoroStates, string> & {
   primary: Colors['blue'];
   textPrimary: string;
@@ -17,6 +21,16 @@ export interface ThemeColors extends Colors {
   brand: BrandColors;
 }
 
+export interface ThemeShadows extends Shadows {
+  focus: string;
+  active: string;
+  hover: string;
+  selected: string;
+
+  [key: string]: any;
+}
+
 export interface Theme extends BaseTheme {
   colors: ThemeColors;
+  shadows: ThemeShadows;
 }
