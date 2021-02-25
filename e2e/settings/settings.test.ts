@@ -36,7 +36,7 @@ describe('Settings - as a user', () => {
           checkValueCallback: assertFieldValue('10'),
         },
         longBreakInterval: {
-          selector: '[name="pomodoroSettings.longBreakInterval"] input',
+          selector: '[name="pomodoroSettings.longBreakInterval"]',
           setValueCallback: inputFieldCallback('5'),
           checkValueCallback: assertFieldValue('5'),
         },
