@@ -3,6 +3,7 @@ import { RecoilRoot } from 'recoil';
 import { IpcRendererProvider } from './IpcRendererProvider';
 import {
   ChakraProvider,
+  ColorModeProvider,
   extendTheme,
   theme as chakraTheme,
 } from '@chakra-ui/react';
@@ -29,7 +30,10 @@ export const AppProvider: FC<AppProviderProps> = ({ children }) => {
   const colorMode = usePrefersColorScheme();
 
   const theme: Theme = useMemo(() => {
-    const color = colorMode === 'dark' ? '#FFFCFC' : chakraTheme.colors.black;
+    const color =
+      colorMode === 'dark'
+        ? chakraTheme.colors.white
+        : chakraTheme.colors.black;
     return extendTheme({
       colors: {
         brand: {
@@ -101,28 +105,20 @@ export const AppProvider: FC<AppProviderProps> = ({ children }) => {
   return (
     <RecoilRoot>
       <IpcRendererProvider>
-        <ChakraProvider
-          colorModeManager={{
-            type: 'localStorage',
-            get: () => colorMode,
-            set: () => {
-              throw new Error(
-                'Color mode is used via user preference, it cannot be set directly.'
-              );
-            },
-          }}
-          resetCSS
-          theme={theme}
-        >
-          <QueryClientProvider client={queryClient}>
-            <ModalProvider>
-              <DialogProvider>
-                <MemoryRouter initialEntries={initialEntries}>
-                  {children}
-                </MemoryRouter>
-              </DialogProvider>
-            </ModalProvider>
-          </QueryClientProvider>
+        <ChakraProvider resetCSS theme={theme}>
+          <ColorModeProvider
+            options={{ initialColorMode: colorMode, useSystemColorMode: true }}
+          >
+            <QueryClientProvider client={queryClient}>
+              <ModalProvider>
+                <DialogProvider>
+                  <MemoryRouter initialEntries={initialEntries}>
+                    {children}
+                  </MemoryRouter>
+                </DialogProvider>
+              </ModalProvider>
+            </QueryClientProvider>
+          </ColorModeProvider>
         </ChakraProvider>
       </IpcRendererProvider>
     </RecoilRoot>
