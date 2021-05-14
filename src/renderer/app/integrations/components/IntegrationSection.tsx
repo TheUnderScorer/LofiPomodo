@@ -18,8 +18,7 @@ import {
 import { apiProviderIconDictionary } from '../dictionaries/apiProviderIconDictionary';
 import { apiProviderLabelDictionary } from '../../../../shared/dictionary/integration';
 import { useIpcMutation } from '../../../shared/ipc/useIpcMutation';
-import { faEllipsisV } from '@fortawesome/free-solid-svg-icons';
-import { FaIcon } from '../../../ui/atoms/faIcon/FaIcon';
+import { Icon } from '../../../ui/atoms/icons/Icon';
 
 export interface IntegrationSectionProps {
   provider: ApiProvider;
@@ -85,10 +84,9 @@ export const IntegrationSection: FC<IntegrationSectionProps> = ({
         <Button
           className={`manage-${provider}`}
           id={`manage_${provider}`}
-          variant="solid"
+          variant="nes"
           isLoading={authStateLoading}
           onClick={handleBtnClick}
-          backgroundColor="brand.primary.300"
         >
           <Text>{token ? 'Manage' : 'Authorize'}</Text>
         </Button>
@@ -100,7 +98,7 @@ export const IntegrationSection: FC<IntegrationSectionProps> = ({
               isDisabled={unAuthorizeMutation.isLoading}
               type="button"
             >
-              <FaIcon icon={faEllipsisV} />
+              <Icon transform="rotate(90deg)" name="Ellipsis" />
             </MenuButton>
             <MenuList>
               <MenuItem

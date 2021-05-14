@@ -5,10 +5,10 @@ import {
   HStack,
   ListItem,
   ListItemProps,
-  Select,
   Spinner,
   Stack,
 } from '@chakra-ui/react';
+import { Select } from '../../../../../ui/molecules/select/Select';
 import React, { FC, ReactNode, useCallback, useEffect, useMemo } from 'react';
 import {
   TrelloBoard,
@@ -28,6 +28,7 @@ import { TrelloListsSelection } from './trelloListsSection/TrelloListsSection';
 import { get } from 'lodash';
 import { validateDuplicateTrelloBoards } from '../../../validators/validateDuplicateTrelloBoards';
 import { useIpcQuery } from '../../../../../shared/ipc/useIpcQuery';
+import { Loading } from '../../../../../ui/atoms/loading/Loading';
 
 export interface TrelloBoardListItemProps
   extends Omit<ListItemProps, 'defaultValue'> {
@@ -142,7 +143,7 @@ export const TrelloBoardListItem: FC<TrelloBoardListItemProps> = ({
         </FormControl>
         {fetchListsQuery.isLoading && (
           <Center>
-            <Spinner color="brand.primary.300" />
+            <Loading />
           </Center>
         )}
         {!fetchListsQuery.isLoading && (

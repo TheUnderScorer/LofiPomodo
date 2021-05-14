@@ -93,7 +93,7 @@ export const ContextMenu: FC<ContextMenuProps> = ({ menu, children, id }) => {
             <Menu
               closeOnSelect={false}
               placement="auto"
-              fixed={false}
+              strategy="fixed"
               preventOverflow
               isLazy
               isOpen={open}

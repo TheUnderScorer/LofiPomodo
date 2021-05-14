@@ -1,4 +1,4 @@
-import React, { FC, useCallback, useMemo, useState } from 'react';
+import React, { useCallback, useMemo, useState } from 'react';
 import { TitleBar } from '../../../ui/molecules/titleBar/TitleBar';
 import {
   Button,
@@ -7,7 +7,6 @@ import {
   Divider,
   Flex,
   HStack,
-  Spinner,
   Tab,
   TabList,
   Tabs,
@@ -26,10 +25,7 @@ import { IntegrationsForm } from '../../integrations/components/IntegrationsForm
 import { SubmitButton } from '../../../ui/molecules/submitButton/SubmitButton';
 import { Alert } from '../../../ui/molecules/alert/Alert';
 import { useIpcQuery } from '../../../shared/ipc/useIpcQuery';
-import {
-  SettingsFormViewProps,
-  settingsTabIndexArray,
-} from './SettingsFormView.types';
+import { settingsTabIndexArray } from './SettingsFormView.types';
 import { GeneralSettings } from '../components/GeneralSettings';
 import { useWindowMinSizeOnMount } from '../../../shared/hooks/useWindowMinSizeOnMount';
 import {
@@ -38,8 +34,9 @@ import {
 } from '../../../../shared/windows/constants';
 import { SettingsFormSchema } from '../../../../shared/schema/settings/SettingsFormSchema';
 import { useJoifulValidationResolver } from '../../../form/hooks/useJoifulValidationResolver';
+import { Loading } from '../../../ui/atoms/loading/Loading';
 
-export const SettingsFormView: FC<SettingsFormViewProps> = () => {
+export const SettingsFormView = () => {
   const history = useHistory();
 
   const [activeTabIndex, setActiveTabIndex] = useState(0);
@@ -134,7 +131,7 @@ export const SettingsFormView: FC<SettingsFormViewProps> = () => {
       >
         {queryLoading && (
           <Center height="100%" width="100%">
-            <Spinner color="brand.primary.300" />
+            <Loading />
           </Center>
         )}
         {settings && !queryLoading && (
@@ -173,30 +170,23 @@ export const SettingsFormView: FC<SettingsFormViewProps> = () => {
               )}
               {tab === 'Integrations' && <IntegrationsForm form={form} />}
             </Flex>
-            {tab !== 'Integrations' && (
-              <>
-                <Divider />
-                <HStack
-                  w="100%"
-                  h="60px"
-                  justifyContent="center"
-                  alignItems="center"
-                  spacing={4}
-                >
-                  <Button
-                    onClick={() => history.goBack()}
-                    className="go-back-btn"
-                  >
-                    <Text>Cancel</Text>
-                  </Button>
+            <Divider />
+            <HStack
+              w="100%"
+              h="60px"
+              justifyContent="center"
+              alignItems="center"
+              spacing={4}
+            >
+              <Button onClick={() => history.goBack()} className="go-back-btn">
+                <Text>Cancel</Text>
+              </Button>
 
-                  <SubmitButton
-                    id="submit_settings"
-                    isLoading={setSettingsMutation.isLoading}
-                  />
-                </HStack>
-              </>
-            )}
+              <SubmitButton
+                id="submit_settings"
+                isLoading={setSettingsMutation.isLoading}
+              />
+            </HStack>
           </Flex>
         )}
       </Container>

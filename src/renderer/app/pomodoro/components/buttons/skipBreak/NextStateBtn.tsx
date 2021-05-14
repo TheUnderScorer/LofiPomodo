@@ -10,6 +10,7 @@ import { usePomodoro } from '../../../hooks/usePomodoro';
 import { getNextState } from '../../../../../../main/app/pomodoro/logic/nextState';
 import { pomodoroStateDictionary } from '../../../../../../shared/dictionary/pomodoro';
 import { useGetSetting } from '../../../../settings/hooks/useGetSetting';
+import { Icon } from '../../../../../ui/atoms/icons/Icon';
 
 export interface NextStateBtnProps
   extends Omit<OmitUnderscored<IconButtonProps>, 'aria-label'> {}
@@ -39,7 +40,7 @@ export const NextStateBtn: FC<NextStateBtnProps> = (props) => {
         aria-label="Move to next state"
         {...props}
       >
-        <ArrowIcon width="auto" height="20px" iconDirection="left" />
+        <Icon fill="brand.iconPrimary" boxSize="15px" name="Arrow" />
       </IconButton>
     </Tooltip>
   );

@@ -6,7 +6,6 @@ import {
   NumberInput,
   NumberInputField,
   Stack,
-  Switch,
 } from '@chakra-ui/react';
 import { AppSettings } from '../../../../../shared/types/settings';
 import { PomodoroSettings } from '../../../../../shared/types';
@@ -22,7 +21,7 @@ export interface PomodoroFormProps {
 
 const maxFieldWidth = '200px';
 
-export const PomodoroForm: FC<PomodoroFormProps> = ({ form, settings }) => {
+export const PomodoroForm = ({ form, settings }: PomodoroFormProps) => {
   return (
     <Stack spacing={6} width="100%">
       <SettingsFormController

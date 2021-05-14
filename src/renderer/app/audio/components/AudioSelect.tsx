@@ -1,11 +1,4 @@
-import {
-  Button,
-  Center,
-  HStack,
-  Select,
-  SelectProps,
-  Spinner,
-} from '@chakra-ui/react';
+import { Button, Center, HStack, SelectProps, Spinner } from '@chakra-ui/react';
 import React from 'react';
 import { useIpcQuery } from '../../../shared/ipc/useIpcQuery';
 import {
@@ -17,6 +10,8 @@ import { Text } from '../../../ui/atoms/text/Text';
 import { useIpcMutation } from '../../../shared/ipc/useIpcMutation';
 import { OmitUnderscored } from '../../../../shared/types';
 import { OptionSeparator } from '../../../ui/atoms/optionSeparator/OptionSeparator';
+import { Select } from '../../../ui/molecules/select/Select';
+import { Loading } from '../../../ui/atoms/loading/Loading';
 
 export interface AudioSelectProps extends OmitUnderscored<SelectProps> {}
 
@@ -33,7 +28,7 @@ export const AudioSelect = (props: AudioSelectProps) => {
   if (isLoading) {
     return (
       <Center>
-        <Spinner color="brand.primary.300" />
+        <Loading />
       </Center>
     );
   }

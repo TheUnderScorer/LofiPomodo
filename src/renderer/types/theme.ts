@@ -1,9 +1,5 @@
-import { Theme as BaseTheme, theme } from '@chakra-ui/react';
+import { ChakraTheme, Colors, theme } from '@chakra-ui/react';
 import { PomodoroStates } from '../../shared/types';
-
-type Colors = typeof theme.colors;
-
-type Borders = typeof theme.borders;
 
 type Shadows = typeof theme.shadows;
 
@@ -30,7 +26,7 @@ export interface ThemeShadows extends Shadows {
   [key: string]: any;
 }
 
-export interface Theme extends BaseTheme {
+export interface Theme extends ChakraTheme {
   colors: ThemeColors;
   shadows: ThemeShadows;
 }

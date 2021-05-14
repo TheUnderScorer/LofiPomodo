@@ -2,20 +2,15 @@ import {
   Menu,
   MenuButton,
   MenuButtonProps,
+  MenuDivider,
+  MenuIcon,
   MenuItem,
   MenuList,
-  Spinner,
-  MenuIcon,
-  MenuDivider,
   Portal,
 } from '@chakra-ui/react';
 import React, { FC, useCallback } from 'react';
 import { FaIcon } from '../../../../ui/atoms/faIcon/FaIcon';
-import {
-  faEllipsisH,
-  faSync,
-  faTrash,
-} from '@fortawesome/free-solid-svg-icons';
+import { faSync, faTrash } from '@fortawesome/free-solid-svg-icons';
 import { useGroupedTasksCount } from '../../hooks/useGroupedTasksCount';
 import { useIpcMutation } from '../../../../shared/ipc/useIpcMutation';
 import { TaskOperations } from '../../../../../shared/types/tasks';
@@ -23,6 +18,8 @@ import { useInlineConfirm } from '../../../../shared/hooks/useInlineConfirm';
 import { useTasksSync } from '../../hooks/useTasksSync';
 import { Text } from '../../../../ui/atoms/text/Text';
 import classNames from 'classnames';
+import { Icon } from '../../../../ui/atoms/icons/Icon';
+import { Loading } from '../../../../ui/atoms/loading/Loading';
 
 export interface TasksMenuProps {
   menuButtonProps?: MenuButtonProps;
@@ -54,11 +51,7 @@ export const TasksMenu: FC<TasksMenuProps> = ({ menuButtonProps, loading }) => {
   return (
     <Menu variant="nes" isLazy closeOnSelect={false} placement="left-end">
       <MenuButton width="30px" {...menuButtonProps}>
-        {loading ? (
-          <Spinner color="brand.primary.300" />
-        ) : (
-          <FaIcon icon={faEllipsisH} />
-        )}
+        {loading ? <Loading /> : <Icon name="Ellipsis" />}
       </MenuButton>
       <Portal>
         <MenuList width="40vh" minWidth="300px">

@@ -81,7 +81,7 @@ export const TimerBox: FC<TimerProps> = ({
             >
               {pomodoro!.remainingTime}
             </Heading>
-            <NextStateBtn size="xs" />
+            <NextStateBtn bottom="3px" size="xs" />
           </Stack>
         </Stack>
         <Center>

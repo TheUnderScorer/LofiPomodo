@@ -12,6 +12,7 @@ import { PomodoroStates } from '../../shared/types';
 import { nesCss } from '../styles/nes.css';
 import { Global } from '@emotion/react';
 import { pixelBordersCss } from '../styles/pixelBorders.css';
+import { Icon } from '../ui/atoms/icons/Icon';
 
 export interface ThemeProviderProps {}
 
@@ -138,7 +139,7 @@ export const ThemeProvider = ({
       },
     };
 
-    return extendTheme({
+    return extendTheme<Theme>({
       colors: {
         brand: {
           [PomodoroStates.Work]: primary['300'],
@@ -146,7 +147,7 @@ export const ThemeProvider = ({
           [PomodoroStates.LongBreak]: chakraTheme.colors.green['600'],
           paper: '#eee6e6',
           success: chakraTheme.colors.green['500'],
-          primary: primary,
+          primary,
           colorModeContrast:
             colorMode === 'dark' ? '#FFFCFC' : chakraTheme.colors.white,
           textPrimary: color,
@@ -254,7 +255,8 @@ export const ThemeProvider = ({
             ...nesVariants,
             nes: {
               ...nesVariants.nes,
-              boxShadow: shadows['2xl'],
+              borderImage: 'none',
+              boxShadow: shadows['dark-lg'],
               pt: 2,
               pb: 2,
               color,
@@ -306,6 +308,11 @@ export const ThemeProvider = ({
           },
           defaultProps: {
             variant: 'nes',
+          },
+        },
+        NumberDecrementStepper: {
+          defaultProps: {
+            children: <Icon name="Arrow" />,
           },
         },
         IconButton: {
