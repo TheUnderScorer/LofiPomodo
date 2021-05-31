@@ -5,7 +5,7 @@ import {
 import { useFormContext } from 'react-hook-form';
 import React, { FC } from 'react';
 import { minArrayLength } from '../../../../../../form/validators/minArrayLength';
-import { Box, CheckboxGroup, HStack, Tooltip, VStack } from '@chakra-ui/react';
+import { CheckboxGroup, HStack, Tooltip, VStack } from '@chakra-ui/react';
 import { Text } from '../../../../../../ui/atoms/text/Text';
 import { FormController } from '../../../../../../ui/molecules/formController/FormController';
 import { PixelCheckbox } from '../../../../../../ui/atoms/pixelCheckbox/PixelCheckbox';
