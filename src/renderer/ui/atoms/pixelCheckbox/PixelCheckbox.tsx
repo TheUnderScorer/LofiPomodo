@@ -12,8 +12,8 @@ export const PixelCheckbox = (props: PixelCheckboxProps) => {
   return (
     <Checkbox
       icon={<Icon fill="inherit" boxSize={5} name="PixelCheck" />}
-      {...props}
       sx={styles}
+      {...props}
     >
       {props.children}
     </Checkbox>

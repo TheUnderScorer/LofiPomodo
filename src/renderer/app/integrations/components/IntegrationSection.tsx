@@ -76,7 +76,7 @@ export const IntegrationSection: FC<IntegrationSectionProps> = ({
       {apiProviderIconDictionary[provider]}
       <Text>{apiProviderLabelDictionary[provider]}</Text>
       <HStack
-        alignItems="center"
+        alignItems="baseline"
         spacing={4}
         justifyContent="flex-end"
         flex="1"

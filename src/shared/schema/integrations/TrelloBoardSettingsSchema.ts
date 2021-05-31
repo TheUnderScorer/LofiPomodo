@@ -8,7 +8,7 @@ export class TrelloBoardSettingsSchema
   @(jf.string().optional())
   id?: string;
 
-  @(jf.string().optional())
+  @(jf.string().optional().allow('', null))
   doneListId?: string;
 
   @(jf.string().optional())

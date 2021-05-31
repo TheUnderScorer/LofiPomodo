@@ -104,13 +104,12 @@ export const ManageTrelloForm: FC<ManageTrelloFormProps> = ({
           <ManageTrelloBoards boards={boards} />
         </Box>
         <HStack>
+          {additionalButtons ? additionalButtons(form) : undefined}
           <SubmitButton
             didSubmit={didSubmit}
-            width="200px"
             isLoading={saveTrelloBoardsMutation.isLoading}
             id="submit_trello"
           />
-          {additionalButtons ? additionalButtons(form) : undefined}
         </HStack>
       </FormProvider>
     </Flex>
