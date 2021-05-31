@@ -5,7 +5,6 @@ import {
   HStack,
   ListItem,
   ListItemProps,
-  Spinner,
   Stack,
 } from '@chakra-ui/react';
 import { Select } from '../../../../../ui/molecules/select/Select';

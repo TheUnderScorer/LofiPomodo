@@ -5,7 +5,6 @@ import {
   OmitUnderscored,
   PomodoroOperations,
 } from '../../../../../../shared/types';
-import { ArrowIcon } from '../../../../../ui/atoms/icons';
 import { usePomodoro } from '../../../hooks/usePomodoro';
 import { getNextState } from '../../../../../../main/app/pomodoro/logic/nextState';
 import { pomodoroStateDictionary } from '../../../../../../shared/dictionary/pomodoro';

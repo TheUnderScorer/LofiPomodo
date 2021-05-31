@@ -1,4 +1,4 @@
-import { Button, Center, HStack, SelectProps, Spinner } from '@chakra-ui/react';
+import { Button, Center, HStack, SelectProps } from '@chakra-ui/react';
 import React from 'react';
 import { useIpcQuery } from '../../../shared/ipc/useIpcQuery';
 import {

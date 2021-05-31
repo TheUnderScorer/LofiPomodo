@@ -1,4 +1,4 @@
-import React, { FC } from 'react';
+import React from 'react';
 import { UseFormMethods } from 'react-hook-form';
 import { DurationField } from '../../../../form/fields/DurationField';
 import {
