@@ -23,6 +23,7 @@ jobs:
         arch: [x64, arm64]
         exclude:
           - { os: macos-latest, arch: arm64 }
+          - { os: windows-latest, arch: arm64 }
           - { os: macos-arm64, arch: x64 }
     runs-on: ${{ matrix.os }}
     steps:
