@@ -46,14 +46,6 @@ jobs:
       - name: Install npm dependencies
         run: npm ci
 
-#      - name: Rebuild deps in x64
- #       if: ${{ matrix.arch == 'x64' }}
-  #      run: npm run rebuild:x64
-
-   #   - name: Rebuild deps in arm64
-    #    if: ${{ matrix.arch == 'arm64' && matrix.os != 'macos-arm64' }}
-     #   run: npm run rebuild:arm64
-
       - name: Get tag
         id: get_tag
         uses: ./.github/actions/tagProvider
@@ -80,11 +72,6 @@ jobs:
       - name: Build (arm64 macos)
         if: ${{ matrix.arch == 'arm64' && matrix.os == 'macos-arm64' }}
         run: arch -arm64 npm run build:all && arch -arm64 npm run rebuild:arm64
-
-      # Packager is used only on ubuntu
-      - name: Build packager
-        if: ${{ matrix.os == 'ubuntu-latest' }}
-        run: npm run build-packager
 
       - name: Pack mac x64
         if: ${{ matrix.arch == 'x64' && matrix.os == 'macos-latest' }}
