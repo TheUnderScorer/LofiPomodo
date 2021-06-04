@@ -32,7 +32,7 @@ const assetsMap = [
     name: 'PixelPomodo-arm64-win32.exe',
   },
   {
-    os: 'macbook-pro-m1',
+    os: 'macos-arm64',
     arch: 'arm64',
     path: 'out/make/PixelPomodo-arm64-darwin.dmg',
     name: 'PixelPomodo-arm64-darwin.dmg',
