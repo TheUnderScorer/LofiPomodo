@@ -96,11 +96,11 @@ jobs:
 
       - name: Pack linux x64
         if: ${{ matrix.arch == 'x64' && matrix.os == 'ubuntu-latest' }}
-        run: npm run make:x64-linux:docker
+        run: npm run make:x64-linux
 
       - name: Pack linux arm64
         if: ${{ matrix.arch == 'arm64' && matrix.os == 'ubuntu-latest' }}
-        run: npm run make:arm64-linux:docker
+        run: npm run make:arm64-linux
 
       - name: Pack windows x64
         if: ${{ matrix.arch == 'x64' && matrix.os == 'windows-latest' }}
