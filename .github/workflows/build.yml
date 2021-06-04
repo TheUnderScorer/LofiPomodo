@@ -37,11 +37,11 @@ jobs:
         with:
           python-version: '2.x'
 
-      - name: Set Node.js 15.x
+      - name: Set Node.js 13.x
         uses: actions/setup-node@v2-beta
         if: ${{ matrix.arch != 'arm64' && matrix.os != 'macos-arm64' }}
         with:
-          node-version: '15'
+          node-version: '13'
 
       - name: Install npm dependencies
         run: npm ci
