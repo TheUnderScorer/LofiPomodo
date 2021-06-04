@@ -20,6 +20,7 @@
     "forge": "./forge.config.js"
   },
   "dependencies": {
+    "@sindresorhus/do-not-disturb": "^1.1.0",
     "@theunderscorer/when": "^1.0.1",
     "auto-launch": "^5.0.5",
     "date-fns": "^2.17.0",
@@ -53,7 +54,7 @@
     "@chakra-ui/system": "^1.6.5",
     "@craco/craco": "5.7.0",
     "@csstools/normalize.css": "11.0.1",
-    "@electron-forge/cli": "^6.0.0-beta.54",
+    "@electron-forge/cli": "^6.0.0-beta.57",
     "@electron-forge/maker-deb": "^6.0.0-beta.57",
     "@electron-forge/maker-dmg": "^6.0.0-beta.57",
     "@electron-forge/maker-rpm": "^6.0.0-beta.57",
@@ -95,7 +96,6 @@
     "cross-env": "^7.0.3",
     "electron": "^13.1.0",
     "electron-osx-sign": "^0.5.0",
-    "electron-packager": "^15.2.0",
     "electron-rebuild": "^2.3.5",
     "eslint": "7.18.0",
     "eslint-import-resolver-typescript": "^2.3.0",
@@ -219,7 +219,8 @@
     "rebuild:arm64": "electron-rebuild -f --arch arm64",
     "rebuild:x64": "electron-rebuild -f --arch x64",
     "start-m1-gh-runner": "arch -x86_64 ./actions-runner/run.sh",
-    "clear-node-modules": "modclean -n default:safe -I @semantic-release/changelog,@csstools/normalize.css,electron-installer-dmg,@electron-forge/*,electron-winstaller,electron-installer-debian -r"
+    "clear-node-modules": "modclean -n default:safe -I @semantic-release/changelog,@csstools/normalize.css,electron-installer-dmg,@electron-forge/*,electron-winstaller,electron-installer-debian -r",
+    "start": "electron-forge start"
   },
   "version": "1.11.0"
 }
