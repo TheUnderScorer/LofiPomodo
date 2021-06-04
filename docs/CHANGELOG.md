@@ -1,3 +1,17 @@
+# [1.12.0](https://github.com/TheUnderScorer/pixel-pomodo/compare/v1.11.0...v1.12.0) (2021-06-04)
+
+
+### Bug Fixes
+
+* **macos:** Navigate to timer window when clicking tray icon while being on different desktop ([b4f3058](https://github.com/TheUnderScorer/pixel-pomodo/commit/b4f3058e1eb36d84b01c1a016a2a7cb3551f4cf3))
+* **windows:** Set min width for settings view ([ccc4852](https://github.com/TheUnderScorer/pixel-pomodo/commit/ccc48520de40167580407f82007cb672647fad80))
+
+
+### Features
+
+* Show notification before break ([ef2fc7e](https://github.com/TheUnderScorer/pixel-pomodo/commit/ef2fc7ed0b2d986fff1af36a4887e5e9d6cb550c))
+* UI improvements ([2b9b602](https://github.com/TheUnderScorer/pixel-pomodo/commit/2b9b602231db0e00ca9847568dc39fe0cb02a854))
+
 # [1.11.0](https://github.com/TheUnderScorer/pixel-pomodo/compare/v1.10.0...v1.11.0) (2021-01-28)
 
 
