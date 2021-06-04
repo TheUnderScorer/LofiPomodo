@@ -20,7 +20,6 @@
     "forge": "./forge.config.js"
   },
   "dependencies": {
-    "@mapbox/node-pre-gyp": "^1.0.5",
     "@sindresorhus/do-not-disturb": "^1.1.0",
     "@theunderscorer/when": "^1.0.1",
     "auto-launch": "^5.0.5",
