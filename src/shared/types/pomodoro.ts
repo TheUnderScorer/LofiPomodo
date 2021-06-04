@@ -1,26 +1,6 @@
 import { PomodoroService } from '../../main/app/pomodoro/services/pomodoroService/PomodoroService';
 
-export interface Pomodoro {
-  start: Date;
-  state: PomodoroStateEnum;
-  workDurationSeconds: number;
-  shortBreakDurationSeconds: number;
-  longBreakDurationSeconds: number;
-  longBreakInterval: number;
-  shortBreakCount: number;
-  remainingSeconds: number;
-  isRunning: boolean;
-  autoRunBreak: boolean;
-  autoRunWork: boolean;
-  remainingTime: string;
-  remainingPercentage: number;
-  openFullWindowOnBreak: boolean;
-  breakSound?: string;
-  workSound?: string;
-  longBreakSound?: string;
-}
-
-export enum PomodoroStateEnum {
+export enum PomodoroStates {
   Work = 'Work',
   Break = 'Break',
   LongBreak = 'LongBreak',
@@ -32,39 +12,40 @@ export enum PomodoroOperations {
   ToggleTimerMenu = 'ToggleTimerMenu',
   RestartCurrentState = 'RestartCurrentState',
   MoveToNextState = 'MoveToNextState',
+  BreakSoon = 'BreakSoon',
 }
 
 export enum PomodoroSubscriptionTopics {
   PomodoroUpdated = 'PomodoroUpdated',
 }
 
-export interface PomodoroState extends Omit<Pomodoro, PomodoroSettingsKeys> {}
+export interface PomodoroState {
+  shortBreakCount: number;
+  remainingSeconds: number;
+  state: PomodoroStates;
+  start: Date;
+  remainingTime: string;
+  remainingPercentage: number;
+  isRunning: boolean;
+}
 
-type PomodoroSettingsKeys = keyof Pick<
-  Pomodoro,
-  | 'longBreakInterval'
-  | 'openFullWindowOnBreak'
-  | 'autoRunBreak'
-  | 'autoRunWork'
-  | 'workDurationSeconds'
-  | 'longBreakDurationSeconds'
-  | 'shortBreakDurationSeconds'
-  | 'breakSound'
-  | 'longBreakSound'
-  | 'workSound'
->;
-
-export interface PomodoroSettings
-  extends Pick<Pomodoro, PomodoroSettingsKeys> {}
-
-export interface ToggleMenuPayload {
-  y: number;
-  x: number;
+export interface PomodoroSettings {
+  workDurationSeconds: number;
+  shortBreakDurationSeconds: number;
+  longBreakDurationSeconds: number;
+  autoRunBreak: boolean;
+  autoRunWork: boolean;
+  openFullWindowOnBreak: boolean;
+  breakSound?: string;
+  workSound?: string;
+  longBreakSound?: string;
+  showNotificationBeforeBreak?: boolean;
+  longBreakInterval: number;
 }
 
 export interface PomodoroStateChanged {
-  newState: PomodoroStateEnum;
-  oldState: PomodoroStateEnum;
+  newState: PomodoroStates;
+  oldState: PomodoroStates;
   pomodoro: PomodoroService;
   trigger: Trigger;
 }

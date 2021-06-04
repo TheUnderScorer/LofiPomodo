@@ -1,5 +1,5 @@
 import React, { FC } from 'react';
-import { Box, useColorMode } from '@chakra-ui/core';
+import { Box, useColorMode } from '@chakra-ui/react';
 import { usePomodoro } from '../../hooks/usePomodoro';
 import { TitleBar } from '../../../../ui/molecules/titleBar/TitleBar';
 import { PomodoroMenuBtn } from '../../components/pomodoroMenu/PomodoroMenuBtn';
@@ -48,7 +48,7 @@ export const PomodoroView: FC<PomodoroViewProps> = () => {
                   pb: 5,
                 }}
               />
-              <Box flex={1} overflow="hidden">
+              <Box pt={2} flex={1} overflow="hidden">
                 <TabbedTasksList
                   listProps={{
                     pb: '100px',

@@ -1,6 +1,5 @@
 import {
   Box,
-  Checkbox,
   Editable,
   EditableInput,
   EditablePreview,
@@ -9,7 +8,7 @@ import {
   NumberInput,
   NumberInputField,
   Stack,
-} from '@chakra-ui/core';
+} from '@chakra-ui/react';
 import React, { FC, ReactNode, useCallback, useEffect, useState } from 'react';
 import { Task, TaskState } from '../../../../../../shared/types/tasks';
 import { Draggable } from 'react-beautiful-dnd';
@@ -17,8 +16,9 @@ import { FaIcon } from '../../../../../ui/atoms/faIcon/FaIcon';
 import { faGripLines } from '@fortawesome/free-solid-svg-icons';
 import { ContextMenu } from '../../../../../ui/molecules/contextMenu/ContextMenu';
 import { useDebounce, usePrevious } from 'react-use';
+import { PixelCheckbox } from '../../../../../ui/atoms/pixelCheckbox/PixelCheckbox';
 
-export interface TaskListItemProps extends ListItemProps {
+export interface TaskListItemProps extends Omit<ListItemProps, 'contextMenu'> {
   task: Task;
   onTaskChange?: (task: Task) => any;
   arrIndex: number;
@@ -135,6 +135,8 @@ export const TaskListItem: FC<TaskListItemProps> = ({
         >
           {(bag) => (
             <ListItem
+              px={1}
+              py={2}
               onContextMenu={bag.onContextMenu}
               ref={innerRef}
               {...props}
@@ -143,7 +145,7 @@ export const TaskListItem: FC<TaskListItemProps> = ({
               alignItems="center"
               d="flex"
             >
-              <Checkbox
+              <PixelCheckbox
                 isDisabled={isDisabled}
                 className="task-state-checkbox"
                 onChange={handleTaskChange(
@@ -157,6 +159,7 @@ export const TaskListItem: FC<TaskListItemProps> = ({
                 mr={2}
               />
               <Editable
+                d="flex"
                 isDisabled={isDisabled}
                 maxWidth="70%"
                 width="100%"
@@ -187,13 +190,11 @@ export const TaskListItem: FC<TaskListItemProps> = ({
                   value={Number.isNaN(duration) ? 0 : duration}
                 >
                   <NumberInputField
-                    className="task-estimation"
-                    width="40px"
-                    height="40px"
+                    className="task-estimation is-rounded"
+                    width="35px"
+                    height="35px"
                     padding="0"
                     textAlign="center"
-                    borderRadius="50%"
-                    borderStyle="dashed"
                   />
                 </NumberInput>
                 {!isDragDisabled && (

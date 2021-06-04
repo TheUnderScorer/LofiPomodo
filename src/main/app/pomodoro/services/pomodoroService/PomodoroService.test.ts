@@ -1,6 +1,6 @@
 import { PomodoroService } from './PomodoroService';
 import { createMockProxy } from 'jest-mock-proxy';
-import { PomodoroStateEnum } from '../../../../../shared/types';
+import { PomodoroStates } from '../../../../../shared/types';
 import { wait } from '../../../../../shared/utils/timeout';
 import { createMockSettings } from '../../../../../tests/mocks/settings';
 import ElectronStore from 'electron-store';
@@ -52,7 +52,7 @@ describe('PomodoroService', () => {
     await wait(1000);
 
     expect(service.isRunning).toEqual(false);
-    expect(service.state).toEqual(PomodoroStateEnum.Break);
+    expect(service.state).toEqual(PomodoroStates.Break);
     expect(service.remainingTime).toMatchInlineSnapshot(`"00:05"`);
   });
 
@@ -67,12 +67,12 @@ describe('PomodoroService', () => {
       isRunning: true,
       remainingSeconds: 1,
       shortBreakCount: 1,
-      state: PomodoroStateEnum.Work,
+      state: PomodoroStates.Work,
     });
 
     await wait(4000);
 
-    expect(service.state).toEqual(PomodoroStateEnum.LongBreak);
+    expect(service.state).toEqual(PomodoroStates.LongBreak);
   });
 
   it('should automatically run next timer if autoRunBreak and autoRunWork is set to true', async () => {
@@ -86,7 +86,7 @@ describe('PomodoroService', () => {
     service.fill({
       isRunning: true,
       remainingSeconds: 1,
-      state: PomodoroStateEnum.Work,
+      state: PomodoroStates.Work,
     });
 
     jest.advanceTimersByTime(2000);
@@ -95,7 +95,7 @@ describe('PomodoroService', () => {
     await wait(2000);
 
     expect(service.isRunning).toEqual(true);
-    expect(service.state).toEqual(PomodoroStateEnum.Break);
+    expect(service.state).toEqual(PomodoroStates.Break);
     expect(service.remainingTime).toMatchInlineSnapshot(`"00:02"`);
 
     jest.useFakeTimers();
@@ -105,7 +105,7 @@ describe('PomodoroService', () => {
     await wait(2000);
 
     expect(service.isRunning).toEqual(true);
-    expect(service.state).toEqual(PomodoroStateEnum.Work);
+    expect(service.state).toEqual(PomodoroStates.Work);
   });
 
   it('should handle restart', async () => {
@@ -119,12 +119,12 @@ describe('PomodoroService', () => {
       isRunning: false,
       remainingSeconds: 1,
       shortBreakCount: 1,
-      state: PomodoroStateEnum.Break,
+      state: PomodoroStates.Break,
     });
 
     await service.restart();
 
-    expect(service.state).toEqual(PomodoroStateEnum.Work);
+    expect(service.state).toEqual(PomodoroStates.Work);
     expect(service.shortBreakCount).toEqual(0);
     expect(service.isRunning).toEqual(false);
   });

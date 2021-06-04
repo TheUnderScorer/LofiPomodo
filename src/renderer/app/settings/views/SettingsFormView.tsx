@@ -1,21 +1,19 @@
-import React, { FC, useCallback, useMemo, useState } from 'react';
+import React, { useCallback, useMemo, useState } from 'react';
 import { TitleBar } from '../../../ui/molecules/titleBar/TitleBar';
 import {
+  Button,
   Center,
   Container,
   Divider,
   Flex,
-  IconButton,
-  Spinner,
+  HStack,
   Tab,
   TabList,
   Tabs,
-} from '@chakra-ui/core';
-import { ArrowIcon } from '../../../ui/atoms/icons';
+} from '@chakra-ui/react';
 import { useHistory } from 'react-router-dom';
 import { usePlatform } from '../../system/hooks/usePlatform';
 import { Text } from '../../../ui/atoms/text/Text';
-import './SettingsFormView.styles.css';
 import {
   AppSettings,
   SettingsOperations,
@@ -27,24 +25,18 @@ import { IntegrationsForm } from '../../integrations/components/IntegrationsForm
 import { SubmitButton } from '../../../ui/molecules/submitButton/SubmitButton';
 import { Alert } from '../../../ui/molecules/alert/Alert';
 import { useIpcQuery } from '../../../shared/ipc/useIpcQuery';
-import { useYupValidationResolver } from '../../../form/hooks/useYupValidationResolver';
-import Yup from '../../../../shared/schema/yup';
-import { pomodoroSettingsSchemaShape } from '../../../../shared/schema/pomodoro/pomodoroSettings';
-import {
-  SettingsFormInput,
-  SettingsFormViewProps,
-  settingsTabIndexArray,
-} from './SettingsFormView.types';
+import { settingsTabIndexArray } from './SettingsFormView.types';
 import { GeneralSettings } from '../components/GeneralSettings';
-import { useWindowMinHeightOnMount } from '../../../shared/hooks/useWindowMinHeightOnMount';
-import { defaultWindowHeight } from '../../../../shared/windows/constants';
+import { useWindowMinSizeOnMount } from '../../../shared/hooks/useWindowMinSizeOnMount';
+import {
+  defaultWindowHeight,
+  timerWindowSize,
+} from '../../../../shared/windows/constants';
+import { SettingsFormSchema } from '../../../../shared/schema/settings/SettingsFormSchema';
+import { useJoifulValidationResolver } from '../../../form/hooks/useJoifulValidationResolver';
+import { Loading } from '../../../ui/atoms/loading/Loading';
 
-const formSchema = Yup.object().shape<SettingsFormInput & any>({
-  autoStart: Yup.boolean().required(),
-  pomodoroSettings: Yup.object().shape(pomodoroSettingsSchemaShape),
-});
-
-export const SettingsFormView: FC<SettingsFormViewProps> = () => {
+export const SettingsFormView = () => {
   const history = useHistory();
 
   const [activeTabIndex, setActiveTabIndex] = useState(0);
@@ -55,7 +47,7 @@ export const SettingsFormView: FC<SettingsFormViewProps> = () => {
 
   const form = useForm<AppSettings>({
     mode: 'all',
-    resolver: useYupValidationResolver(formSchema),
+    resolver: useJoifulValidationResolver(SettingsFormSchema),
     shouldUnregister: false,
   });
 
@@ -96,42 +88,35 @@ export const SettingsFormView: FC<SettingsFormViewProps> = () => {
 
   const { is } = usePlatform();
 
-  useWindowMinHeightOnMount(defaultWindowHeight);
+  useWindowMinSizeOnMount({
+    minHeight: defaultWindowHeight,
+    minWidth: is?.windows ? timerWindowSize + 100 : undefined,
+  });
 
   return (
     <>
       <TitleBar
+        backgroundColor="brand.bg"
         position="relative"
         justifyContent="flex-start"
         pt={!is?.windows ? '60px' : 2}
         pl={2}
       >
-        <Flex w="100%" position="relative">
-          <IconButton
-            className="go-back-btn"
-            left="0"
-            top={is?.windows ? 1 : 0}
-            onClick={() => history.goBack()}
-            aria-label="Go back"
-          >
-            <ArrowIcon height="20px" width="20px" iconDirection="right" />
-          </IconButton>
-          <Center flex="1">
-            <Tabs index={activeTabIndex} onChange={setActiveTabIndex}>
-              <TabList>
-                <Tab id="general_tab">
-                  <Text>General</Text>
-                </Tab>
-                <Tab id="pomodoro_tab">
-                  <Text>Pomodoro</Text>
-                </Tab>
-                <Tab className="integrations-tab" id="integrations_tab">
-                  <Text>Integrations</Text>
-                </Tab>
-              </TabList>
-            </Tabs>
-          </Center>
-        </Flex>
+        <Center flex={1}>
+          <Tabs index={activeTabIndex} onChange={setActiveTabIndex}>
+            <TabList>
+              <Tab id="general_tab">
+                <Text>General</Text>
+              </Tab>
+              <Tab id="pomodoro_tab">
+                <Text>Pomodoro</Text>
+              </Tab>
+              <Tab className="integrations-tab" id="integrations_tab">
+                <Text>Integrations</Text>
+              </Tab>
+            </TabList>
+          </Tabs>
+        </Center>
       </TitleBar>
       <Container
         pl={0}
@@ -146,7 +131,7 @@ export const SettingsFormView: FC<SettingsFormViewProps> = () => {
       >
         {queryLoading && (
           <Center height="100%" width="100%">
-            <Spinner color="brand.primary" />
+            <Loading />
           </Center>
         )}
         {settings && !queryLoading && (
@@ -185,17 +170,23 @@ export const SettingsFormView: FC<SettingsFormViewProps> = () => {
               )}
               {tab === 'Integrations' && <IntegrationsForm form={form} />}
             </Flex>
-            {tab !== 'Integrations' && (
-              <>
-                <Divider />
-                <Center h="60px">
-                  <SubmitButton
-                    id="submit_settings"
-                    isLoading={setSettingsMutation.isLoading}
-                  />
-                </Center>
-              </>
-            )}
+            <Divider />
+            <HStack
+              w="100%"
+              h="60px"
+              justifyContent="center"
+              alignItems="center"
+              spacing={4}
+            >
+              <Button onClick={() => history.goBack()} className="go-back-btn">
+                <Text>Cancel</Text>
+              </Button>
+
+              <SubmitButton
+                id="submit_settings"
+                isLoading={setSettingsMutation.isLoading}
+              />
+            </HStack>
           </Flex>
         )}
       </Container>

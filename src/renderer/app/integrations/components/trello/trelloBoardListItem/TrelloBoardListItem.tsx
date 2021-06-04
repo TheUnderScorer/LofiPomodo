@@ -5,10 +5,9 @@ import {
   HStack,
   ListItem,
   ListItemProps,
-  Select,
-  Spinner,
   Stack,
-} from '@chakra-ui/core';
+} from '@chakra-ui/react';
+import { Select } from '../../../../../ui/molecules/select/Select';
 import React, { FC, ReactNode, useCallback, useEffect, useMemo } from 'react';
 import {
   TrelloBoard,
@@ -28,8 +27,10 @@ import { TrelloListsSelection } from './trelloListsSection/TrelloListsSection';
 import { get } from 'lodash';
 import { validateDuplicateTrelloBoards } from '../../../validators/validateDuplicateTrelloBoards';
 import { useIpcQuery } from '../../../../../shared/ipc/useIpcQuery';
+import { Loading } from '../../../../../ui/atoms/loading/Loading';
 
-export interface TrelloBoardListItemProps extends ListItemProps {
+export interface TrelloBoardListItemProps
+  extends Omit<ListItemProps, 'defaultValue'> {
   boards: TrelloBoard[];
   index: number;
   isLast?: boolean;
@@ -141,7 +142,7 @@ export const TrelloBoardListItem: FC<TrelloBoardListItemProps> = ({
         </FormControl>
         {fetchListsQuery.isLoading && (
           <Center>
-            <Spinner color="brand.primary" />
+            <Loading />
           </Center>
         )}
         {!fetchListsQuery.isLoading && (

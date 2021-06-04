@@ -6,6 +6,7 @@ import {
 } from '../../../shared/types/system';
 import { AppContext } from '../../context';
 import { is } from 'electron-util';
+import { ResizeWindowPayloadSchema } from '../../../shared/schema/system/ResizeWindowPayloadSchema';
 
 export const setupSystem = (context: AppContext) => {
   const { ipcService, windowFactory } = context;
@@ -41,10 +42,14 @@ export const setupSystem = (context: AppContext) => {
     [AppSystemOperations.GetIs]: () => {
       return is;
     },
-    [AppSystemOperations.ResizeWindow]: (
+    [AppSystemOperations.ResizeWindow]: async (
       _,
-      { height, width, animate = true }: ResizeWindowPayload
+      payload: ResizeWindowPayload
     ) => {
+      const { width, animate, height } = ResizeWindowPayloadSchema.validate(
+        payload
+      );
+
       const window = BrowserWindow.getFocusedWindow();
 
       window?.setSize(width, height, animate);

@@ -5,7 +5,7 @@ import {
   AlertStatus,
   AlertIcon,
   AlertProps as BaseAlertProps,
-} from '@chakra-ui/core';
+} from '@chakra-ui/react';
 import { OmitUnderscored } from '../../../../shared/types';
 
 export interface AlertProps

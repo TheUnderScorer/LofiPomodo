@@ -1,7 +1,7 @@
 import { Theme } from '../../types/theme';
 import { ColorMode } from '../../../shared/types/color';
 import { ComponentType, FC, useMemo } from 'react';
-import { ThemeProvider, useColorMode, useTheme } from '@chakra-ui/core';
+import { ThemeProvider, useColorMode, useTheme } from '@chakra-ui/react';
 import * as React from 'react';
 
 type ExtendsThemeCallback = (theme: Theme, colorMode: ColorMode) => Theme;

@@ -10,10 +10,10 @@ import {
   ModalHeader,
   ModalOverlay,
   ModalProps as BaseModalProps,
-  Spinner,
-} from '@chakra-ui/core';
+} from '@chakra-ui/react';
 import { Text } from '../../atoms/text/Text';
 import { useModalState } from '../../../providers/modalProvider/hooks/useModalState';
+import { Loading } from '../../atoms/loading/Loading';
 
 export interface ModalProps extends Omit<BaseModalProps, 'isOpen' | 'onClose'> {
   id: string;
@@ -45,7 +45,7 @@ export const Modal: FC<ModalProps> = ({
         <ModalBody>
           {loading && (
             <Center>
-              <Spinner color="brand.primary" />
+              <Loading />
             </Center>
           )}
           {!loading && <>{children}</>}

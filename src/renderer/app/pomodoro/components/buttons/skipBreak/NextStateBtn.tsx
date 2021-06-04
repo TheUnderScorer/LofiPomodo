@@ -1,15 +1,15 @@
-import { IconButton, IconButtonProps, Tooltip } from '@chakra-ui/core';
+import { IconButton, IconButtonProps, Tooltip } from '@chakra-ui/react';
 import React, { FC, useMemo } from 'react';
 import { useIpcMutation } from '../../../../../shared/ipc/useIpcMutation';
 import {
   OmitUnderscored,
   PomodoroOperations,
 } from '../../../../../../shared/types';
-import { ArrowIcon } from '../../../../../ui/atoms/icons';
 import { usePomodoro } from '../../../hooks/usePomodoro';
 import { getNextState } from '../../../../../../main/app/pomodoro/logic/nextState';
 import { pomodoroStateDictionary } from '../../../../../../shared/dictionary/pomodoro';
 import { useGetSetting } from '../../../../settings/hooks/useGetSetting';
+import { Icon } from '../../../../../ui/atoms/icons/Icon';
 
 export interface NextStateBtnProps
   extends Omit<OmitUnderscored<IconButtonProps>, 'aria-label'> {}
@@ -33,17 +33,13 @@ export const NextStateBtn: FC<NextStateBtnProps> = (props) => {
   return (
     <Tooltip label={`Skip to ${nextState}`}>
       <IconButton
+        variant="nes-outlined"
         className="move-to-next-state"
         onClick={() => moveToNextStateMutation.mutate()}
         aria-label="Move to next state"
         {...props}
       >
-        <ArrowIcon
-          variant="dark"
-          width="auto"
-          height="20px"
-          iconDirection="left"
-        />
+        <Icon fill="brand.iconPrimary" boxSize="15px" name="Arrow" />
       </IconButton>
     </Tooltip>
   );

@@ -2,7 +2,7 @@ import { createMockProxy } from 'jest-mock-proxy';
 import { AudioPlayer } from './AudioPlayer';
 import { createMockSettings } from '../../../../tests/mocks/settings';
 import { Subject } from 'rxjs';
-import { PomodoroStateEnum, Trigger } from '../../../../shared/types';
+import { PomodoroStates, Trigger } from '../../../../shared/types';
 import { pomodoroStateSoundMap, setupPomodoroSounds } from './pomodoroSounds';
 
 describe('Pomodoro sounds', () => {
@@ -23,7 +23,7 @@ describe('Pomodoro sounds', () => {
     pomodoroService.stateChanged$.complete();
   });
 
-  it.each(Object.values(PomodoroStateEnum))(
+  it.each(Object.values(PomodoroStates))(
     'should play sound on state change',
     (pomodoroState) => {
       const expectedKey = pomodoroStateSoundMap[pomodoroState];
@@ -56,7 +56,7 @@ describe('Pomodoro sounds', () => {
 
     pomodoroService.stateChanged$.next({
       trigger: Trigger.Manual,
-      newState: PomodoroStateEnum.Break,
+      newState: PomodoroStates.Break,
     });
 
     expect(audioPlayer.play).toHaveBeenCalledTimes(0);
@@ -73,7 +73,7 @@ describe('Pomodoro sounds', () => {
 
     pomodoroService.stateChanged$.next({
       trigger: Trigger.Scheduled,
-      newState: PomodoroStateEnum.Work,
+      newState: PomodoroStates.Work,
     });
 
     expect(audioPlayer.play).toHaveBeenCalledTimes(0);

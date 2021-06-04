@@ -1,5 +1,5 @@
 import React, { FC, ReactNode } from 'react';
-import { Box, BoxProps, Flex, IconButton } from '@chakra-ui/core';
+import { Box, BoxProps, Flex, IconButton } from '@chakra-ui/react';
 import './TitleBar.css';
 import { useIpcMutation } from '../../../shared/ipc/useIpcMutation';
 import { AppSystemOperations } from '../../../../shared/types/system';
@@ -39,7 +39,6 @@ export const TitleBar: FC<TitleBarProps> = ({
       as="header"
       {...props}
     >
-      <Box className="draggable" />
       <Flex
         height="100%"
         alignItems="center"

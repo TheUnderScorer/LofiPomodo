@@ -22,13 +22,14 @@ import { ApiService } from './app/integrations/types';
 import { ContextMenuFactory } from './shared/menu/ContextMenuFactory';
 import { TrelloTasksService } from './app/tasks/services/trelloTaskService/TrelloTasksService';
 import { TaskSynchronizer } from './app/tasks/services/TaskSynchronizer';
-import { Pomodoro, PomodoroSettings, PomodoroState } from '../shared/types';
+import { PomodoroSettings, PomodoroState } from '../shared/types';
 import {
   getInitialPomodoroSettings,
   getInitialPomodoroState,
 } from './app/pomodoro/data';
 import { AudioPlayer } from './app/audio/services/AudioPlayer';
 import audios from '../assets/audio/audios.json';
+import { NotificationsService } from './shared/notifications/NotificationsService';
 import { AppSettings } from '../shared/types/settings';
 
 export interface AppContext {
@@ -49,6 +50,7 @@ export interface AppContext {
   apiAuthState: ApiAuthStateService;
   taskSynchronizer: TaskSynchronizer;
   audioPlayer: AudioPlayer;
+  notificationService: NotificationsService;
 }
 
 const handleIntegrations = async (
@@ -69,20 +71,21 @@ const handleIntegrations = async (
 };
 
 const createStore = () => {
-  const defaults: AppSettings = {
+  const defaults: AppStore & AppSettings = {
     pomodoroSettings: getInitialPomodoroSettings(),
     pomodoroState: getInitialPomodoroState(),
-    autoStart: false,
     taskSettings: {
       showToggleTaskListBtn: false,
     },
+    autoStart: false,
   };
 
   const store = new ElectronStore<AppStore>({
     defaults,
     migrations: {
       '>1.9.0': (store) => {
-        const pomodoroState = store.get('pomodoroState') as Pomodoro;
+        const pomodoroState = store.get('pomodoroState') as PomodoroState &
+          PomodoroSettings;
 
         console.log('>1.9.0 migration running');
 
@@ -192,5 +195,6 @@ export const createContext = async (): Promise<AppContext> => {
     contextMenuFactory: new ContextMenuFactory(pomodoro, settingsService),
     taskSynchronizer,
     audioPlayer,
+    notificationService: new NotificationsService(),
   };
 };

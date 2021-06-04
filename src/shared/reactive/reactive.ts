@@ -21,8 +21,8 @@ export const reactive = <T extends Changable>(
   castedObject.changed$ = subject;
 
   return new Proxy<T & ChangeSubject<T>>(castedObject, {
-    set(target: T, p: keyof T, value: any): boolean {
-      target[p] = value;
+    set(target: T, property: string, value: any): boolean {
+      target[property as keyof T] = value;
 
       target.onChange!.call(target);
 

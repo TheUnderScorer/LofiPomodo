@@ -3,10 +3,10 @@ import {
   ChangeSubject,
   PomodoroState,
   PomodoroStateChanged,
-  PomodoroStateEnum,
+  PomodoroStates,
   Trigger,
 } from '../../../../../shared/types';
-import { getInitialPomodoro } from '../../data';
+import { getInitialPomodoroState } from '../../data';
 import ElectronStore from 'electron-store';
 import { AppStore } from '../../../../../shared/types/store';
 import { getDurationByState, getNextState } from '../../logic/nextState';
@@ -35,7 +35,7 @@ export class PomodoroService
   remainingSeconds!: number;
   shortBreakCount!: number;
   start!: Date;
-  state!: PomodoroStateEnum;
+  state!: PomodoroStates;
 
   timeoutId: any = null;
 
@@ -43,16 +43,16 @@ export class PomodoroService
 
   readonly stateChanged$ = new Subject<PomodoroStateChanged>();
   readonly anyBreakStarted$ = this.stateChanged$.pipe(
-    filter((payload) => payload.newState !== PomodoroStateEnum.Work)
+    filter((payload) => payload.newState !== PomodoroStates.Work)
   );
   readonly shortBreakStarted$ = this.stateChanged$.pipe(
-    filter((payload) => payload.newState === PomodoroStateEnum.Break)
+    filter((payload) => payload.newState === PomodoroStates.Break)
   );
   readonly longBreakStarted$ = this.stateChanged$.pipe(
-    filter((payload) => payload.newState === PomodoroStateEnum.LongBreak)
+    filter((payload) => payload.newState === PomodoroStates.LongBreak)
   );
   readonly workStarted$ = this.stateChanged$.pipe(
-    filter((payload) => payload.newState === PomodoroStateEnum.Work)
+    filter((payload) => payload.newState === PomodoroStates.Work)
   );
 
   readonly timerTick$ = new Subject<this>();
@@ -69,7 +69,7 @@ export class PomodoroService
 
     const state = store.get('pomodoroState');
 
-    this.fill(state ?? getInitialPomodoro());
+    this.fill(state ?? getInitialPomodoroState());
     this.schedule();
   }
 
@@ -160,9 +160,13 @@ export class PomodoroService
     }, 1000);
   }
 
+  addSeconds(seconds: number) {
+    this.remainingSeconds += seconds;
+  }
+
   async moveToNextState(
     trigger: Trigger = Trigger.Scheduled,
-    nextState?: PomodoroStateEnum
+    nextState?: PomodoroStates
   ) {
     const oldState = this.state;
 
@@ -177,11 +181,11 @@ export class PomodoroService
     const newIsRunning = shouldRun(this.state, pomodoroSettings);
 
     let newBreakCount =
-      this.state === PomodoroStateEnum.Break
+      this.state === PomodoroStates.Break
         ? this.shortBreakCount + 1
         : this.shortBreakCount;
 
-    if (this.state === PomodoroStateEnum.LongBreak) {
+    if (this.state === PomodoroStates.LongBreak) {
       newBreakCount = 0;
     }
 
@@ -210,7 +214,7 @@ export class PomodoroService
   }
 
   async skipBreak() {
-    if (this.state === PomodoroStateEnum.Work) {
+    if (this.state === PomodoroStates.Work) {
       return;
     }
 
@@ -230,7 +234,7 @@ export class PomodoroService
   }
 
   async restart() {
-    await this.moveToNextState(Trigger.Manual, PomodoroStateEnum.Work);
+    await this.moveToNextState(Trigger.Manual, PomodoroStates.Work);
 
     this.shortBreakCount = 0;
     this.isRunning = false;

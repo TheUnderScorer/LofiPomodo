@@ -17,6 +17,7 @@ export const ManageTrelloBoards: FC<ManageTrelloBoardsProps> = ({ boards }) => {
   const { append, fields, remove } = useFieldArray<TrelloBoard>({
     control: form.control,
     name: 'boards',
+    keyName: 'id',
   });
 
   const handleAdd = useCallback(() => {

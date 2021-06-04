@@ -10,9 +10,7 @@ export const setupTray = (context: AppContext) => {
   const tray = new Tray(img);
 
   tray.on('click', async () => {
-    await context.windowFactory
-      .createTimerWindow()
-      .then((window) => window.focus());
+    await context.windowFactory.createTimerWindow();
   });
 
   if (!is.windows) {

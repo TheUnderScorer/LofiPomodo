@@ -19,35 +19,33 @@ jobs:
   build:
     strategy:
       matrix:
-        os: [macos-latest, ubuntu-latest, windows-latest, macbook-pro-m1]
+        os: [macos-latest, ubuntu-latest, windows-latest, macos-arm64]
         arch: [x64, arm64]
         exclude:
           - { os: macos-latest, arch: arm64 }
-          - { os: macbook-pro-m1, arch: x64 }
+          - { os: windows-latest, arch: arm64 }
+          - { os: macos-arm64, arch: x64 }
     runs-on: ${{ matrix.os }}
     steps:
       - name: Check actor
-        if: ${{ matrix.os == 'macbook-pro-m1' && env.GITHUB_ACTOR == 'TheUnderScorer' }}
+        if: ${{ matrix.os == 'macos-arm64' && env.GITHUB_ACTOR == 'TheUnderScorer' }}
         run: exit 1
 
       - uses: actions/checkout@v2
 
+      - uses: actions/setup-python@v2
+        if: ${{ matrix.arch != 'arm64' && matrix.os != 'macos-arm64' }}
+        with:
+          python-version: '2.x'
+
       - name: Set Node.js 14.x
         uses: actions/setup-node@v2-beta
-        if: ${{ matrix.arch != 'arm64' && matrix.os != 'macbook-pro-m1' }}
+        if: ${{ matrix.arch != 'arm64' && matrix.os != 'macos-arm64' }}
         with:
           node-version: '14'
 
       - name: Install npm dependencies
         run: npm ci
-
-      - name: Rebuild deps in x64
-        if: ${{ matrix.arch == 'x64' }}
-        run: npm run rebuild:x64
-
-      - name: Rebuild deps in arm64
-        if: ${{ matrix.arch == 'arm64' && matrix.os != 'macbook-pro-m1' }}
-        run: npm run rebuild:arm64
 
       - name: Get tag
         id: get_tag
@@ -68,34 +66,29 @@ jobs:
           echo "TRELLO_REDIRECT_URL=${{ secrets.TRELLO_REDIRECT_URL }}" >> .env
 
       - name: Build
-        if: ${{ matrix.arch != 'arm64' && matrix.os != 'macbook-pro-m1' }}
+        if: ${{ matrix.arch != 'arm64' && matrix.os != 'macos-arm64' }}
         run: npm run build:all
 
-        # Special build with arch -arm64 prefix on m1 macbook pro
+        # Special build with arch -arm64 prefix on macos-arm64 macbook pro
       - name: Build (arm64 macos)
-        if: ${{ matrix.arch == 'arm64' && matrix.os == 'macbook-pro-m1' }}
+        if: ${{ matrix.arch == 'arm64' && matrix.os == 'macos-arm64' }}
         run: arch -arm64 npm run build:all && arch -arm64 npm run rebuild:arm64
-
-      # Packager is used only on ubuntu
-      - name: Build packager
-        if: ${{ matrix.os == 'ubuntu-latest' }}
-        run: npm run build-packager
 
       - name: Pack mac x64
         if: ${{ matrix.arch == 'x64' && matrix.os == 'macos-latest' }}
         run: npm run make:x64-darwin
 
       - name: Pack mac arm64
-        if: ${{ matrix.arch == 'arm64' && matrix.os == 'macbook-pro-m1' }}
+        if: ${{ matrix.arch == 'arm64' && matrix.os == 'macos-arm64' }}
         run: arch -arm64 npm run make
 
       - name: Pack linux x64
         if: ${{ matrix.arch == 'x64' && matrix.os == 'ubuntu-latest' }}
-        run: npm run make:x64-linux:docker
+        run: npm run make:x64-linux
 
       - name: Pack linux arm64
         if: ${{ matrix.arch == 'arm64' && matrix.os == 'ubuntu-latest' }}
-        run: npm run make:arm64-linux:docker
+        run: npm run make:arm64-linux
 
       - name: Pack windows x64
         if: ${{ matrix.arch == 'x64' && matrix.os == 'windows-latest' }}

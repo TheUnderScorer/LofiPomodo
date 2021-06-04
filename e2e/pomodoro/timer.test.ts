@@ -1,15 +1,19 @@
-import { getInitialPomodoro } from '../../src/main/app/pomodoro/data';
+import {
+  getInitialPomodoroSettings,
+  getInitialPomodoroState,
+} from '../../src/main/app/pomodoro/data';
 import { bootstrapTestApp } from '../setup';
 import { secondsToTime } from '../../src/shared/utils/time';
 import { wait } from '../../src/shared/utils/timeout';
 import { createTask } from '../helpers/tasks';
 
-const initialPomodoro = getInitialPomodoro();
+const initialPomodoroState = getInitialPomodoroState();
+const initialPomodoroSettings = getInitialPomodoroSettings();
 
 describe('Timer - as an user', () => {
   it('I should see timer after starting up', async () => {
     const app = await bootstrapTestApp({
-      WORK_DURATION_SECONDS: initialPomodoro.workDurationSeconds,
+      WORK_DURATION_SECONDS: initialPomodoroSettings.workDurationSeconds,
     });
 
     const timer = await app.client.$('#timer');
@@ -22,7 +26,7 @@ describe('Timer - as an user', () => {
     const progressText = await progress.getText();
 
     expect(progressText).toEqual(
-      secondsToTime(initialPomodoro.remainingSeconds).toClockString()
+      secondsToTime(initialPomodoroState.remainingSeconds).toClockString()
     );
   });
 

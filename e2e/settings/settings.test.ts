@@ -3,6 +3,7 @@ import { wait } from '../../src/shared/utils/timeout';
 import {
   assertFieldProperty,
   assertFieldValue,
+  assertSwitchField,
   durationFieldCallback,
   inputFieldCallback,
   switchFieldCallback,
@@ -36,24 +37,24 @@ describe('Settings - as a user', () => {
           checkValueCallback: assertFieldValue('10'),
         },
         longBreakInterval: {
-          selector: '[name="pomodoroSettings.longBreakInterval"] input',
+          selector: '[name="pomodoroSettings.longBreakInterval"]',
           setValueCallback: inputFieldCallback('5'),
           checkValueCallback: assertFieldValue('5'),
         },
         openFullWindowOnBreak: {
           selector: '[name="pomodoroSettings.openFullWindowOnBreak"]',
           setValueCallback: switchFieldCallback(),
-          checkValueCallback: assertFieldProperty('checked', true),
+          checkValueCallback: assertSwitchField(true),
         },
         autoRunBreak: {
           selector: '[name="pomodoroSettings.autoRunBreak"]',
           setValueCallback: switchFieldCallback(),
-          checkValueCallback: assertFieldProperty('checked', true),
+          checkValueCallback: assertSwitchField(true),
         },
         autoRunWork: {
           selector: '[name="pomodoroSettings.autoRunWork"]',
           setValueCallback: switchFieldCallback(),
-          checkValueCallback: assertFieldProperty('checked', true),
+          checkValueCallback: assertSwitchField(true),
         },
       },
       app
@@ -94,7 +95,7 @@ describe('Settings - as a user', () => {
         toggleTaskListSwitch: {
           selector: '[name="taskSettings.showToggleTaskListBtn"]',
           setValueCallback: switchFieldCallback(),
-          checkValueCallback: assertFieldProperty('checked', true),
+          checkValueCallback: assertSwitchField(true),
         },
       },
       app

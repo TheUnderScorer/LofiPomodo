@@ -1,10 +1,15 @@
 import { AppContext } from '../../context';
-import { Pomodoro, PomodoroOperations, Trigger } from '../../../shared/types';
+import {
+  PomodoroOperations,
+  PomodoroState,
+  Trigger,
+} from '../../../shared/types';
 import { setupTray } from './tray';
 import { breakWindow } from './services/breakWindow';
 import { sendUpdatesToWindows } from './services/rendererUpdates';
 import { showTrayProgress } from './services/showTrayProgress';
 import { restartPomodoroOnNewDay } from './services/restartPomodoroOnNewDay';
+import { breakSoonNotification } from './services/breakSoonNotification';
 
 export const setupPomodoro = (context: AppContext) => {
   sendUpdatesToWindows(context);
@@ -12,9 +17,10 @@ export const setupPomodoro = (context: AppContext) => {
   setupTray(context);
   showTrayProgress(context);
   restartPomodoroOnNewDay(context.pomodoroService).catch(console.error);
+  breakSoonNotification(context);
 
   context.ipcService.registerAsMap({
-    [PomodoroOperations.UpdatePomodoro]: (_, payload: Pomodoro) => {
+    [PomodoroOperations.UpdatePomodoro]: (_, payload: PomodoroState) => {
       if (!payload) {
         return;
       }

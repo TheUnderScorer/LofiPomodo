@@ -4,12 +4,11 @@ import {
   Center,
   HStack,
   Stack,
-  Tab,
   TabList,
   TabPanel,
   TabPanels,
   Tabs,
-} from '@chakra-ui/core';
+} from '@chakra-ui/react';
 import React, {
   FC,
   useCallback,
@@ -35,6 +34,7 @@ import { TaskContextMenu } from '../taskContextMenu/TaskContextMenu';
 import { TasksMenu } from '../tasksMenu/TasksMenu';
 import { useUpdateTask } from '../../hooks/useUpdateTask';
 import { isEqual } from 'lodash';
+import { Tab } from '../../../../ui/atoms/tab/Tab';
 
 export interface TabbedTasksListProps {
   listProps?: Omit<TasksListProps, 'tasks'>;
@@ -46,7 +46,7 @@ export const TabbedTasksList: FC<TabbedTasksListProps> = (props) => {
   const isDragRef = useRef(false);
 
   const { count: tasksCount } = useGroupedTasksCount();
-  const { tasks, loading, setTaskState, didFetch, state } = useTasksList();
+  const { tasks, loading, setTaskState, state } = useTasksList();
   const { updateTask } = useUpdateTask();
 
   const [activeIndex, setActiveIndex] = useState(0);
@@ -77,8 +77,6 @@ export const TabbedTasksList: FC<TabbedTasksListProps> = (props) => {
       if (isEqual(task, storedTasks[index])) {
         return;
       }
-
-      console.log('Task changed:', task);
 
       const newTasks = [...storedTasks];
 
@@ -122,11 +120,6 @@ export const TabbedTasksList: FC<TabbedTasksListProps> = (props) => {
 
   return (
     <Box h="100%" position="relative">
-      {loading && !didFetch && (
-        <Center>
-          <Text>Loading...</Text>
-        </Center>
-      )}
       <Tabs isLazy h="100%" index={activeIndex} onChange={setActiveIndex}>
         <Center>
           <TabList>
@@ -134,9 +127,13 @@ export const TabbedTasksList: FC<TabbedTasksListProps> = (props) => {
               const count = tasksCount ? tasksCount[state] : 0;
 
               return (
-                <Tab className={`tabbed-task-state-${state}`} key={state}>
+                <Tab
+                  ml={2}
+                  className={`tabbed-task-state-${state}`}
+                  key={state}
+                >
                   <Text mr={1}>{taskStateDictionary[state]}</Text>
-                  <Badge>{count}</Badge>
+                  <Badge ml={2}>{count}</Badge>
                 </Tab>
               );
             })}

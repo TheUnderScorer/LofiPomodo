@@ -1,4 +1,4 @@
-import { Box, Menu, MenuList, Portal } from '@chakra-ui/core';
+import { Box, Menu, MenuList, Portal } from '@chakra-ui/react';
 import React, {
   FC,
   MouseEventHandler,
@@ -93,7 +93,7 @@ export const ContextMenu: FC<ContextMenuProps> = ({ menu, children, id }) => {
             <Menu
               closeOnSelect={false}
               placement="auto"
-              fixed={false}
+              strategy="fixed"
               preventOverflow
               isLazy
               isOpen={open}

@@ -4,16 +4,14 @@ import {
   InputGroup,
   InputGroupProps,
   InputRightElement,
-  NumberDecrementStepper,
-  NumberIncrementStepper,
   NumberInput,
   NumberInputField,
   NumberInputProps,
-  NumberInputStepper,
-  Select,
-} from '@chakra-ui/core';
+} from '@chakra-ui/react';
+import { Select } from '../../ui/molecules/select/Select';
 import { TimeUnits } from '../../../shared/types/units';
 import { timeUnitsDictionaryShort } from '../../../shared/dictionary/units';
+import { NumberStepper } from '../../ui/molecules/numberStepper/NumberStepper';
 
 export interface DurationFieldProps
   extends FormInputProps<number>,
@@ -107,16 +105,12 @@ export const DurationField = forwardRef<HTMLInputElement, DurationFieldProps>(
           ref={ref}
         >
           <NumberInputField name={name} />
-          <NumberInputStepper>
-            <NumberIncrementStepper />
-            <NumberDecrementStepper />
-          </NumberInputStepper>
+          <NumberStepper />
         </NumberInput>
         <InputRightElement padding={0} right="12%" width="90px">
           <Select
             onChange={(event) => setUnit(event.target.value as TimeUnits)}
             borderRadius={0}
-            variant="filled"
             color="brand.textPrimary"
             value={unit}
           >

@@ -1,7 +1,7 @@
 import {
   PomodoroSettings,
   PomodoroState,
-  PomodoroStateEnum,
+  PomodoroStates,
 } from '../../../../shared/types';
 import { nextStateMap, stateDurationMap } from '../maps';
 
@@ -14,7 +14,7 @@ export const getNextState = (
 
 export const getDurationByState = (
   pomodoro: PomodoroSettings,
-  state: PomodoroStateEnum
+  state: PomodoroStates
 ) => {
   const prop = stateDurationMap[state];
 

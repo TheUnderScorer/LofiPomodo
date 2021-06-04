@@ -1,37 +1,40 @@
 import { getDurationByState, getNextState } from './nextState';
-import { Pomodoro, PomodoroStateEnum } from '../../../../shared/types';
-import { getInitialPomodoro } from '../data';
+import {
+  PomodoroSettings,
+  PomodoroState,
+  PomodoroStates,
+} from '../../../../shared/types';
+import { getInitialPomodoroSettings, getInitialPomodoroState } from '../data';
 
 describe('Next state', () => {
-  it.each<[PomodoroStateEnum, keyof Pomodoro]>([
-    [PomodoroStateEnum.Break, 'shortBreakDurationSeconds'],
-    [PomodoroStateEnum.LongBreak, 'longBreakDurationSeconds'],
-    [PomodoroStateEnum.Work, 'workDurationSeconds'],
+  it.each<[PomodoroStates, keyof PomodoroSettings]>([
+    [PomodoroStates.Break, 'shortBreakDurationSeconds'],
+    [PomodoroStates.LongBreak, 'longBreakDurationSeconds'],
+    [PomodoroStates.Work, 'workDurationSeconds'],
   ])('should return correct duration by state', (state, prop) => {
-    const pomodoro: Pomodoro = {
-      ...getInitialPomodoro(),
-      state,
-    };
+    const pomodoroSettings = getInitialPomodoroSettings();
 
-    const duration = getDurationByState(pomodoro, state);
-    expect(duration).toEqual(pomodoro[prop]);
+    const duration = getDurationByState(pomodoroSettings, state);
+    expect(duration).toEqual(pomodoroSettings[prop]);
   });
 
-  it.each<[PomodoroStateEnum, PomodoroStateEnum, number | undefined]>([
-    [PomodoroStateEnum.LongBreak, PomodoroStateEnum.Work, undefined],
-    [PomodoroStateEnum.Break, PomodoroStateEnum.Work, undefined],
-    [PomodoroStateEnum.Work, PomodoroStateEnum.Break, undefined],
-    [PomodoroStateEnum.Work, PomodoroStateEnum.LongBreak, 4],
+  it.each<[PomodoroStates, PomodoroStates, number | undefined]>([
+    [PomodoroStates.LongBreak, PomodoroStates.Work, undefined],
+    [PomodoroStates.Break, PomodoroStates.Work, undefined],
+    [PomodoroStates.Work, PomodoroStates.Break, undefined],
+    [PomodoroStates.Work, PomodoroStates.LongBreak, 4],
   ])(
     'should return correct next state',
     (currentState, expectedNextState, shortBreakCount) => {
-      const pomodoro: Pomodoro = {
-        ...getInitialPomodoro(),
+      const pomodoroState: PomodoroState = {
+        ...getInitialPomodoroState(),
         state: currentState,
         shortBreakCount: shortBreakCount ?? 0,
       };
 
-      const nextState = getNextState(pomodoro, pomodoro);
+      const pomodoroSettings = getInitialPomodoroSettings();
+
+      const nextState = getNextState(pomodoroState, pomodoroSettings);
       expect(nextState).toEqual(expectedNextState);
     }
   );

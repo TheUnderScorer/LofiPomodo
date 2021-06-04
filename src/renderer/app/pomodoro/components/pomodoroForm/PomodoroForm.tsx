@@ -1,4 +1,4 @@
-import React, { FC } from 'react';
+import React from 'react';
 import { UseFormMethods } from 'react-hook-form';
 import { DurationField } from '../../../../form/fields/DurationField';
 import {
@@ -6,13 +6,13 @@ import {
   NumberInput,
   NumberInputField,
   Stack,
-  Switch,
-} from '@chakra-ui/core';
+} from '@chakra-ui/react';
 import { AppSettings } from '../../../../../shared/types/settings';
 import { PomodoroSettings } from '../../../../../shared/types';
 import { AudioSelect } from '../../../audio/components/AudioSelect';
 import { SettingsFormController } from '../../../../ui/molecules/settingsFormController/SettingsFormController';
 import { FormController } from '../../../../ui/molecules/formController/FormController';
+import { PixelSwitch } from '../../../../ui/molecules/pixelSwitch/PixelSwitch';
 
 export interface PomodoroFormProps {
   form: UseFormMethods<AppSettings>;
@@ -21,7 +21,7 @@ export interface PomodoroFormProps {
 
 const maxFieldWidth = '200px';
 
-export const PomodoroForm: FC<PomodoroFormProps> = ({ form, settings }) => {
+export const PomodoroForm = ({ form, settings }: PomodoroFormProps) => {
   return (
     <Stack spacing={6} width="100%">
       <SettingsFormController
@@ -73,10 +73,10 @@ export const PomodoroForm: FC<PomodoroFormProps> = ({ form, settings }) => {
         defaultValue={settings.openFullWindowOnBreak}
       >
         {(props) => (
-          <Switch
+          <PixelSwitch
             {...props}
             id={props.name}
-            onChange={(event) => props.onChange(event.target.checked)}
+            onChange={(checked) => props.onChange(checked)}
             isChecked={props.value}
           />
         )}
@@ -88,10 +88,10 @@ export const PomodoroForm: FC<PomodoroFormProps> = ({ form, settings }) => {
         defaultValue={settings.autoRunBreak}
       >
         {(props) => (
-          <Switch
+          <PixelSwitch
             {...props}
             id={props.name}
-            onChange={(event) => props.onChange(event.target.checked)}
+            onChange={(checked) => props.onChange(checked)}
             isChecked={props.value}
           />
         )}
@@ -103,10 +103,24 @@ export const PomodoroForm: FC<PomodoroFormProps> = ({ form, settings }) => {
         defaultValue={settings.autoRunWork}
       >
         {(props) => (
-          <Switch
+          <PixelSwitch
             {...props}
             id={props.name}
-            onChange={(event) => props.onChange(event.target.checked)}
+            onChange={(checked) => props.onChange(checked)}
+            isChecked={props.value}
+          />
+        )}
+      </SettingsFormController>
+      <SettingsFormController
+        label="Show notification before break"
+        form={form}
+        name="pomodoroSettings.showNotificationBeforeBreak"
+      >
+        {(props) => (
+          <PixelSwitch
+            {...props}
+            id={props.name}
+            onChange={(checked) => props.onChange(checked)}
             isChecked={props.value}
           />
         )}

@@ -6,7 +6,7 @@ import {
 import { FormProvider, useForm, UseFormMethods } from 'react-hook-form';
 import { IntegrationOperations } from '../../../../../shared/types/integrations/integrations';
 import { useIpcMutation } from '../../../../shared/ipc/useIpcMutation';
-import { Box, Flex, HStack } from '@chakra-ui/core';
+import { Box, Flex, HStack } from '@chakra-ui/react';
 import { Alert } from '../../../../ui/molecules/alert/Alert';
 import { Text } from '../../../../ui/atoms/text/Text';
 import { ManageTrelloBoards } from './ManageTrelloBoards';
@@ -104,13 +104,12 @@ export const ManageTrelloForm: FC<ManageTrelloFormProps> = ({
           <ManageTrelloBoards boards={boards} />
         </Box>
         <HStack>
+          {additionalButtons ? additionalButtons(form) : undefined}
           <SubmitButton
             didSubmit={didSubmit}
-            width="200px"
             isLoading={saveTrelloBoardsMutation.isLoading}
             id="submit_trello"
           />
-          {additionalButtons ? additionalButtons(form) : undefined}
         </HStack>
       </FormProvider>
     </Flex>

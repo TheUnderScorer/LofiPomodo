@@ -9,10 +9,9 @@ import {
   FormLabel,
   IconButton,
   Tooltip,
-} from '@chakra-ui/core';
-import { FaIcon } from '../../atoms/faIcon/FaIcon';
-import { faInfo } from '@fortawesome/free-solid-svg-icons';
+} from '@chakra-ui/react';
 import { OmitUnderscored } from '../../../../shared/types';
+import { Icon } from '../../atoms/icons/Icon';
 
 export interface FormControlProps
   extends Omit<OmitUnderscored<BaseFormControlProps>, 'helperText'> {
@@ -49,8 +48,8 @@ export const FormControl: FC<FormControlProps> = ({
         {children}
         {helperInTooltip && helperText && (
           <Tooltip label={helperText as string}>
-            <IconButton variant="link" aria-label="Field helper text">
-              <FaIcon icon={faInfo} />
+            <IconButton left={1} variant="link" aria-label="Field helper text">
+              <Icon name="Info" width="23px" height="23px" />
             </IconButton>
           </Tooltip>
         )}

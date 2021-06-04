@@ -1,4 +1,4 @@
-import { Input, InputGroup, InputProps } from '@chakra-ui/core';
+import { Input, InputGroup, InputProps } from '@chakra-ui/react';
 import React, { forwardRef } from 'react';
 import { FormControl, FormControlProps } from '../formControl/FormControl';
 

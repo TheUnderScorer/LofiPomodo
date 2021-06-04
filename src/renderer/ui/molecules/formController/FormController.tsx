@@ -19,16 +19,12 @@ export const FormController = ({
   rules,
   ...rest
 }: FormControllerProps) => {
-  const error = useMemo(
-    () => get(form.errors, [...rest.name!.split('.'), 'message']),
-    [form.errors, rest.name]
-  );
+  const error = useMemo(() => get(form.errors, `${rest.name}.message`), [
+    form.errors,
+    rest.name,
+  ]);
 
-  console.log({
-    error,
-    formErrors: form.errors,
-    name: rest.name,
-  });
+  console.log({ error, name: rest.name, errors: form.errors });
 
   return (
     <FormControl {...rest} error={rest.error ?? error}>

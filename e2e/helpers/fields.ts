@@ -1,35 +1,55 @@
 import { FieldCallback } from './fields.types';
 
-export const durationFieldCallback = (
-  value: number | string
-): FieldCallback => async (field) => {
-  const parentEl = await field
-    .parentElement()
-    .then((parent) => parent.parentElement());
+export const durationFieldCallback =
+  (value: number | string): FieldCallback =>
+  async (field) => {
+    const parentEl = await field
+      .parentElement()
+      .then((parent) => parent.parentElement());
 
-  const buttons = await parentEl.$$('[role="button"]');
-  const [, decrement] = buttons;
+    const buttons = await parentEl.$$('[role="button"]');
+    const [, decrement] = buttons;
 
-  /**
-   * I couldn't find any better way to clear the field, since 'field.clearValue()' was not working :/.
-   * So I set every duration field value to 120 seconds (which ends up displayed as "2" minutes) and then click the decrement button twice, to reduce it's value to "0".
-   * After that, "field.setValue()" is working correctly.
-   * */
-  await decrement.click();
-  await decrement.click();
+    /**
+     * I couldn't find any better way to clear the field, since 'field.clearValue()' was not working :/.
+     * So I set every duration field value to 120 seconds (which ends up displayed as "2" minutes) and then click the decrement button twice, to reduce it's value to "0".
+     * After that, "field.setValue()" is working correctly.
+     * */
+    await decrement.click();
+    await decrement.click();
 
-  await field.setValue(value);
-};
+    await field.setValue(value);
+  };
 
-export const switchFieldCallback = (): FieldCallback => async (
-  field,
-  client
-) => {
-  const name = await field.getAttribute('name');
-  const label = await client.$(`label[for="${name}"]`);
+export const assertSwitchField =
+  (expectedChecked: boolean): FieldCallback =>
+  async (field, client) => {
+    const parent = await field.parentElement();
 
-  await label.click();
-};
+    const isChecked = await isSwitchFieldChecked(parent);
+
+    expect(isChecked).toEqual(expectedChecked);
+  };
+
+async function isSwitchFieldChecked(parent: WebdriverIO.Element) {
+  const parentClasses = await parent.getAttribute('class');
+
+  return parentClasses.includes('isChecked');
+}
+
+export const switchFieldCallback =
+  (): FieldCallback => async (field, client) => {
+    const name = await field.getAttribute('name');
+    const parent = await field.parentElement();
+    const isChecked = await isSwitchFieldChecked(parent);
+
+    const targetName = isChecked ? `${name}-no` : `${name}-yes`;
+
+    const input = await client.$(`[name="${targetName}"]`);
+    const label = await input.parentElement();
+
+    await label.click();
+  };
 
 export const checkboxFieldCallback = (): FieldCallback => async (field) => {
   const label = await field.parentElement();
@@ -37,44 +57,42 @@ export const checkboxFieldCallback = (): FieldCallback => async (field) => {
   await label.click();
 };
 
-export const inputFieldCallback = (value: any): FieldCallback => async (
-  field,
-  client
-) => {
-  /**
-   * Overrwrite the field value with backpace, since .setValue() is not working correctly if field has defualt value set
-   *
-   * @see https://github.com/webdriverio/webdriverio/issues/1140#issuecomment-301532531
-   * */
-  await field.setValue('\uE003');
+export const inputFieldCallback =
+  (value: any): FieldCallback =>
+  async (field, client) => {
+    /**
+     * Overrwrite the field value with backpace, since .setValue() is not working correctly if field has defualt value set
+     *
+     * @see https://github.com/webdriverio/webdriverio/issues/1140#issuecomment-301532531
+     * */
+    await field.setValue('\uE003');
 
-  await client.pause(500);
+    await client.pause(500);
 
-  await field.setValue(value);
-};
+    await field.setValue(value);
+  };
 
-export const selectFieldCallback = (value: string): FieldCallback => async (
-  field
-) => {
-  return setSelectValue(field, value);
-};
+export const selectFieldCallback =
+  (value: string): FieldCallback =>
+  async (field) => {
+    return setSelectValue(field, value);
+  };
 
-export const assertFieldValue = (
-  value: string | number
-): FieldCallback => async (field) => {
-  const fieldValue = await field.getValue();
+export const assertFieldValue =
+  (value: string | number): FieldCallback =>
+  async (field) => {
+    const fieldValue = await field.getValue();
 
-  expect(fieldValue).toEqual(value);
-};
+    expect(fieldValue).toEqual(value);
+  };
 
-export const assertFieldProperty = (
-  prop: string,
-  value: any
-): FieldCallback => async (field) => {
-  const propValue = await field.getProperty(prop);
+export const assertFieldProperty =
+  (prop: string, value: any): FieldCallback =>
+  async (field) => {
+    const propValue = await field.getProperty(prop);
 
-  expect(propValue).toEqual(value);
-};
+    expect(propValue).toEqual(value);
+  };
 
 export const setSelectValue = async (
   element: WebdriverIO.Element,

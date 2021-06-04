@@ -1,6 +1,6 @@
 import { BaseIconProps, ColorIconMap } from './types';
 import React, { FC, useMemo } from 'react';
-import { BoxProps, Image, useColorMode, useTheme } from '@chakra-ui/core';
+import { BoxProps, Image, useColorMode, useTheme } from '@chakra-ui/react';
 import { Theme } from '../../../types/theme';
 import classNames from 'classnames';
 import './styles.css';

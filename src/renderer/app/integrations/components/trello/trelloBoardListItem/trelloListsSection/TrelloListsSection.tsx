@@ -5,9 +5,10 @@ import {
 import { useFormContext } from 'react-hook-form';
 import React, { FC } from 'react';
 import { minArrayLength } from '../../../../../../form/validators/minArrayLength';
-import { Box, Checkbox, CheckboxGroup, Tooltip, VStack } from '@chakra-ui/core';
+import { CheckboxGroup, HStack, Tooltip, VStack } from '@chakra-ui/react';
 import { Text } from '../../../../../../ui/atoms/text/Text';
 import { FormController } from '../../../../../../ui/molecules/formController/FormController';
+import { PixelCheckbox } from '../../../../../../ui/atoms/pixelCheckbox/PixelCheckbox';
 
 export interface TrelloListsSelectionProps {
   name: string;
@@ -28,6 +29,7 @@ export const TrelloListsSelection: FC<TrelloListsSelectionProps> = ({
       name={name}
       w="50%"
       label="Lists"
+      defaultValue={defaultValue}
       rules={{
         required: true,
         minLength: 1,
@@ -46,13 +48,19 @@ export const TrelloListsSelection: FC<TrelloListsSelectionProps> = ({
           <VStack alignItems="flex-start">
             {lists?.map((list) => (
               <Tooltip label={list.name} key={list.id}>
-                <Box>
-                  <Checkbox value={list.id}>
+                <HStack>
+                  <PixelCheckbox
+                    id={`${list.name}-${list.id}`}
+                    className="trello-list-checkbox"
+                    border="none !important"
+                    value={list.id}
+                  />
+                  <label htmlFor={`${list.name}-${list.id}`}>
                     <Text maxWidth="30vw" isTruncated>
                       {list.name}
                     </Text>
-                  </Checkbox>
-                </Box>
+                  </label>
+                </HStack>
               </Tooltip>
             ))}
           </VStack>

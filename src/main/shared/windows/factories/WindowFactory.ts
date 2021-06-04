@@ -68,6 +68,8 @@ export class WindowFactory {
       webPreferences: {
         preload: this.preloadPath,
         nodeIntegration: false,
+        contextIsolation: false,
+        worldSafeExecuteJavaScript: false,
       },
     });
 
@@ -82,6 +84,7 @@ export class WindowFactory {
     parent,
   }: CreateWindowArgs = {}): Promise<BrowserWindow> {
     if (this.timerWindow) {
+      this.timerWindow.show();
       this.timerWindow.focus();
 
       return this.timerWindow;
@@ -94,6 +97,8 @@ export class WindowFactory {
       webPreferences: {
         preload: this.preloadPath,
         nodeIntegration: false,
+        contextIsolation: false,
+        worldSafeExecuteJavaScript: false,
       },
     });
 

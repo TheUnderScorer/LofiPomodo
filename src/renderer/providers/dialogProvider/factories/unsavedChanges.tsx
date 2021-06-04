@@ -1,5 +1,5 @@
 import { Text } from '../../../ui/atoms/text/Text';
-import { Button } from '@chakra-ui/core';
+import { Button } from '@chakra-ui/react';
 import React from 'react';
 import { DialogProps } from '../types';
 

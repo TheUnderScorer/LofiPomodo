@@ -1,4 +1,4 @@
-import { ModalHeaderProps } from '@chakra-ui/core';
+import { ModalHeaderProps } from '@chakra-ui/react';
 import { ReactNode, Ref } from 'react';
 
 export interface DialogFooterBag {
