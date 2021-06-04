@@ -30,7 +30,7 @@ export const bootstrapTestApp = async (env: object = {}) => {
       path: Electron as any,
       args: [resolve(__dirname, '..')],
       quitTimeout: 20000,
-      waitTimeout: 20000,
+      waitTimeout: 5000,
       startTimeout: 40000,
       env: {
         ...process.env,

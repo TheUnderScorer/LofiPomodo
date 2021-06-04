@@ -1,6 +1,7 @@
 import { HStack } from '@chakra-ui/react';
 import React from 'react';
 import { PixelRadio, PixelRadioProps } from '../../atoms/pixelRadio/PixelRadio';
+import classNames from 'classnames';
 
 export interface PixelSwitchProps
   extends Pick<PixelRadioProps, 'name' | 'isChecked' | 'id'> {
@@ -14,7 +15,8 @@ export const PixelSwitch = ({
   id,
 }: PixelSwitchProps) => {
   return (
-    <HStack spacing={4} id={id}>
+    <HStack spacing={4} id={id} className={classNames({ isChecked })}>
+      <input type="hidden" name={name} />
       <PixelRadio
         name={`${name}-yes`}
         label="Yes"
