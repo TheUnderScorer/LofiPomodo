@@ -6,7 +6,8 @@ import { audio } from '../decorators/audio';
 
 export class PomodoroSettingsSchema
   extends BaseSchema<PomodoroSettingsSchema>
-  implements PomodoroSettings {
+  implements PomodoroSettings
+{
   @(jf.boolean().required())
   autoRunBreak!: boolean;
 
@@ -39,4 +40,7 @@ export class PomodoroSettingsSchema
 
   @audio()
   workSound?: string;
+
+  @(jf.boolean().optional())
+  dndOnBreak?: boolean;
 }

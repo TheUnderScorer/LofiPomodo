@@ -20,9 +20,11 @@
     "forge": "./forge.config.js"
   },
   "dependencies": {
-    "@sindresorhus/do-not-disturb": "^1.1.0",
+    "@theunderscorer/do-not-disturb": "^1.2.0",
     "@theunderscorer/when": "^1.0.1",
     "auto-launch": "^5.0.5",
+    "bplist-creator": "^0.0.8",
+    "bplist-parser": "^0.3.0",
     "date-fns": "^2.17.0",
     "dotenv": "^8.2.0",
     "electron-debug": "^3.1.0",
@@ -83,6 +85,7 @@
     "@types/lodash.isplainobject": "^4.0.6",
     "@types/node": "^12.0.0",
     "@types/node-fetch": "^2.5.7",
+    "@types/plist": "^3.0.2",
     "@types/react": "^17.0.0",
     "@types/react-beautiful-dnd": "^13.0.0",
     "@types/react-dom": "^17.0.0",

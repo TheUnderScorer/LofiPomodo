@@ -1,7 +1,6 @@
 const fs = require('fs');
 const path = require('path');
 const pkg = require('./package.json');
-const glob = require('glob');
 const modClean = require('modclean');
 
 const ignorePatterns = [
@@ -65,10 +64,8 @@ const parseArtifact = (artifact, platform, arch) => {
   const dirname = path.dirname(artifact);
   const extension = path.extname(artifact);
 
-  const newFileName = `${pkg.productName}-${arch}-${platform}${extension}`.replace(
-    / /g,
-    ''
-  );
+  const newFileName =
+    `${pkg.productName}-${arch}-${platform}${extension}`.replace(/ /g, '');
 
   const newPath = path.join(dirname, newFileName);
 
