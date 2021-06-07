@@ -8,8 +8,8 @@ describe('Pomodoro dnd', () => {
   it('should start and stop dnd mode if enabled', async () => {
     const dndService = createMockProxy<DndService>();
     const pomodoroService = {
-      anyBreakStarted$: new Subject(),
-      workStarted$: new Subject(),
+      anyBreakTimerStart$: new Subject(),
+      workTimerStart$: new Subject(),
     };
     const settingsService = {
       pomodoroSettings: {
@@ -25,13 +25,13 @@ describe('Pomodoro dnd', () => {
 
     dndService.isEnabled.mockResolvedValue(false);
 
-    pomodoroService.anyBreakStarted$.next();
+    pomodoroService.anyBreakTimerStart$.next();
 
     await wait(100);
 
     expect(dndService.enable).toHaveBeenCalledTimes(1);
 
-    pomodoroService.workStarted$.next();
+    pomodoroService.workTimerStart$.next();
 
     await wait(100);
 
@@ -41,8 +41,8 @@ describe('Pomodoro dnd', () => {
   it('should do nothing if dnd mode is already active', async () => {
     const dndService = createMockProxy<DndService>();
     const pomodoroService = {
-      anyBreakStarted$: new Subject(),
-      workStarted$: new Subject(),
+      anyBreakTimerStart$: new Subject(),
+      workTimerStart$: new Subject(),
     };
     const settingsService = {
       pomodoroSettings: {
@@ -58,13 +58,13 @@ describe('Pomodoro dnd', () => {
 
     dndService.isEnabled.mockResolvedValue(true);
 
-    pomodoroService.anyBreakStarted$.next();
+    pomodoroService.anyBreakTimerStart$.next();
 
     await wait(100);
 
     expect(dndService.enable).toHaveBeenCalledTimes(0);
 
-    pomodoroService.workStarted$.next();
+    pomodoroService.workTimerStart$.next();
 
     await wait(100);
 

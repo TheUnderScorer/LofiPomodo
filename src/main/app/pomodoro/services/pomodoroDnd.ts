@@ -19,7 +19,7 @@ export const pomodoroDnd = ({
     return;
   }
 
-  pomodoroService.anyBreakStarted$.subscribe(async () => {
+  pomodoroService.anyBreakTimerStart$.subscribe(async () => {
     const isEnabled = await dndService.isEnabled();
 
     if (!settingsService.pomodoroSettings?.dndOnBreak || isEnabled) {
@@ -31,7 +31,7 @@ export const pomodoroDnd = ({
     wasDndStarted = true;
   });
 
-  pomodoroService.workStarted$.subscribe(async () => {
+  pomodoroService.workTimerStart$.subscribe(async () => {
     if (wasDndStarted) {
       wasDndStarted = false;
 

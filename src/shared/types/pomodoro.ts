@@ -27,6 +27,7 @@ export interface PomodoroState {
   remainingTime: string;
   remainingPercentage: number;
   isRunning: boolean;
+  wasRunning?: boolean;
 }
 
 export interface PomodoroSettings {

@@ -30,8 +30,10 @@ export class PomodoroService
     PomodoroState,
     ChangeSubject<PomodoroService>,
     ChangeSubject<PomodoroService>,
-    Jsonable {
+    Jsonable
+{
   isRunning!: boolean;
+  wasRunning?: boolean;
   remainingSeconds!: number;
   shortBreakCount!: number;
   start!: Date;
@@ -58,6 +60,16 @@ export class PomodoroService
   readonly timerTick$ = new Subject<this>();
 
   readonly timerStop$ = new Subject<this>();
+
+  readonly timerStart$ = new Subject<PomodoroService>();
+
+  readonly workTimerStart$ = this.timerStart$.pipe(
+    filter((payload) => payload.state === PomodoroStates.Work)
+  );
+
+  readonly anyBreakTimerStart$ = this.timerStart$.pipe(
+    filter((payload) => payload.state !== PomodoroStates.Work)
+  );
 
   constructor(
     private readonly store: ElectronStore<AppStore>,
@@ -116,6 +128,8 @@ export class PomodoroService
   }
 
   stop() {
+    this.wasRunning = false;
+
     if (this.timeoutId) {
       clearTimeout(this.timeoutId);
       this.timeoutId = null;
@@ -136,6 +150,8 @@ export class PomodoroService
 
       return;
     }
+
+    this.handleTimerStart();
 
     this.timeoutId = setTimeout(async () => {
       this.timeoutId = null;
@@ -158,6 +174,14 @@ export class PomodoroService
 
       this.onChange();
     }, 1000);
+  }
+
+  private handleTimerStart() {
+    if (this.isRunning && !this.wasRunning) {
+      this.wasRunning = true;
+
+      this.timerStart$.next(this);
+    }
   }
 
   addSeconds(seconds: number) {
@@ -230,6 +254,7 @@ export class PomodoroService
       start: this.start,
       state: this.state,
       remainingPercentage: this.remainingPercentage,
+      wasRunning: this.wasRunning,
     };
   }
 
