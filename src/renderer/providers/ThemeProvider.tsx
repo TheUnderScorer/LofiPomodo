@@ -216,11 +216,12 @@ export const ThemeProvider = ({
                     boxShadow: 'none',
                   },
 
-                  '&::after, &::before, &:hover::after,  &:focus::after, &:active::after': {
-                    boxShadow: 'none',
-                    borderImage: 'none',
-                    border: 'none',
-                  },
+                  '&::after, &::before, &:hover::after,  &:focus::after, &:active::after':
+                    {
+                      boxShadow: 'none',
+                      borderImage: 'none',
+                      border: 'none',
+                    },
 
                   '&::after': {
                     content: '""',
@@ -348,7 +349,6 @@ export const ThemeProvider = ({
         global: {
           body: {
             fontFamily: 'PixelFont',
-            overflow: 'visible',
           },
           'div.chakra-checkbox__control': {
             borderColor: color,

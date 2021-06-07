@@ -119,6 +119,8 @@ const createStore = () => {
   });
 
   if (process.env.CLEAR_STORE_ON_APP_RUN === 'true') {
+    console.log('Clearing store...');
+
     store.clear();
 
     store.set(defaults);
