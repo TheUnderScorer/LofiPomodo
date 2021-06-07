@@ -1,3 +1,18 @@
+# [1.13.0](https://github.com/TheUnderScorer/pixel-pomodo/compare/v1.12.0...v1.13.0) (2021-06-07)
+
+
+### Bug Fixes
+
+* Not working break and audio window ([3057a11](https://github.com/TheUnderScorer/pixel-pomodo/commit/3057a118c23edf753aaa8e02ead50a051db470b4))
+* Timer layout breaking when dragging task from list ([9fea3b6](https://github.com/TheUnderScorer/pixel-pomodo/commit/9fea3b6e6ca03dcdbe5ac9074cb9b7cbd8926f58))
+
+
+### Features
+
+* **ci:** Fix tag output ([3fd6001](https://github.com/TheUnderScorer/pixel-pomodo/commit/3fd6001c59771841787d3f21a35430cc0d2d2b84))
+* **trigger-release:** Build app on release ([d1838d9](https://github.com/TheUnderScorer/pixel-pomodo/commit/d1838d953ec947f97257baeddb7b3cbb8ddd1b80))
+* Support "Do Not Disturb" mode on break ([d9dfc9f](https://github.com/TheUnderScorer/pixel-pomodo/commit/d9dfc9ff72acd5a1847c718a59f99e2a89d843da))
+
 # [1.14.0](https://github.com/TheUnderScorer/pixel-pomodo/compare/v1.13.0...v1.14.0) (2021-06-07)
 
 
