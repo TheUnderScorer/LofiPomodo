@@ -28,7 +28,7 @@ jobs:
     runs-on: ${{ matrix.os }}
     steps:
       - name: Output release tag (if exists)
-        run: echo ${{ github.event.inputs.tag_name }} ${{ github.event.inputs.tag }} ${{ github.event.tag_name }} ${{ github.event.tag }}
+        run: echo "${{ github.event.inputs.tag_name }} ${{ github.event.inputs.tag }} ${{ github.event.tag_name }} ${{ github.event.tag }}"
 
       - name: Check actor
         if: ${{ matrix.os == 'macos-arm64' && env.GITHUB_ACTOR == 'TheUnderScorer' }}
