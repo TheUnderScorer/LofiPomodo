@@ -9,16 +9,20 @@ Pixel Pomodo is an app built using React & Electron.
 * Customizable session durations.
 * Full-screen break overlay (with option to switch it off).
 * Dark mode.
+* Enable "Do Not Disturb" mode during breaks (currently supported only on MacOS)
+* Integration with Trello
+* Play 8-bit sound on break/work start 
 
 The app is still in early stage, and I have plans for more features in the future ;).
 
 ### Plans for future features:
 
-* Integration with various providers, like Jira, Trello etc. with time tracking.
+* Integration with various providers, like Jira etc. with time tracking.
 * Time reports
 * Break suggestions.
-* Sounds
 * On full screen break window - show random pixel art animation.
+* App icon
+* More UI tweaks
 
 ### Screenshots
 
