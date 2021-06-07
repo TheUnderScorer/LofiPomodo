@@ -19,15 +19,15 @@ export const showTrayProgress = ({
     return;
   }
 
-  pomodoroService.changed$.subscribe(() => {
+  pomodoroService.state.changed$.subscribe(() => {
     const { timerWindow } = windowFactory;
 
     if (timerWindow) {
       const duration = getDurationByState(
         settingsService.pomodoroSettings!,
-        pomodoroService.state
+        pomodoroService.state.state
       );
-      const percentage = pomodoroService.remainingSeconds / duration;
+      const percentage = pomodoroService.state.remainingSeconds / duration;
 
       timerWindow.setProgressBar(1 - percentage);
     }

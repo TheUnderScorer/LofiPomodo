@@ -1,8 +1,8 @@
 import { AppContext } from '../../context';
 import { nativeImage, Tray } from 'electron';
-import { PomodoroService } from './services/pomodoroService/PomodoroService';
 import { pomodoroStateDictionary } from '../../../shared/dictionary/pomodoro';
 import { is } from 'electron-util';
+import { PomodoroStateManager } from './services/pomodoroService/PomodoroStateManager';
 
 export const setupTray = (context: AppContext) => {
   const img = nativeImage.createEmpty();
@@ -14,22 +14,22 @@ export const setupTray = (context: AppContext) => {
   });
 
   if (!is.windows) {
-    const setTitle = (pomodoro: Readonly<PomodoroService>) => {
+    const setTitle = (state: Readonly<PomodoroStateManager>) => {
       tray.setTitle(
         `${pomodoroStateDictionary[
-          context.pomodoroService.state
-        ].toUpperCase()}: ${pomodoro.remainingTime}`
+          context.pomodoroService.state.state
+        ].toUpperCase()}: ${state.remainingTime}`
       );
     };
 
-    setTitle(context.pomodoroService);
+    setTitle(context.pomodoroService.state);
 
-    context.pomodoroService.changed$.subscribe((state) => {
+    context.pomodoroService.state.changed$.subscribe((state) => {
       setTitle(state);
     });
 
     tray.on('right-click', () => {
-      context.pomodoroService.isRunning = !context.pomodoroService.isRunning;
+      context.pomodoroService.state.toggle();
     });
 
     return;

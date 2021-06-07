@@ -48,7 +48,6 @@ export interface PomodoroSettings {
 export interface PomodoroStateChanged {
   newState: PomodoroStates;
   oldState: PomodoroStates;
-  pomodoro: PomodoroService;
   trigger: Trigger;
 }
 

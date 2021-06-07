@@ -13,24 +13,27 @@ export const trackTaskDuration = ({
   taskRepository,
   settingsService,
 }: TrackTaskDurationDependencies) => {
-  const subscription = pomodoroService.anyBreakStarted$.subscribe(async () => {
-    const activeTask = await taskRepository.getActiveTask();
+  const subscription = pomodoroService.state.anyBreakStarted$.subscribe(
+    async () => {
+      const activeTask = await taskRepository.getActiveTask();
 
-    if (!activeTask) {
-      return;
+      if (!activeTask) {
+        return;
+      }
+
+      if (!activeTask.pomodoroSpent) {
+        activeTask.pomodoroSpent = [];
+      }
+
+      activeTask.pomodoroSpent!.push({
+        finishedAt: new Date().toISOString(),
+        durationInSeconds:
+          settingsService.pomodoroSettings!.workDurationSeconds,
+      });
+
+      await taskRepository.update(activeTask);
     }
-
-    if (!activeTask.pomodoroSpent) {
-      activeTask.pomodoroSpent = [];
-    }
-
-    activeTask.pomodoroSpent!.push({
-      finishedAt: new Date().toISOString(),
-      durationInSeconds: settingsService.pomodoroSettings!.workDurationSeconds,
-    });
-
-    await taskRepository.update(activeTask);
-  });
+  );
 
   return () => subscription.unsubscribe();
 };

@@ -42,10 +42,9 @@ describe('Track task duration', () => {
       settingsService: mockSettings as any,
     });
 
-    await pomodoroService.stateChanged$.next({
+    await pomodoroService.state.stateChanged$.next({
       newState: PomodoroStates.Work,
       oldState: PomodoroStates.LongBreak,
-      pomodoro: pomodoroService,
       trigger: Trigger.Scheduled,
     });
 
@@ -75,10 +74,9 @@ describe('Track task duration', () => {
       settingsService: mockSettings as any,
     });
 
-    await pomodoroService.stateChanged$.next({
+    await pomodoroService.state.stateChanged$.next({
       newState: PomodoroStates.Break,
       oldState: PomodoroStates.LongBreak,
-      pomodoro: pomodoroService,
       trigger: Trigger.Scheduled,
     });
 

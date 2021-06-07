@@ -15,7 +15,7 @@ export const breakWindow = ({
   windowFactory,
   pomodoroService,
 }: BreakWindowParams) => {
-  pomodoroService.anyBreakStarted$
+  pomodoroService.state.anyBreakStarted$
     .pipe(filter((value) => value.trigger === Trigger.Scheduled))
     .subscribe(async () => {
       if (!settingsService.pomodoroSettings?.openFullWindowOnBreak) {
@@ -25,7 +25,7 @@ export const breakWindow = ({
       await windowFactory.createBreakWindow();
     });
 
-  pomodoroService.workStarted$.subscribe(async () => {
+  pomodoroService.state.workStarted$.subscribe(async () => {
     await windowFactory.breakWindow?.close();
   });
 };

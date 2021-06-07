@@ -23,20 +23,20 @@ export const breakSoonNotification = ({
     return;
   }
 
-  pomodoroService.changed$
+  pomodoroService.state.changed$
     .pipe(
       filter(
-        (service) =>
-          service.remainingSeconds === seconds &&
-          service.state === PomodoroStates.Work
+        (state) =>
+          state.remainingSeconds === seconds &&
+          state.state === PomodoroStates.Work
       )
     )
-    .subscribe(async (service) => {
+    .subscribe(async (state) => {
       if (!settingsService.pomodoroSettings?.showNotificationBeforeBreak) {
         return;
       }
 
-      const date = addSeconds(new Date(), service.remainingSeconds);
+      const date = addSeconds(new Date(), state.remainingSeconds);
       const notification = notificationService.add({
         title: 'Break is starting soon!',
         body: `Break will start at ${format(date, 'HH:mm')}.`,
@@ -49,7 +49,7 @@ export const breakSoonNotification = ({
       });
 
       notification.addListener('action', () => {
-        service.addSeconds(60 * 5);
+        state.addSeconds(60 * 5);
       });
 
       notification.show();
