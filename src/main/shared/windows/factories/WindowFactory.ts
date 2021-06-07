@@ -1,4 +1,4 @@
-import { BrowserWindow } from 'electron';
+import { BrowserWindow, WebPreferences } from 'electron';
 import { setupWindow } from './setup';
 import { routes } from '../../../../shared/routes/routes';
 import { MenuFactory } from '../../menu/MenuFactory';
@@ -36,11 +36,20 @@ export class WindowFactory {
     [WindowTypes.AudioPlayer]: this.createAudioPlayerWindow.bind(this),
   };
 
+  private readonly defaultWebPreferences: WebPreferences;
+
   constructor(
     private readonly preloadPath: string,
     private readonly menuFactory: MenuFactory,
     private readonly store: ElectronStore<AppStore>
-  ) {}
+  ) {
+    this.defaultWebPreferences = {
+      preload: this.preloadPath,
+      nodeIntegration: false,
+      contextIsolation: false,
+      worldSafeExecuteJavaScript: false,
+    };
+  }
 
   async createWindowByType(type: WindowTypes, args?: CreateWindowArgs) {
     const method = this.windowKeyMethodMap[type];
@@ -65,12 +74,7 @@ export class WindowFactory {
       ...this.getWindowProps(WindowTypes.ManageTrello),
       title: windowTitles[WindowTypes.ManageTrello],
       parent,
-      webPreferences: {
-        preload: this.preloadPath,
-        nodeIntegration: false,
-        contextIsolation: false,
-        worldSafeExecuteJavaScript: false,
-      },
+      webPreferences: this.defaultWebPreferences,
     });
 
     await setupWindow(window, routes.manageTrello());
@@ -94,12 +98,7 @@ export class WindowFactory {
       ...this.getWindowProps(WindowTypes.Timer),
       title: windowTitles[WindowTypes.Timer],
       parent,
-      webPreferences: {
-        preload: this.preloadPath,
-        nodeIntegration: false,
-        contextIsolation: false,
-        worldSafeExecuteJavaScript: false,
-      },
+      webPreferences: this.defaultWebPreferences,
     });
 
     await setupWindow(window, routes.timer());
@@ -117,9 +116,7 @@ export class WindowFactory {
       show: false,
       height: 400,
       width: 400,
-      webPreferences: {
-        preload: this.preloadPath,
-      },
+      webPreferences: this.defaultWebPreferences,
     });
 
     await setupWindow(window, routes.hiddenAudioPlayer());
@@ -156,10 +153,7 @@ export class WindowFactory {
       titleBarStyle: 'hidden',
       resizable: false,
       parent,
-      webPreferences: {
-        preload: this.preloadPath,
-        nodeIntegration: false,
-      },
+      webPreferences: this.defaultWebPreferences,
     });
 
     window.setAlwaysOnTop(true, 'floating');
