@@ -1,4 +1,4 @@
-import { Box, Center, List, ListProps } from '@chakra-ui/react';
+import { Center, List, ListProps } from '@chakra-ui/react';
 import React, { FC, ReactNode, useCallback } from 'react';
 import { Task } from '../../../../../shared/types/tasks';
 import { Heading } from '../../../../ui/atoms/heading/Heading';
@@ -46,33 +46,38 @@ export const TasksList: FC<TasksListProps> = ({
   );
 
   return (
-    <List className="tasks-list" h="100%" overflow="auto" {...props}>
+    <DragDropContext onDragEnd={handleDragEnd}>
       {(!tasks.length && !loading && emptyContent) ?? (
         <Center h="100%">
           <Heading size="sm">No tasks found.</Heading>
         </Center>
       )}
-      <DragDropContext onDragEnd={handleDragEnd}>
-        <Droppable droppableId="droppable">
-          {({ droppableProps, innerRef, placeholder }) => (
-            <Box {...droppableProps} ref={innerRef}>
-              {tasks.map((task, index) => (
-                <TaskListItem
-                  isDisabled={isDirty}
-                  isDragDisabled={isDragDisabled}
-                  arrIndex={index}
-                  className="task-list-item"
-                  mb={2}
-                  key={task.id}
-                  task={task}
-                  {...itemProps}
-                />
-              ))}
-              {placeholder}
-            </Box>
-          )}
-        </Droppable>
-      </DragDropContext>
-    </List>
+      <Droppable droppableId="droppable">
+        {({ droppableProps, innerRef, placeholder }) => (
+          <List
+            className="tasks-list"
+            h="100%"
+            overflow="auto"
+            {...props}
+            ref={innerRef}
+            {...droppableProps}
+          >
+            {tasks.map((task, index) => (
+              <TaskListItem
+                isDisabled={isDirty}
+                isDragDisabled={isDragDisabled}
+                arrIndex={index}
+                className="task-list-item"
+                mb={2}
+                key={task.id}
+                task={task}
+                {...itemProps}
+              />
+            ))}
+            {placeholder}
+          </List>
+        )}
+      </Droppable>
+    </DragDropContext>
   );
 };

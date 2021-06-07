@@ -20,6 +20,7 @@
     "forge": "./forge.config.js"
   },
   "dependencies": {
+    "@popperjs/core": "^2.4.4",
     "@theunderscorer/do-not-disturb": "^1.2.0",
     "@theunderscorer/when": "^1.0.1",
     "auto-launch": "^5.0.5",
@@ -41,6 +42,7 @@
     "nes.css": "^2.3.0",
     "node-fetch": "^2.6.1",
     "p-limit": "^2.3.0",
+    "react-popper": "^2.2.5",
     "reflect-metadata": "^0.1.13",
     "rxjs": "^6.6.3",
     "sqlite3": "5.0.0",

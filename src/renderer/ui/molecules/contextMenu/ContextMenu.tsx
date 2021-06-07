@@ -1,15 +1,20 @@
-import { Box, Menu, MenuList, Portal } from '@chakra-ui/react';
+import { Menu, MenuList, Portal } from '@chakra-ui/react';
 import React, {
   FC,
   MouseEventHandler,
   ReactNode,
   useCallback,
+  useEffect,
   useMemo,
   useState,
 } from 'react';
 import { atom, useRecoilState } from 'recoil';
 import clone from 'lodash.clonedeep';
 import { useMount } from 'react-use';
+import { usePopper } from 'react-popper';
+import './ContextMenu.styles.css';
+import { findScrollContainer } from '../../../shared/findScrollContainer';
+import { useScrollLock } from '../../../shared/hooks/useScrollLock';
 
 export interface ContextMenuBag {
   onContextMenu: (event: any) => any;
@@ -22,8 +27,6 @@ export interface ContextMenuProps {
   id: string;
 }
 
-const maxMenuOffset = 200;
-
 const contextMenus = atom<Record<string, boolean>>({
   default: {},
   key: 'contextMenu',
@@ -31,6 +34,10 @@ const contextMenus = atom<Record<string, boolean>>({
 
 export const ContextMenu: FC<ContextMenuProps> = ({ menu, children, id }) => {
   const [menus, setMenus] = useRecoilState(contextMenus);
+
+  const [container, setContainer] = useState<HTMLElement | null>(null);
+  const [popperElement, setPopperElement] = useState<HTMLElement | null>(null);
+  const [scrollElement, setScrollElement] = useState<HTMLElement | null>(null);
 
   const open = useMemo(() => {
     return Boolean(menus[id]);
@@ -43,25 +50,17 @@ export const ContextMenu: FC<ContextMenuProps> = ({ menu, children, id }) => {
     setMenus(newMenus);
   }, [id, menus, setMenus]);
 
-  const [xPos, setxPos] = useState<string>('');
-  const [yPos, setyPos] = useState<string>('');
+  const { styles, attributes } = usePopper(container, popperElement, {
+    placement: 'auto',
+    strategy: 'absolute',
+  });
 
   const toggleMenu: MouseEventHandler<HTMLElement> = useCallback(
     (event) => {
       event.stopPropagation();
 
-      const { innerWidth } = window;
-
-      const x =
-        innerWidth - event.clientX < maxMenuOffset
-          ? event.clientX - maxMenuOffset
-          : event.clientX;
-
-      const newXPos = `${x}px`;
-      const newYPos = `${event.clientY}px`;
-
-      setxPos(newXPos);
-      setyPos(newYPos);
+      setContainer(event.target as HTMLElement);
+      setScrollElement(findScrollContainer(event.target as HTMLElement));
 
       setMenus((prev) => {
         const entries = Object.entries(prev).map(([key, value]) => [
@@ -75,6 +74,8 @@ export const ContextMenu: FC<ContextMenuProps> = ({ menu, children, id }) => {
     [setMenus, id]
   );
 
+  useScrollLock(open, scrollElement);
+
   useMount(() => {
     setMenus((prev) => {
       const value = { ...prev };
@@ -85,15 +86,27 @@ export const ContextMenu: FC<ContextMenuProps> = ({ menu, children, id }) => {
     });
   });
 
+  useEffect(() => {
+    console.log({
+      container,
+      styles,
+    });
+  }, [container, styles]);
+
   return (
     <>
       {open && (
         <Portal>
-          <Box className="context-menu" position="fixed" left={xPos} top={yPos}>
+          <div
+            ref={setPopperElement}
+            style={styles.popper}
+            className="context-menu"
+            {...attributes.popper}
+          >
             <Menu
               closeOnSelect={false}
               placement="auto"
-              strategy="fixed"
+              strategy="absolute"
               preventOverflow
               isLazy
               isOpen={open}
@@ -101,7 +114,7 @@ export const ContextMenu: FC<ContextMenuProps> = ({ menu, children, id }) => {
             >
               <MenuList>{menu}</MenuList>
             </Menu>
-          </Box>
+          </div>
         </Portal>
       )}
       {children({ onContextMenu: toggleMenu, open })}
