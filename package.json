@@ -226,5 +226,5 @@
     "clear-node-modules": "modclean -n default:safe -I @semantic-release/changelog,@csstools/normalize.css,electron-installer-dmg,@electron-forge/*,electron-winstaller,electron-installer-debian -r",
     "start": "electron-forge start"
   },
-  "version": "1.13.0"
+  "version": "1.14.0"
 }

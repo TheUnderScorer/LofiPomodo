@@ -1,3 +1,10 @@
+# [1.14.0](https://github.com/TheUnderScorer/pixel-pomodo/compare/v1.13.0...v1.14.0) (2021-06-07)
+
+
+### Features
+
+* **trigger-release:** Build app on release ([d1838d9](https://github.com/TheUnderScorer/pixel-pomodo/commit/d1838d953ec947f97257baeddb7b3cbb8ddd1b80))
+
 # [1.13.0](https://github.com/TheUnderScorer/pixel-pomodo/compare/v1.12.0...v1.13.0) (2021-06-07)
 
 
