@@ -41,9 +41,10 @@ export const SettingsFormView = () => {
 
   const [activeTabIndex, setActiveTabIndex] = useState(0);
 
-  const tab = useMemo(() => settingsTabIndexArray[activeTabIndex], [
-    activeTabIndex,
-  ]);
+  const tab = useMemo(
+    () => settingsTabIndexArray[activeTabIndex],
+    [activeTabIndex]
+  );
 
   const form = useForm<AppSettings>({
     mode: 'all',
@@ -90,7 +91,7 @@ export const SettingsFormView = () => {
 
   useWindowMinSizeOnMount({
     minHeight: defaultWindowHeight,
-    minWidth: is?.windows ? timerWindowSize + 100 : undefined,
+    minWidth: is?.windows ? timerWindowSize + 300 : timerWindowSize + 100,
   });
 
   return (

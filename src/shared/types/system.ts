@@ -9,6 +9,7 @@ export enum AppSystemOperations {
   ResizeWindow = 'ResizeWindow',
   OpenWindow = 'OpenWindow',
   QuitApp = 'QuitApp',
+  SupportsDnd = 'SupportsDnd',
 }
 
 export interface ResizeWindowPayload

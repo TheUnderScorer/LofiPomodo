@@ -9,12 +9,13 @@ import { is } from 'electron-util';
 import { ResizeWindowPayloadSchema } from '../../../shared/schema/system/ResizeWindowPayloadSchema';
 
 export const setupSystem = (context: AppContext) => {
-  const { ipcService, windowFactory } = context;
+  const { ipcService, windowFactory, dndService } = context;
 
   ipcService.registerAsMap({
     [AppSystemOperations.QuitApp]: () => {
       app.quit();
     },
+    [AppSystemOperations.SupportsDnd]: () => dndService.supported,
     [AppSystemOperations.CloseWindow]: (event) => {
       const window = BrowserWindow.fromWebContents(event.sender);
 
@@ -46,9 +47,8 @@ export const setupSystem = (context: AppContext) => {
       _,
       payload: ResizeWindowPayload
     ) => {
-      const { width, animate, height } = ResizeWindowPayloadSchema.validate(
-        payload
-      );
+      const { width, animate, height } =
+        ResizeWindowPayloadSchema.validate(payload);
 
       const window = BrowserWindow.getFocusedWindow();
 

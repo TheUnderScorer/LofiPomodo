@@ -112,6 +112,21 @@ export const PomodoroForm = ({ form, settings }: PomodoroFormProps) => {
         )}
       </SettingsFormController>
       <SettingsFormController
+        form={form}
+        name="pomodoroSettings.dndOnBreak"
+        label={'Enable "Do Not Disturb" mode on break'}
+        defaultValue={settings.dndOnBreak}
+      >
+        {(props) => (
+          <PixelSwitch
+            {...props}
+            id={props.name}
+            onChange={(checked) => props.onChange(checked)}
+            isChecked={props.value}
+          />
+        )}
+      </SettingsFormController>
+      <SettingsFormController
         label="Show notification before break"
         form={form}
         name="pomodoroSettings.showNotificationBeforeBreak"

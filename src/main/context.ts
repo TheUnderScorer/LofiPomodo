@@ -31,9 +31,11 @@ import { AudioPlayer } from './app/audio/services/AudioPlayer';
 import audios from '../assets/audio/audios.json';
 import { NotificationsService } from './shared/notifications/NotificationsService';
 import { AppSettings } from '../shared/types/settings';
+import { DndService } from './shared/dnd/DndService';
 
 export interface AppContext {
   ipcService: IpcMainService;
+  dndService: DndService;
   store: ElectronStore<AppStore>;
   pomodoroService: PomodoroService;
   preloadPath: string;
@@ -117,6 +119,8 @@ const createStore = () => {
   });
 
   if (process.env.CLEAR_STORE_ON_APP_RUN === 'true') {
+    console.log('Clearing store...');
+
     store.clear();
 
     store.set(defaults);
@@ -166,19 +170,19 @@ export const createContext = async (): Promise<AppContext> => {
     fetch
   );
 
-  const {
-    trelloService,
-    apiAuthState,
-    apiAuthService,
-  } = await handleIntegrations(store, windowFactory, trelloClient);
+  const { trelloService, apiAuthState, apiAuthService } =
+    await handleIntegrations(store, windowFactory, trelloClient);
 
   const taskApiServices = [
     new TrelloTasksService(trelloService, taskRepository, taskCrudService),
   ];
   const taskSynchronizer = new TaskSynchronizer(taskApiServices, store);
 
+  const dndService = new DndService();
+
   return {
     ipcService: new IpcMainService(),
+    dndService: dndService,
     taskRepository,
     store,
     pomodoroService: pomodoro,

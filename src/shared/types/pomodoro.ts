@@ -41,6 +41,7 @@ export interface PomodoroSettings {
   longBreakSound?: string;
   showNotificationBeforeBreak?: boolean;
   longBreakInterval: number;
+  dndOnBreak?: boolean;
 }
 
 export interface PomodoroStateChanged {

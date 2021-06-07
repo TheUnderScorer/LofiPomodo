@@ -157,7 +157,7 @@ export const TabbedTasksList: FC<TabbedTasksListProps> = (props) => {
             <TasksList
               onListDragEnd={handleListDragEnd}
               emptyContent={
-                <Center h="100%">
+                <Center h="80%">
                   <Stack spacing={2} height="auto" alignItems="center">
                     <Heading size="sm">No tasks found</Heading>
                     <Text>Use input above to add new tasks ✌️</Text>
