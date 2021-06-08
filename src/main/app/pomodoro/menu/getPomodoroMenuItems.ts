@@ -10,22 +10,22 @@ export const getPomodoroMenuItems = (
 ) => {
   return [
     {
-      label: pomodoroService.isRunning ? 'Pause timer' : 'Start timer',
-      click: () => pomodoroService.toggle(),
+      label: pomodoroService.state.isRunning ? 'Pause timer' : 'Start timer',
+      click: () => pomodoroService.state.toggle(),
       accelerator: keyboardShortcuts.togglePomodoro()?.electronKey,
     },
     {
       label: `Skip to ${
         pomodoroStateDictionary[
-          getNextState(pomodoroService, settingsService.pomodoroSettings!)
+          getNextState(pomodoroService.state, settingsService.pomodoroSettings!)
         ]
       }`,
-      click: () => pomodoroService.moveToNextState(),
+      click: () => pomodoroService.state.moveToNextState(),
       accelerator: keyboardShortcuts.moveToNextPomodoroState()?.electronKey,
     },
     {
       label: 'Restart pomodoro',
-      click: () => pomodoroService.restart(),
+      click: () => pomodoroService.state.restart(),
       accelerator: keyboardShortcuts.restartPomodoro()?.electronKey,
     },
   ];

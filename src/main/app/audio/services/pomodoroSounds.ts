@@ -28,7 +28,7 @@ export const setupPomodoroSounds = ({
   settingsService,
   audioPlayer,
 }: PomodoroSoundsDependencies) => {
-  pomodoroService.stateChanged$
+  pomodoroService.state.stateChanged$
     .pipe(filter(({ trigger }) => trigger === Trigger.Scheduled))
     .subscribe(async ({ newState }) => {
       const soundKey = pomodoroStateSoundMap[newState];

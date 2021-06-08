@@ -38,7 +38,7 @@ log.debug(`Dirname: ${__dirname}`);
 const setupAppMenu = (context: AppContext) => {
   Menu.setApplicationMenu(context.menuFactory.createAppMenu());
 
-  context.pomodoroService.changed$.subscribe(() => {
+  context.pomodoroService.state.changed$.subscribe(() => {
     Menu.setApplicationMenu(context.menuFactory.createAppMenu());
   });
 };

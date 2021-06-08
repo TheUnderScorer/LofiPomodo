@@ -29,7 +29,7 @@ describe('PomodoroService', () => {
   it('should return correct time', () => {
     jest.useFakeTimers();
 
-    expect(service.remainingTime).toMatchInlineSnapshot(`"00:01"`);
+    expect(service.state.remainingTime).toMatchInlineSnapshot(`"00:01"`);
   });
 
   it('should stop timer after work if auto run is set to false', async () => {
@@ -51,9 +51,9 @@ describe('PomodoroService', () => {
 
     await wait(1000);
 
-    expect(service.isRunning).toEqual(false);
-    expect(service.state).toEqual(PomodoroStates.Break);
-    expect(service.remainingTime).toMatchInlineSnapshot(`"00:05"`);
+    expect(service.state.isRunning).toEqual(false);
+    expect(service.state.state).toEqual(PomodoroStates.Break);
+    expect(service.state.remainingTime).toMatchInlineSnapshot(`"00:05"`);
   });
 
   it('should advance to long break', async () => {
@@ -72,7 +72,7 @@ describe('PomodoroService', () => {
 
     await wait(4000);
 
-    expect(service.state).toEqual(PomodoroStates.LongBreak);
+    expect(service.state.state).toEqual(PomodoroStates.LongBreak);
   });
 
   it('should automatically run next timer if autoRunBreak and autoRunWork is set to true', async () => {
@@ -94,9 +94,9 @@ describe('PomodoroService', () => {
 
     await wait(2000);
 
-    expect(service.isRunning).toEqual(true);
-    expect(service.state).toEqual(PomodoroStates.Break);
-    expect(service.remainingTime).toMatchInlineSnapshot(`"00:02"`);
+    expect(service.state.isRunning).toEqual(true);
+    expect(service.state.state).toEqual(PomodoroStates.Break);
+    expect(service.state.remainingTime).toMatchInlineSnapshot(`"00:02"`);
 
     jest.useFakeTimers();
     jest.advanceTimersByTime(4000);
@@ -104,8 +104,27 @@ describe('PomodoroService', () => {
 
     await wait(2000);
 
-    expect(service.isRunning).toEqual(true);
-    expect(service.state).toEqual(PomodoroStates.Work);
+    expect(service.state.isRunning).toEqual(true);
+    expect(service.state.state).toEqual(PomodoroStates.Work);
+  });
+
+  it('should indicate when timer have started', async () => {
+    const fn = jest.fn();
+
+    service.fill({
+      state: PomodoroStates.Work,
+      remainingSeconds: 60,
+    });
+
+    service.timerStart$.subscribe(fn);
+
+    service.fill({
+      isRunning: true,
+    });
+
+    await wait(1200);
+
+    expect(fn).toHaveBeenCalledTimes(1);
   });
 
   it('should handle restart', async () => {
@@ -122,10 +141,10 @@ describe('PomodoroService', () => {
       state: PomodoroStates.Break,
     });
 
-    await service.restart();
+    await service.state.restart();
 
-    expect(service.state).toEqual(PomodoroStates.Work);
-    expect(service.shortBreakCount).toEqual(0);
-    expect(service.isRunning).toEqual(false);
+    expect(service.state.state).toEqual(PomodoroStates.Work);
+    expect(service.state.shortBreakCount).toEqual(0);
+    expect(service.state.isRunning).toEqual(false);
   });
 });

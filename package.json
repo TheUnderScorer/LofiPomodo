@@ -201,6 +201,7 @@
     "test:e2e": "jest --config jest.config.e2e.js --runInBand --forceExit",
     "test:e2e-docker": "COMPOSE_DOCKER_CLI_BUILD=1 docker-compose run e2e",
     "build:electron": "cross-env NODE_ENV=\"production\" webpack --config webpack.electron.js",
+    "typecheck:electron": "tsc --project tsconfig.electron.json --noEmit",
     "build:all": "npm run build:renderer && npm run build:electron",
     "watch:electron": "webpack --config webpack.electron.js -w",
     "start:electron": "electron ./build/electron.js --remote-debugging-port=9444",

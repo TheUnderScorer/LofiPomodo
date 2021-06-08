@@ -30,10 +30,10 @@ export const setupPomodoro = (context: AppContext) => {
       context.pomodoroService.fill(payload);
     },
     [PomodoroOperations.GetPomodoroState]: () =>
-      context.pomodoroService.toJSON(),
+      context.pomodoroService.state.toJSON(),
     [PomodoroOperations.RestartCurrentState]: () =>
-      context.pomodoroService.resetCurrentState(),
+      context.pomodoroService.state.resetCurrentState(),
     [PomodoroOperations.MoveToNextState]: () =>
-      context.pomodoroService.moveToNextState(Trigger.Manual),
+      context.pomodoroService.state.moveToNextState(Trigger.Manual),
   });
 };

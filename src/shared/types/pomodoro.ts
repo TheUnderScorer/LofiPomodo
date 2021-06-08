@@ -1,5 +1,3 @@
-import { PomodoroService } from '../../main/app/pomodoro/services/pomodoroService/PomodoroService';
-
 export enum PomodoroStates {
   Work = 'Work',
   Break = 'Break',
@@ -27,6 +25,7 @@ export interface PomodoroState {
   remainingTime: string;
   remainingPercentage: number;
   isRunning: boolean;
+  wasRunning?: boolean;
 }
 
 export interface PomodoroSettings {
@@ -47,7 +46,6 @@ export interface PomodoroSettings {
 export interface PomodoroStateChanged {
   newState: PomodoroStates;
   oldState: PomodoroStates;
-  pomodoro: PomodoroService;
   trigger: Trigger;
 }
 

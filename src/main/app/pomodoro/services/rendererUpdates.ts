@@ -4,6 +4,7 @@ import { sendObservablesToWindows } from '../../../shared/windows/sendObservable
 
 export const sendUpdatesToWindows = ({ pomodoroService }: AppContext) => {
   sendObservablesToWindows({
-    [PomodoroSubscriptionTopics.PomodoroUpdated]: pomodoroService.changed$,
+    [PomodoroSubscriptionTopics.PomodoroUpdated]:
+      pomodoroService.state.changed$,
   });
 };

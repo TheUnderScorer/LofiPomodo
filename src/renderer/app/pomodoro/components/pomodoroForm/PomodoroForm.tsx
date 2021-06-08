@@ -13,6 +13,7 @@ import { AudioSelect } from '../../../audio/components/AudioSelect';
 import { SettingsFormController } from '../../../../ui/molecules/settingsFormController/SettingsFormController';
 import { FormController } from '../../../../ui/molecules/formController/FormController';
 import { PixelSwitch } from '../../../../ui/molecules/pixelSwitch/PixelSwitch';
+import { useSupportsDnd } from '../../../../shared/hooks/useSupportsDnd';
 
 export interface PomodoroFormProps {
   form: UseFormMethods<AppSettings>;
@@ -22,6 +23,8 @@ export interface PomodoroFormProps {
 const maxFieldWidth = '200px';
 
 export const PomodoroForm = ({ form, settings }: PomodoroFormProps) => {
+  const { isSupported: dndSupported } = useSupportsDnd();
+
   return (
     <Stack spacing={6} width="100%">
       <SettingsFormController
@@ -111,21 +114,23 @@ export const PomodoroForm = ({ form, settings }: PomodoroFormProps) => {
           />
         )}
       </SettingsFormController>
-      <SettingsFormController
-        form={form}
-        name="pomodoroSettings.dndOnBreak"
-        label={'Enable "Do Not Disturb" mode on break'}
-        defaultValue={settings.dndOnBreak}
-      >
-        {(props) => (
-          <PixelSwitch
-            {...props}
-            id={props.name}
-            onChange={(checked) => props.onChange(checked)}
-            isChecked={props.value}
-          />
-        )}
-      </SettingsFormController>
+      {dndSupported && (
+        <SettingsFormController
+          form={form}
+          name="pomodoroSettings.dndOnBreak"
+          label={'Enable "Do Not Disturb" mode on break'}
+          defaultValue={settings.dndOnBreak}
+        >
+          {(props) => (
+            <PixelSwitch
+              {...props}
+              id={props.name}
+              onChange={(checked) => props.onChange(checked)}
+              isChecked={props.value}
+            />
+          )}
+        </SettingsFormController>
+      )}
       <SettingsFormController
         label="Show notification before break"
         form={form}
