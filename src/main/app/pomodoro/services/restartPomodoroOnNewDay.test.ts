@@ -2,29 +2,31 @@ import { restartPomodoroOnNewDay } from './restartPomodoroOnNewDay';
 
 describe('Restart pomodoro on new day', () => {
   const mockPomodoro: any = {
-    restart: jest.fn(),
+    state: {
+      restart: jest.fn(),
+    },
   };
 
   beforeEach(() => {
-    mockPomodoro.restart.mockClear();
+    mockPomodoro.state.restart.mockClear();
   });
 
   it('should not restart pomodoro on the same day', async () => {
-    mockPomodoro.start = new Date();
+    mockPomodoro.state.start = new Date();
 
     await restartPomodoroOnNewDay(mockPomodoro);
 
-    expect(mockPomodoro.restart).toBeCalledTimes(0);
+    expect(mockPomodoro.state.restart).toBeCalledTimes(0);
   });
 
   it('should restart pomodoro on new day', async () => {
     const date = new Date();
     date.setDate(date.getDate() - 1);
 
-    mockPomodoro.start = date;
+    mockPomodoro.state.start = date;
 
     await restartPomodoroOnNewDay(mockPomodoro);
 
-    expect(mockPomodoro.restart).toBeCalledTimes(1);
+    expect(mockPomodoro.state.restart).toBeCalledTimes(1);
   });
 });

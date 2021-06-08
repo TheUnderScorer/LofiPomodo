@@ -1,5 +1,3 @@
-import { PomodoroService } from '../../main/app/pomodoro/services/pomodoroService/PomodoroService';
-
 export enum PomodoroStates {
   Work = 'Work',
   Break = 'Break',

@@ -8,19 +8,21 @@ import { pomodoroStateSoundMap, setupPomodoroSounds } from './pomodoroSounds';
 describe('Pomodoro sounds', () => {
   const audioPlayer = createMockProxy<AudioPlayer>();
   let settingsService: any;
-  let pomodoroService: { stateChanged$: Subject<any> };
+  let pomodoroService: { state: { stateChanged$: Subject<any> } };
 
   beforeEach(() => {
     audioPlayer.mockClear();
 
     settingsService = createMockSettings();
     pomodoroService = {
-      stateChanged$: new Subject(),
+      state: {
+        stateChanged$: new Subject(),
+      },
     };
   });
 
   afterEach(() => {
-    pomodoroService.stateChanged$.complete();
+    pomodoroService.state.stateChanged$.complete();
   });
 
   it.each(Object.values(PomodoroStates))(
@@ -36,7 +38,7 @@ describe('Pomodoro sounds', () => {
         settingsService,
       } as any);
 
-      pomodoroService.stateChanged$.next({
+      pomodoroService.state.stateChanged$.next({
         trigger: Trigger.Scheduled,
         newState: pomodoroState,
       });
@@ -54,7 +56,7 @@ describe('Pomodoro sounds', () => {
       settingsService,
     } as any);
 
-    pomodoroService.stateChanged$.next({
+    pomodoroService.state.stateChanged$.next({
       trigger: Trigger.Manual,
       newState: PomodoroStates.Break,
     });
@@ -71,7 +73,7 @@ describe('Pomodoro sounds', () => {
       settingsService,
     } as any);
 
-    pomodoroService.stateChanged$.next({
+    pomodoroService.state.stateChanged$.next({
       trigger: Trigger.Scheduled,
       newState: PomodoroStates.Work,
     });
