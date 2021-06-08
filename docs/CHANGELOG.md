@@ -1,3 +1,10 @@
+# [1.14.0](https://github.com/TheUnderScorer/pixel-pomodo/compare/v1.13.0...v1.14.0) (2021-06-08)
+
+
+### Features
+
+* **macos:** Toggle DnD only when timer starts ([9c88f4c](https://github.com/TheUnderScorer/pixel-pomodo/commit/9c88f4caae7bce773bf637564e3fdf322c80eb2f))
+
 # [1.13.0](https://github.com/TheUnderScorer/pixel-pomodo/compare/v1.12.0...v1.13.0) (2021-06-07)
 
 
